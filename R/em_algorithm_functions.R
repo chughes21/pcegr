@@ -1,7 +1,17 @@
 #EM Algorithm Functions
 
-#the complete data log likelihood for a Poisson response
-
+#' The complete data log likelihood for a Poisson response
+#'
+#' This function calculates the complete data log likelihood for a count vector and time vector, given values of the parameters of a Poisson distribution.
+#'
+#' @param params The parameters for the distribution
+#' @param y The observed count vector
+#' @param t The observed time vector
+#'
+#' @return A list containing the likelihood value and a vector of weights for the em algorithm
+#' @export
+#'
+#' @examples
 cdll<-function(params,y,t){
   # p <-glogitinv(params[1]) #for constraints, so pi is a prop
   #  lambda<-exp(params[-1])
@@ -12,8 +22,21 @@ cdll<-function(params,y,t){
   return(list(lik=lik,weights=omega))
 }
 
-#the EM algorithm for a leaf stage
-
+#' The EM algorithm for a leaf
+#'
+#'This function carries out the Expectation-Maximisation algorithm for a leaf, given initial values of the parameters and the count and time vectors.
+#'
+#' @param p_0 The initial value for the risk probability
+#' @param l_0 The initial value for the rate
+#' @param y The observed count vector
+#' @param t The observed time vector
+#' @param tol The tolerance to stop the algorithm
+#' @param max_iter The maximum number of iterations for the algorithm
+#'
+#' @return A list containing the estimates of the risk probability and the rate, and the number of iterations necessary
+#' @export
+#'
+#' @examples
 em<-function(p_0,l_0,y,t,tol = 1e-10,max_iter=10000){
 
   n<-length(y)
@@ -42,8 +65,23 @@ em<-function(p_0,l_0,y,t,tol = 1e-10,max_iter=10000){
   return(list(p=p,lambda=lambda,iter=i))
 }
 
-#the function to carry out the em algorithm across leaf stages
 
+
+#' The EM algorithm
+#'
+#' This function carries out the Expectation-Maximisation algorithm across all leaves.
+#'
+#' @param data The entire data set, where the observed count vector and time vector are the last two columns
+#' @param p_0 The initial value for the risk value
+#' @param l_0 The initial value for the rate. If NA
+#' @param variable_time An indicator of whether the observed time is uniform or variable
+#' @param max_iter The tolerance to stop the algorithm
+#' @param tol The maximum number of iterations for the algorithm
+#'
+#' @return
+#' @export
+#'
+#' @examples
 em_zip<-function(data,p_0=NA,l_0=NA, variable_time = TRUE, max_iter = 10000,tol=1e-10){
   n<-dim(data)[2] - 1 - 1*variable_time #if there are variable times, they will be an extra column
   data_levels<-sapply(data[,1:n],nlevels)
