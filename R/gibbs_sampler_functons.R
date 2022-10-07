@@ -1,8 +1,3 @@
-#Gibbs sampler functions
-
-library(prodlim) #need this for row.match
-library(tidyr) #need this for expand_grid
-
 #' The vec_from function
 #'
 #' A function to create a descending vector of natural numbers
@@ -73,6 +68,7 @@ path_refactor<-function(data,n,data_levels){
 #' @param b A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.
 #' @param c A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.
 #' @param d A numeric value for the beta hyperparameter of the Beta prior for the risk probability.
+#'
 #'
 #' @return A list containing a matrix with the desired outputs for each evolution of the process, as well as vectors of the estimates for the rates and risk probabilities.
 #' @export

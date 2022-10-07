@@ -13,7 +13,7 @@
 #' @param data A data set, where the observed count vector and time vector (if variable) are the last two columns
 #' @param ceg A ceg model fit to the data set, as produced by CEG.AHC.POISS.
 #' @param limit An integer where the number of event counts greater than or equal to this integer are grouped together.
-#' @param poisson_response A logical value indicating whether the reponse variable is Poisson (TRUE) or categorical (FALSE).
+#' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param poisson_time_variable A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
 #' @param posterior A logical value indicating whether the estimates of the parameters used should be the posterior estimate (TRUE) or sample estimate (FALSE).
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
