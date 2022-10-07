@@ -6,7 +6,7 @@
 #'
 #' A function to test the goodness of fit of a pceg model to a data set.
 #'
-#' For each leaf stage in a pceg model created by [CEG.AHC.POISS()], this function calculates the observed event counts up to some integer limit, and then calculates
+#' For each leaf stage in a pceg model created by [pceg()], this function calculates the observed event counts up to some integer limit, and then calculates
 #' the expected event counts for that leaf based on the model estimates of the parameters for the Poisson distribution. Then, for each leaf $i$ and each event count $j$,
 #' a chi-square contribution is calculated using the formula $\frac{(O_{ij}-E_{ij})^2}{E_{ij}}$ and output as a matrix.
 #'
