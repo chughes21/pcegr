@@ -2,7 +2,7 @@
 
 #' The complete data log likelihood for a Poisson response
 #'
-#' This function calculates the complete data log likelihood for a count vector and time vector, given values of the parameters of a Poisson distribution.
+#' This function calculates the complete data log likelihood for a count vector and time vector, given values of the parameters of a zero-inflated Poisson distribution.
 #'
 #' @param params A numeric vector of the parameters for the distribution.
 #' @param y An integer vector of observed event counts.
@@ -87,7 +87,7 @@ em<-function(p_0,l_0,y,t,tol = 1e-10,max_iter=10000){
 #' @param max_iter An integer for the maximum number of iterations for the algorithm.
 #' @param tol A numeric which represents the minimum change in the complete data log likelihood needed to continue the algorithm.
 #'
-#' @return
+#' @return A list containing a matrix with the desired outputs for each evolution of the process, as well as vectors of the estimates for the rates and risk probabilities.
 #' @export
 #'
 #' @examples
