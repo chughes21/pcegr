@@ -7,21 +7,25 @@
 em(p_0, l_0, y, t, tol = 1e-10, max_iter = 10000)
 }
 \arguments{
-\item{p_0}{The initial value for the risk probability}
+\item{p_0}{A numeric initial value for the risk probability}
 
-\item{l_0}{The initial value for the rate}
+\item{l_0}{A numeric initial value for the rate.}
 
-\item{y}{The observed count vector}
+\item{y}{An integer vector of observed event counts.}
 
-\item{t}{The observed time vector}
+\item{t}{A numeric vector of observed times.}
 
-\item{tol}{The tolerance to stop the algorithm}
+\item{tol}{A numeric which represents the minimum change in the complete data log likelihood needed to continue the algorithm.}
 
-\item{max_iter}{The maximum number of iterations for the algorithm}
+\item{max_iter}{An integer for the maximum number of iterations for the algorithm.}
 }
 \value{
 A list containing the estimates of the risk probability and the rate, and the number of iterations necessary
 }
 \description{
 This function carries out the Expectation-Maximisation algorithm for a leaf, given initial values of the parameters and the count and time vectors.
+}
+\details{
+For a specific leaf, which is a unique evolution of the process, the event counts and observed times are used, alongside the \code{\link[=cdll]{cdll()}} function and some initial parameter values,
+to carry out the Expectation-Maximisation algorithm.
 }

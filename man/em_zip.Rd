@@ -14,21 +14,24 @@ em_zip(
 )
 }
 \arguments{
-\item{data}{The entire data set, where the observed count vector and time vector are the last two columns}
+\item{data}{A data set, where the observed count vector and time vector (if variable) are the last two columns.}
 
-\item{p_0}{The initial value for the risk value}
+\item{p_0}{A numeric initial value for the risk probability.}
 
-\item{l_0}{The initial value for the rate. If NA}
+\item{l_0}{A numeric initial value for the rate.}
 
-\item{variable_time}{An indicator of whether the observed time is uniform or variable}
+\item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).}
 
-\item{max_iter}{The tolerance to stop the algorithm}
+\item{max_iter}{An integer for the maximum number of iterations for the algorithm.}
 
-\item{tol}{The maximum number of iterations for the algorithm}
+\item{tol}{A numeric which represents the minimum change in the complete data log likelihood needed to continue the algorithm.}
 }
 \value{
-
+A list containing a matrix with the desired outputs for each evolution of the process, as well as vectors of the estimates for the rates and risk probabilities.
 }
 \description{
 This function carries out the Expectation-Maximisation algorithm across all leaves.
+}
+\details{
+For each leaf, which represents a unique evolution of the process, the \code{\link[=em]{em()}} function is applied.
 }

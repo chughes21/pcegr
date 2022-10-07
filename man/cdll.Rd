@@ -7,15 +7,21 @@
 cdll(params, y, t)
 }
 \arguments{
-\item{params}{The parameters for the distribution}
+\item{params}{A numeric vector of the parameters for the distribution.}
 
-\item{y}{The observed count vector}
+\item{y}{An integer vector of observed event counts.}
 
-\item{t}{The observed time vector}
+\item{t}{A numeric vector of observed times.}
 }
 \value{
 A list containing the likelihood value and a vector of weights for the em algorithm
 }
 \description{
-This function calculates the complete data log likelihood for a count vector and time vector, given values of the parameters of a Poisson distribution.
+This function calculates the complete data log likelihood for a count vector and time vector, given values of the parameters of a zero-inflated Poisson distribution.
+}
+\examples{
+y<-c(1,0,2,0)
+t<-c(0.5,0.7,0.8,0.3)
+params<-c(0.5,1.5)
+cdll(params,y,t)
 }
