@@ -87,12 +87,7 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
   return(diff)
 }
 
-#the pceg function - should be versatile to perform both pceg and ceg analysis
-
-#alpha and beta can be input as either vectors of the same length as number of stages, or as one scalar each
-#should have an error if not one of these
-
-#' The pceg function
+#' The PCEG function
 #'
 #' This function fits a PCEG model to a data set.
 #'
