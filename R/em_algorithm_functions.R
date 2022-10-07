@@ -12,6 +12,10 @@
 #' @export
 #'
 #' @examples
+#' y<-c(1,0,2,0)
+#' t<-c(0.5,0.7,0.8,0.3)
+#' params<-c(0.5,1.5)
+#' cdll(params,y,t)
 cdll<-function(params,y,t){
   # p <-glogitinv(params[1]) #for constraints, so pi is a prop
   #  lambda<-exp(params[-1])
