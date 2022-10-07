@@ -80,7 +80,7 @@ em<-function(p_0,l_0,y,t,tol = 1e-10,max_iter=10000){
 #'
 #' For each leaf, which represents a unique evolution of the process, the [em()] function is applied.
 #'
-#' @param data A data set, where the observed count vector and time vector are the last two columns
+#' @param data A data set, where the observed count vector and time vector (if variable) are the last two columns.
 #' @param p_0 A numeric initial value for the risk value.
 #' @param l_0 A numeric initial value for the rate.
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
