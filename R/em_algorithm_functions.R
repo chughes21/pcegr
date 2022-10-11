@@ -37,14 +37,14 @@ cdll<-function(params,y,t){
 #' @param l_0 A numeric initial value for the rate.
 #' @param y An integer vector of observed event counts.
 #' @param t A numeric vector of observed times.
-#' @param tol A numeric which represents the minimum change in the complete data log likelihood needed to continue the algorithm.
 #' @param max_iter An integer for the maximum number of iterations for the algorithm.
+#' @param tol A numeric which represents the minimum change in the complete data log likelihood needed to continue the algorithm.
 #'
 #' @return A list containing the estimates of the risk probability and the rate, and the number of iterations necessary
 #' @export
 #'
 #' @examples
-em<-function(p_0,l_0,y,t,tol = 1e-10,max_iter=10000){
+em<-function(p_0,l_0,y,t,max_iter=10000,tol = 1e-10){
 
   n<-length(y)
 
@@ -138,7 +138,7 @@ em_zip<-function(data,p_0=NA,l_0=NA, variable_time = TRUE, max_iter = 10000,tol=
     prob<-p_0[i]
     lambda<-l_0[i]
 
-    result<-em(prob,lambda,y,t,tol=tol,max_iter=max_iter)
+    result<-em(prob,lambda,y,t,max_iter=max_iter,tol=tol)
     lambda<-result$lambda
     prob<-result$p
 
