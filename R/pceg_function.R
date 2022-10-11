@@ -96,7 +96,7 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #' @param exampledata A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.
 #' @param equivsize A numeric value specifying the equivalent sample size for the prior, a measure of confidence in the prior.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
-#' @param poisson_time_variable A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
+#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #' @param gamma_alpha A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.
 #' @param gamma_beta A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.
@@ -113,14 +113,14 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #' @export
 #'
 #' @examples
-pceg<-function(exampledata=exampledata ,equivsize=3,  poisson_response = FALSE, poisson_time_variable = FALSE, zip=FALSE,
+pceg<-function(exampledata=exampledata ,equivsize=3,  poisson_response = FALSE, variable_time = FALSE, zip=FALSE,
                         gamma_alpha =1, gamma_beta = 2,structural_zero = FALSE, var_disc = 0, disc_length = 0,
                         restrict = FALSE, mirror = FALSE, cat_limit=0){
 
   no_disc_length_spec<-(disc_length == 0) #if discretisation is chosen but no interval length given
   cat_limit_ind<-(cat_limit>0)
 
-  if(!poisson_response & poisson_time_variable){
+  if(!poisson_response & variable_time){
     stop("Variable time requires a Poisson response")
   }
 
@@ -137,7 +137,7 @@ pceg<-function(exampledata=exampledata ,equivsize=3,  poisson_response = FALSE, 
   }
 
 
-  numbvariables<-dim(exampledata)[2] - 1*poisson_time_variable #this means if there is a variable time, it must come last
+  numbvariables<-dim(exampledata)[2] - 1*variable_time #this means if there is a variable time, it must come last
   numbcat <-sapply(exampledata[,1:numbvariables],FUN=nlevels) #number of categories at each level
   numb<-c(1,cumprod(numbcat[1:(numbvariables-1)])) #number of nodes at each level
 
@@ -221,7 +221,7 @@ pceg<-function(exampledata=exampledata ,equivsize=3,  poisson_response = FALSE, 
       v<-data_sum[k,1:(numbvariables-1)]
       ind<-which(row.match(exampledata[,1:(numbvariables-1)],v)==1 )
       data_counts[[k]]<-exampledata[ind,-(1:(numbvariables-1))]
-      if(!poisson_time_variable){
+      if(!variable_time){
         len<-length(data_counts[[k]])
         data_counts[[k]]<-cbind(data_counts[[k]],rep(1,len))
       }

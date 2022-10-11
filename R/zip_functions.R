@@ -76,7 +76,7 @@ state_imputer<-function(data,lambda=1,prob=1,variable_time=TRUE,stoch=TRUE,all_r
 #' @param iter The number of iterations for the Gibbs sampler or Expectation-Maximisation algorithm.
 #' @param equivsize A numeric value specifying the equivalent sample size for the prior, a measure of confidence in the prior.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
-#' @param poisson_time_variable A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
+#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param stoch_imputation A logical value indicating whether stochastic (TRUE) or deterministic (FALSE) imputation should be used.
 #' @param gamma_alpha A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.
 #' @param gamma_beta A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.
@@ -98,14 +98,14 @@ state_imputer<-function(data,lambda=1,prob=1,variable_time=TRUE,stoch=TRUE,all_r
 #'
 #' @examples
 zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response = TRUE,
-                      poisson_time_variable = FALSE, stoch_imputation = TRUE, gamma_alpha =1, gamma_beta = 2, beta_c = 1, beta_d = 1,
+                      variable_time = FALSE, stoch_imputation = TRUE, gamma_alpha =1, gamma_beta = 2, beta_c = 1, beta_d = 1,
                       p_0 = NA, l_0 = NA, tol=1e-10, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
 
   if(!(method %in% c("Gibbs","nlm","EM","mle","mm"))){
     stop("Unknown estimation method chosen - Please choose either Gibbs, nlm or EM")
   }
 
-  if((method %in% c("mle","mm")) & poisson_time_variable){
+  if((method %in% c("mle","mm")) & variable_time){
     stop(paste0("The ",method," method is only available for uniform time"))
   }
 
@@ -113,43 +113,43 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
     warning(paste0("Nonzero amount of iterations chosen for ",method," method"))
   }
 
-  if(stoch_imputation & !poisson_time_variable){
+  if(stoch_imputation & !variable_time){
     warning("Stochastic Imputation unnecessary for uniform time - deterministic chosen instead")
     stoch_imputation <- FALSE }
 
   if(method=="Gibbs"){
-    out<-gibbs_zip(data,N=iter,poisson_time_variable,gamma_alpha,gamma_beta,beta_c,beta_d)
+    out<-gibbs_zip(data,N=iter,variable_time,gamma_alpha,gamma_beta,beta_c,beta_d)
     le<-unlist(lapply(out$lambda,mean))
     pe<-unlist(lapply(out$prob,mean))
   }
 
   if(method=="nlm"){
-    out<-nlm_zip(data,poisson_time_variable)
+    out<-nlm_zip(data,variable_time)
     pe<-out$prob
     le<-out$lambda
   }
 
   if(method=="EM"){
-    out<-em_zip(data,p_0=p_0,l_0=l_0,variable_time=poisson_time_variable,max_iter=iter,tol=tol)
+    out<-em_zip(data,p_0=p_0,l_0=l_0,variable_time=variable_time,max_iter=iter,tol=tol)
     pe<-out$prob
     le<-out$lambda
   }
 
   if(method=="mle"){
-    out<-mle_zip(data,time_input = poisson_time_variable)
+    out<-mle_zip(data,time_input = variable_time)
     pe<-out$prob
     le<-out$lambda
   }
 
   if(method=="mm"){
-    out<-mm_zip(data,time_input = poisson_time_variable)
+    out<-mm_zip(data,time_input = variable_time)
     pe<-out$prob
     le<-out$lambda
   }
 
-  data.adj<-state_imputer(data,lambda=le,prob=pe,variable_time = poisson_time_variable, stoch = stoch_imputation)
+  data.adj<-state_imputer(data,lambda=le,prob=pe,variable_time = variable_time, stoch = stoch_imputation)
 
-  return(pceg(data.adj,equivsize=equivsize, poisson_response=poisson_response, poisson_time_variable = poisson_time_variable, zip=TRUE, gamma_alpha=gamma_alpha, gamma_beta=gamma_beta, var_disc=var_disc, disc_length=disc_length, restrict=restrict, mirror=mirror, cat_limit=cat_limit))
+  return(pceg(data.adj,equivsize=equivsize, poisson_response=poisson_response, variable_time = variable_time, zip=TRUE, gamma_alpha=gamma_alpha, gamma_beta=gamma_beta, var_disc=var_disc, disc_length=disc_length, restrict=restrict, mirror=mirror, cat_limit=cat_limit))
 
 }
 
@@ -169,7 +169,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @param scatter A logical value indicating whether the plot should be in the form of a scatter plot (TRUE) or not (FALSE).
 #' @param equivsize A numeric value specifying the equivalent sample size for the prior, a measure of confidence in the prior.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
-#' @param poisson_time_variable A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
+#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param stoch_imputation A logical value indicating whether stochastic (TRUE) or deterministic (FALSE) imputation should be used.
 #' @param gamma_alpha A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.
 #' @param gamma_beta A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.
@@ -191,7 +191,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @examples
 zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, plot_ranks = TRUE, plot_rates = TRUE,
                            plot_probs = FALSE, hist = FALSE, violin = FALSE, scatter = FALSE, equivsize=2,
-                           poisson_response = TRUE, poisson_time_variable = FALSE,stoch_imputation=TRUE, gamma_alpha = 1,
+                           poisson_response = TRUE, variable_time = FALSE,stoch_imputation=TRUE, gamma_alpha = 1,
                            gamma_beta = 2, beta_c = 1, beta_d = 1,p0=NA,l0=NA,tol=1e-10,
                            var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
   if(sum(hist,scatter,violin)>1 ){
@@ -206,7 +206,7 @@ zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, pl
     stop("Can't Return Rates and State Probabilities - Choose one ")
   }
 
-  n1<-dim(data)[2] - 1 - 1*poisson_time_variable#if there are variable times, they will be an extra column
+  n1<-dim(data)[2] - 1 - 1*variable_time#if there are variable times, they will be an extra column
   data_levels<-sapply(data[,1:n1],nlevels)
   data_levels<-c(data_levels,risk = 2)
   n2<-n1+1 #the number of levels after including the probability of risk
@@ -228,7 +228,7 @@ zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, pl
 
   for(j in 1:iter_total){
     ceg.temp<-zipceg(data,method=method,iter = iter_f, equivsize=equivsize, poisson_response = poisson_response,
-                          poisson_time_variable = poisson_time_variable , stoch_imputation = stoch_imputation,
+                          variable_time = variable_time , stoch_imputation = stoch_imputation,
                           gamma_alpha =gamma_alpha, gamma_beta = gamma_beta, beta_c = beta_c, beta_d = beta_d,
                           p_0 = p0, l_0 = l_0, tol=tol, var_disc = var_disc, disc_length = disc_length, restrict = restrict, mirror = mirror)
     risk_stages<-seq(from = start_rates+1, by =2,length.out = num)

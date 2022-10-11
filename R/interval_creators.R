@@ -6,15 +6,15 @@
 #' @param ceg A ceg model fit to the data set, as produced by CEG.AHC.POISS.
 #' @param ci A numeric value between 0 and 1 specifying the perecentage confidence for the highest density interval.
 #' @param N An integer specifying the number of iterations for the empirical functions used.
-#' @param poisson_time_variable A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
+#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #'
 #' @return A series of highest density intervals for each parameter.
 #' @export
 #'
 #' @examples
-hdi_gamma_extractor<-function(data,ceg,ci=0.95,N=10000,poisson_time_variable=TRUE,zip=TRUE){
-  summ<-value_extractor(data=data,ceg=ceg,poisson_time_variable = poisson_time_variable,zip=zip)
+hdi_gamma_extractor<-function(data,ceg,ci=0.95,N=10000,variable_time=TRUE,zip=TRUE){
+  summ<-value_extractor(data=data,ceg=ceg,variable_time = variable_time,zip=zip)
   shapes<-summ[,1]+summ[,3]
   scales<-1/(summ[,2]+summ[,4])
   n=length(shapes)
@@ -37,19 +37,19 @@ hdi_gamma_extractor<-function(data,ceg,ci=0.95,N=10000,poisson_time_variable=TRU
 #' @param N An integer specifying the number of iterations for the empirical functions used.
 #' @param level_rel_final A non-positive integer indicating where the desired variable is relative to the response variable.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
-#' @param poisson_time_variable A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
+#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #'
 #' @return A series of highest density intervals for each parameter of interest.
 #' @export
 #'
 #' @examples
-hdi_beta_extractor<-function(data,ceg,ci=0.95,N=10000,level_rel_final=-1,poisson_response=TRUE,poisson_time_variable = TRUE,zip=TRUE){
-  summ<-value_extractor(data=data,ceg=ceg,level_rel_final = level_rel_final,poisson_response = poisson_response,poisson_time_variable = poisson_time_variable,zip=zip)
+hdi_beta_extractor<-function(data,ceg,ci=0.95,N=10000,level_rel_final=-1,poisson_response=TRUE,variable_time = TRUE,zip=TRUE){
+  summ<-value_extractor(data=data,ceg=ceg,level_rel_final = level_rel_final,poisson_response = poisson_response,variable_time = variable_time,zip=zip)
   if(level_rel_final == 0 & poisson_response){
     stop("Beta Distribution not for Poisson Response - Use Gamma")
   }
-  n=dim(data)[2]-1*poisson_time_variable+level_rel_final
+  n=dim(data)[2]-1*variable_time+level_rel_final
   p=nlevels(data[,n])
 
   a<-summ[,1:p]

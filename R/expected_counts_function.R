@@ -14,7 +14,7 @@
 #' @param ceg A ceg model fit to the data set, as produced by pceg().
 #' @param limit An integer where the number of event counts greater than or equal to this integer are grouped together.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
-#' @param poisson_time_variable A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
+#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
 #' @param posterior A logical value indicating whether the estimates of the parameters used should be the posterior estimate (TRUE) or sample estimate (FALSE).
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #'
@@ -22,9 +22,9 @@
 #' @export
 #'
 #' @examples
-expected_count_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,poisson_time_variable=TRUE,posterior = TRUE, zip=TRUE){
+expected_count_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE){
 
-  if(!poisson_response & poisson_time_variable){
+  if(!poisson_response & variable_time){
     stop("Variable Poisson Time Requires Poisson Response")
   }
 
@@ -32,7 +32,7 @@ expected_count_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,poiss
     stop("Zero Inflated Poisson Requires Poisson Response")
   }
 
-  path_details<-covariate_calculator(data,poisson_time_variable) #this is in the component wise analysis functions
+  path_details<-covariate_calculator(data,variable_time) #this is in the component wise analysis functions
   data_use<-path_details$data_use
   n<-path_details$num_var
   p<-path_details$num_alpha
@@ -73,8 +73,8 @@ expected_count_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,poiss
   ind_probs<-ind[ind>=start_probs & ind<=end_probs]
   ind_rates<-ind[ind>=start_rates & ind<=end_rates]
 
-  rates<-value_extractor(data,ceg,level_rel_final=0,poisson_response=poisson_response,poisson_time_variable=poisson_time_variable,posterior=posterior,zip=zip)
-  probs<-value_extractor(data,ceg,level_rel_final=-1,poisson_response,poisson_time_variable,posterior=posterior,zip) #if zip=FALSE, we'll ignore this anyway
+  rates<-value_extractor(data,ceg,level_rel_final=0,poisson_response=poisson_response,variable_time=variable_time,posterior=posterior,zip=zip)
+  probs<-value_extractor(data,ceg,level_rel_final=-1,poisson_response,variable_time,posterior=posterior,zip) #if zip=FALSE, we'll ignore this anyway
 
   rates<-rates[,dim(rates)[2]] #if start inputting true values, this may be incorrect
   probs<-probs[,dim(probs)[2]]
@@ -183,7 +183,7 @@ expected_count_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,poiss
 
     y<-data_use[ind,n+1]
 
-    if(poisson_time_variable){
+    if(variable_time){
       t<-data_use[ind,n+2]
     }else{
       t<-rep(1,length(ind))

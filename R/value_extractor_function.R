@@ -11,7 +11,7 @@
 #' @param ceg A ceg model fit to the data set, as produced by pceg().
 #' @param level_rel_final A non-positive integer indicating where the desired variable is relative to the response variable.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
-#' @param poisson_time_variable A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
+#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param posterior A logical value indicating whether the estimates of the posterior (TRUE) or sample (FALSE) expected value should be calculated.
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #' @param true_value A numeric vector specifying the true values of the parameters for comparison, if known. If unknown, this will be NA.
@@ -20,13 +20,13 @@
 #' @export
 #'
 #' @examples
-value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,poisson_time_variable=TRUE,posterior = TRUE, zip=TRUE, true_value = NA){
+value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, true_value = NA){
 
   if(!poisson_response & zip){
     stop("Zero Inflated Poisson Requires Poisson Response")
   }
 
-  n<-dim(data)[2] - 1 - 1*poisson_time_variable#if there are variable times, they will be an extra column
+  n<-dim(data)[2] - 1 - 1*variable_time#if there are variable times, they will be an extra column
   data_levels<-sapply(data[,1:n],nlevels)
   if(zip){
     data_levels<-c(data_levels,risk = 2)}
