@@ -1,15 +1,14 @@
 Package: pcegr
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Poisson Chain Event Graphs and Zero Inflated Poisson Chain Event Graphs
+Version: 0.0.1.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Conor",
+           family = "Hughes",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
+           email = "conor.hughes@warwick.ac.uk",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Description: This package contains functions to fit Poisson Chain EVent Graphs (PCEGs) and Zero Inflated PCEGs (ZIPCEGs). The functions can be used when observation time is uniform or variable. If observation time is uniform, it can be either excluded or included as equal for each individual. If it is variable, the time must be the last column in the data set. 
+License: usethis:use_mit_license()
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
