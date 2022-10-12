@@ -3,7 +3,7 @@
 #' This function imputes the latent risk states based on the data, the estimated parameters, and the choice of imputation method.
 #'
 #' @param data A data set, where the observed count vector and time vector (if variable) are the last two columns
-#' @param lambda A numeric vector of Poisson rates used to impute the states.
+#' @param lambda A numeric vector of the Poisson rates used to impute the states.
 #' @param prob A numeric vector of the risk probabilities used to impute the states.
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
 #' @param stoch A logical value indicating whether stochastic (TRUE) or deterministic (FALSE) imputation should be used.
