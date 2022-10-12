@@ -92,3 +92,6 @@ A list containing: a matrix of the estimated rates for each leaf, a matrix of th
 \description{
 This function performs the ZIPCEG model selection a specified number of times, producing plots of the rates and stage ranks, and selecting the model with the largest log marginal likelihood.
 }
+\examples{
+zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=FALSE,violin=TRUE)
+}

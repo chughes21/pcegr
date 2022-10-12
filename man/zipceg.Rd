@@ -73,3 +73,6 @@ the comparison set of stages left to be merged, a list of the stages merged, and
 \description{
 This function fits a ZIPCEG model to the chosen data set, based on chosen methods of parameter estimation and state imputation.
 }
+\examples{
+ zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
+}

@@ -58,3 +58,6 @@ This function fits a PCEG model to a data set.
 \details{
 This function takes a data set, a prior structure, and various other inputs to fit a PCEG model. It is flexible enough to fit a vanilla CEG, and perform variable discretisation methods.
 }
+\examples{
+pceg(knee_pain_obs,2,TRUE,TRUE)
+}
