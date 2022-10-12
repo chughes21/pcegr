@@ -112,7 +112,7 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #' the comparison set of stages left to be merged, a list of the stages merged, and the log marginal likelihood of the final model.
 #' @export
 #'
-#' @examples
+#' @examples pceg(knee_pain_obs,2,TRUE,TRUE)
 pceg<-function(exampledata=exampledata ,equivsize=3,  poisson_response = FALSE, variable_time = FALSE, zip=FALSE,
                         gamma_alpha =1, gamma_beta = 2,structural_zero = FALSE, var_disc = 0, disc_length = 0,
                         restrict = FALSE, mirror = FALSE, cat_limit=0){

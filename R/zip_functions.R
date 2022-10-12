@@ -96,7 +96,7 @@ state_imputer<-function(data,lambda=1,prob=1,variable_time=TRUE,stoch=TRUE,all_r
 #' the comparison set of stages left to be merged, a list of the stages merged, and the log marginal likelihood of the final model.
 #' @export
 #'
-#' @examples
+#' @examples  zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
 zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response = TRUE,
                       variable_time = FALSE, stoch_imputation = TRUE, gamma_alpha =1, gamma_beta = 2, beta_c = 1, beta_d = 1,
                       p_0 = NA, l_0 = NA, tol=1e-10, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
@@ -188,7 +188,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @return A list containing: a matrix of the estimated rates for each leaf, a matrix of the ranks for each leaf, a numeric value of the log marginal likelihood of the MAP model, and the MAP model itself.
 #' @export
 #'
-#' @examples
+#' @examples zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=FALSE,violin=TRUE)
 zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, plot_ranks = TRUE, plot_rates = TRUE,
                            plot_probs = FALSE, hist = FALSE, violin = FALSE, scatter = FALSE, equivsize=2,
                            poisson_response = TRUE, variable_time = FALSE,stoch_imputation=TRUE, gamma_alpha = 1,
