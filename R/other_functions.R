@@ -23,3 +23,16 @@ time_minimiser<-function(data,t_min){
   data[ind,n]<-t_min
   return(data)
 }
+
+#' The Zero Checker
+#'
+#' A function that checks how many elements of a given vector are zero.
+#'
+#' @param v A numeric vector
+#'
+#' @return An integer how how many elements of the vector are zero.
+#'
+#' @examples zero_checker(c(0,2,0,1,1))
+zero_checker<-function(v){
+  return(sum(v==0))
+}

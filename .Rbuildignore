@@ -1,4 +1,4 @@
 ^pcegr\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$
-R/workflow.R
+workflow.R

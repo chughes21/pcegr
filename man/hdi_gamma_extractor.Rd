@@ -9,7 +9,7 @@ hdi_gamma_extractor(
   ceg,
   ci = 0.95,
   N = 10000,
-  poisson_time_variable = TRUE,
+  variable_time = TRUE,
   zip = TRUE
 )
 }
@@ -22,7 +22,7 @@ hdi_gamma_extractor(
 
 \item{N}{An integer specifying the number of iterations for the empirical functions used.}
 
-\item{poisson_time_variable}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).}
+\item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).}
 
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
 }

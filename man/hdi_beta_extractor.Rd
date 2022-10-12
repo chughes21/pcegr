@@ -11,7 +11,7 @@ hdi_beta_extractor(
   N = 10000,
   level_rel_final = -1,
   poisson_response = TRUE,
-  poisson_time_variable = TRUE,
+  variable_time = TRUE,
   zip = TRUE
 )
 }
@@ -28,7 +28,7 @@ hdi_beta_extractor(
 
 \item{poisson_response}{A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).}
 
-\item{poisson_time_variable}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).}
+\item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).}
 
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
 }

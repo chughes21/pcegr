@@ -10,7 +10,7 @@ zipceg(
   iter = 10000,
   equivsize = 2,
   poisson_response = TRUE,
-  poisson_time_variable = FALSE,
+  variable_time = FALSE,
   stoch_imputation = TRUE,
   gamma_alpha = 1,
   gamma_beta = 2,
@@ -37,7 +37,7 @@ zipceg(
 
 \item{poisson_response}{A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).}
 
-\item{poisson_time_variable}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.}
+\item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.}
 
 \item{stoch_imputation}{A logical value indicating whether stochastic (TRUE) or deterministic (FALSE) imputation should be used.}
 

@@ -9,7 +9,7 @@ expected_count_calculator(
   ceg,
   limit = 4,
   poisson_response = TRUE,
-  poisson_time_variable = TRUE,
+  variable_time = TRUE,
   posterior = TRUE,
   zip = TRUE
 )
@@ -23,7 +23,7 @@ expected_count_calculator(
 
 \item{poisson_response}{A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).}
 
-\item{poisson_time_variable}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).}
+\item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).}
 
 \item{posterior}{A logical value indicating whether the estimates of the parameters used should be the posterior estimate (TRUE) or sample estimate (FALSE).}
 
