@@ -16,12 +16,12 @@ covariate_calculator<-function(data,variable_time){
   l1<-lapply(data_levels,vec_from)
   l2<-lapply(data_levels,vec_to)
   X<-expand.grid(l1) #this is the different covariate combinations
-  X<-cbind(X,nonzero=apply(X,1,nonzero_counter))
+  X<-cbind(X,nonzero=apply(X,1,nonzero_checker))
   X=X[order(X$nonzero,decreasing = TRUE),] #ignore the far left hand side labels
   # X_fact<-X #will define as factor in later for loop
 
   alpha_ind<-expand.grid(l2) #other way around because we will solve the alphas this way
-  alpha_ind<-cbind(alpha_ind,nonzero=apply(alpha_ind,1,nonzero_counter)) #changed because what if the variable has value 2 (3 levels)
+  alpha_ind<-cbind(alpha_ind,nonzero=apply(alpha_ind,1,nonzero_checker)) #changed because what if the variable has value 2 (3 levels)
   alpha_ind<-cbind(alpha_ind,ind=rep(0,p)) #placeholder for the label, now need to calculate the labels
   #can maybe remove now
   possible_alpha<-c(0:(p-1))
@@ -112,10 +112,10 @@ covariate_calculator<-function(data,variable_time){
     }
   }
 
-  X<-cbind(new_X,nonzero=apply(new_X,1,nonzero_counter)) #keep around for later
+  X<-cbind(new_X,nonzero=apply(new_X,1,nonzero_checker)) #keep around for later
   X_fact<-X
 
-  alpha_ind<-cbind(new_alpha_ind,nonzero=apply(new_alpha_ind,1,nonzero_counter))
+  alpha_ind<-cbind(new_alpha_ind,nonzero=apply(new_alpha_ind,1,nonzero_checker))
   alpha_ind=alpha_ind[order(alpha_ind$nonzero,decreasing=FALSE),] #ignore the far left hand side labels
   alpha_ind<-cbind(alpha_ind,ind=c(0:(p-1)))
 
