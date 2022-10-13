@@ -14,6 +14,8 @@ refactored_tree_matrix<-function(data,variable_time){
   n<-dim(data)[2] - 1 - 1*variable_time#if there are variable times, they will be an extra column
   data_levels<-sapply(data[,1:n],nlevels)
   p<-prod(data_levels)
+
+  l1<-lapply(data_levels,vec_from)
   names.mat<-expand.grid(l1)
 
   Z<-lapply(data_levels,vec_from)
