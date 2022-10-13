@@ -27,3 +27,5 @@ expected_count_calculator(knee_pain_obs,pceg.obs,zip=FALSE)
 zipceg.obs<-zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
 zipceg.obs$result
 expected_count_calculator(knee_pain_obs,zipceg.obs)
+
+zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=FALSE,violin=TRUE,variable_time=TRUE)
