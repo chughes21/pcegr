@@ -18,3 +18,12 @@ devtools::document()
 devtools::load_all()
 usethis::use_r("prior_function")
 usethis::use_r("covariate_calculator_function")
+
+devtools::load_all()
+pceg.obs<-pceg(knee_pain_obs,2,TRUE,TRUE)
+pceg.obs$result
+expected_count_calculator(knee_pain_obs,pceg.obs,zip=FALSE)
+
+zipceg.obs<-zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
+zipceg.obs$result
+expected_count_calculator(knee_pain_obs,zipceg.obs)
