@@ -1,3 +1,56 @@
+#' The Merged Stage Finder
+#'
+#' A function to find which stages have merged with a given unique stage from the merging details of a CEG.
+#'
+#' @param unique_stage An integer value
+#' @param M An integer matrix detailing the merging present in a CEG.
+#'
+#' @return An integer vector detailing the stages that have merged with the unique stage given
+#'
+#' @examples
+merged_stage_finder<-function(unique_stage,M){
+  M_unique<-as.matrix(M[,which(M[1,]==unique_stage)])
+  stages_merged<-c(unique_stage,M_unique[2,])
+  stages_merged<-as.vector(sort(stages_merged,decreasing=FALSE))
+}
+
+#' The Merged List Extractor
+#'
+#' A function to find a list of the stages which have merged given the merging details of a CEG.
+#'
+#' @param merged A matrix specifying the merging present in a CEG.
+#'
+#' @return A list of intger vectors detailing the stages which have merged.
+#'
+#' @examples
+merged_list_extractor<-function(merged){
+  level<-max(merged[3,])
+  merged_stages<-merged[,which(merged[3,]==level)]
+  stages_top<-unique(merged_stages[1,])
+  stages_bottom<-unique(merged_stages[2,])
+
+  stage_ref<-stages_bottom[which(sapply(stages_bottom,FUN=function(x) vec_in(x,stages_top))==TRUE)]
+
+  num_ref<-length(stage_ref)
+
+  merged_stages_adj<-merged_stages
+
+  for(i in 1:num_ref){
+
+    col_ref_top<-which(merged_stages[1,]==stage_ref[i])
+    col_ref_bottom<-which(merged_stages[2,]==stage_ref[i])
+    new_top_stage<-merged_stages[1,col_ref_bottom]
+    merged_stages_adj[1,col_ref_top]<-new_top_stage
+
+  }
+
+  stages_top_adj<-as.vector(sort(unique(merged_stages_adj[1,]),decreasing=FALSE))
+
+  output<-lapply(stages_top_adj,function(x) merged_stage_finder(x,merged_stages_adj))
+  return(output)
+}
+
+
 #' The expected count function.
 #'
 #' A function to test the goodness of fit of a pceg model to a data set.
