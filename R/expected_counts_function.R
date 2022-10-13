@@ -50,6 +50,21 @@ merged_list_extractor<-function(merged){
   return(output)
 }
 
+#' The vec_in function
+#'
+#' A function to check whether a given value is in a vector
+#'
+#' @param x A numeric value
+#' @param v A numeric vector
+#'
+#' @return A logical value indicating whether the given value was in the vector (TRUE) or not (FALSE)
+#'
+#' @examples vec_in(7,c(1:9))
+#' vec_in(10,c(1:9))
+vec_in<-function(x,v){
+  check<-x %in% v
+  return(check)
+}
 
 #' The expected count function.
 #'
