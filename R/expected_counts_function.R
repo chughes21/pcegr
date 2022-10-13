@@ -1,7 +1,3 @@
-#expected count function
-
-
-
 #' The expected count function.
 #'
 #' A function to test the goodness of fit of a pceg model to a data set.

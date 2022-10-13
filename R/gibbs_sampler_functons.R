@@ -1,20 +1,3 @@
-#' The vec_from function
-#'
-#' A function to create a descending vector of natural numbers
-#'
-#' @param x A positive integer
-#'
-#' @return A vector of integers from $x-1$ to 0.
-#' @export
-#'
-#' @examples
-#' vec_from(7)
-vec_from<-function(x){
-  return(c((x-1):0))
-}
-
-
-
 #' The Path refactor function
 #'
 #' This function takes the categorical covariates from a data set and refactors each one from 0 to the number of levels - 1.
@@ -54,8 +37,6 @@ path_refactor<-function(data,n,data_levels){
   }
   return(data_out)
 }
-
-
 
 #' The Gibbs Sampler
 #'
