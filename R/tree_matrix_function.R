@@ -28,6 +28,6 @@ refactored_tree_matrix<-function(data,variable_time){
 
   data_refactor<-path_refactor(data,n,data_levels)
 
-  return(list(data_use=data_use,num_var=n,p=p,data_levels=data_levels, tree_matrix=tree_matrix))
+  return(list(data_use=data_refactor,num_var=n,p=p,data_levels=data_levels, tree_matrix=tree_matrix))
 
 }
