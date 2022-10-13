@@ -28,10 +28,10 @@ expected_count_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,varia
     stop("Zero Inflated Poisson Requires Poisson Response")
   }
 
-  path_details<-covariate_calculator(data,variable_time)
+  path_details<-refactored_tree_matrix(data,variable_time)
   data_use<-path_details$data_use
   n<-path_details$num_var
-  p<-path_details$num_alpha
+  p<-path_details$p
   tree<-path_details$tree_matrix
   data_levels<-path_details$data_levels
   if(zip){
@@ -160,7 +160,6 @@ expected_count_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,varia
 
   }
 
-  tree<-cbind(tree,exp_count=0,act_count=0,chi_comp=0)
   obs.mat<-matrix(nrow=p,ncol=limit+1)
   exp.mat<-matrix(nrow=p,ncol=limit+1)
 
