@@ -82,7 +82,7 @@ vec_in<-function(x,v){
 #' @param posterior A logical value indicating whether the estimates of the parameters used should be the posterior estimate (TRUE) or sample estimate (FALSE).
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #'
-#' @return A list of three matrices. The first matrix is the observed count matrix, the second is the expected count matrix, and the third is the chi-squared contribution matrix.
+#' @return A list of three matrices and a numeric value. The first matrix is the observed count matrix, the second is the expected count matrix, and the third is the chi-squared contribution matrix.The numeric value is the sum of the chi square contributions.
 #' @export
 #'
 #' @examples
@@ -268,6 +268,6 @@ expected_count_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,varia
     chi.mat<-(exp.mat-obs.mat)^2/exp.mat
   }
 
-  return(list(obs=obs.mat,exp=exp.mat,chi_sq=chi.mat))
+  return(list(obs=obs.mat,exp=exp.mat,chi.mat=chi.mat,chi_sq = sum(chi.mat)))
 
 }
