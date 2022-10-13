@@ -28,7 +28,7 @@ expected_count_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,varia
     stop("Zero Inflated Poisson Requires Poisson Response")
   }
 
-  path_details<-covariate_calculator(data,variable_time) #this is in the component wise analysis functions
+  path_details<-covariate_calculator(data,variable_time)
   data_use<-path_details$data_use
   n<-path_details$num_var
   p<-path_details$num_alpha
