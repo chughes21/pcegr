@@ -190,7 +190,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @examples zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=FALSE,violin=TRUE)
 zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, plot_rates = TRUE,
                            plot_probs = FALSE, hist = FALSE, violin = FALSE, scatter = FALSE, equivsize=2,
-                           poisson_response = TRUE, variable_time = FALSE,stoch_imputation=TRUE, gamma_alpha = 1,
+                           poisson_response = TRUE, variable_time = FALSE,stoch_imputation=TRUE, posterior = TRUE, gamma_alpha = 1,
                            gamma_beta = 2, beta_c = 1, beta_d = 1,p0=NA,l0=NA,tol=1e-10,
                            var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
   if(sum(hist,scatter,violin)>1 ){
@@ -201,60 +201,162 @@ zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, pl
     stop("Can't Return Rates and State Probabilities - Choose one ")
   }
 
-  n1<-dim(data)[2] - 1 - 1*variable_time#if there are variable times, they will be an extra column
-  data_levels<-sapply(data[,1:n1],nlevels)
-  data_levels<-c(data_levels,risk = 2)
-  n2<-n1+1 #the number of levels after including the probability of risk
-  p<-prod(data_levels)
+  path_details<-refactored_tree_matrix(data,variable_time)
+  n<-path_details$num_var
+  p<-path_details$p
+  tree<-path_details$tree_matrix
+  data_levels<-path_details$data_levels
+  data_levels_zip<-c(data_levels,risk=2)
 
-  start_rates<-sum(cumprod(data_levels)[1:n1])+2 #+ 1 for s0, +1 for next situation
-  end_rates<-sum(cumprod(data_levels))+1 #+1 for s0
+  n_zip<-n+1
 
-  start_probs<- sum(cumprod(data_levels)[1:(n1-1)])+2 #the risk state prob situations
-  end_probs<-start_rates-1
+  if(plot_rates){
+  rates<-matrix(nrow=iter_total,ncol=p)
+  }
 
-  num<-p/2
+  if(plot_probs){
+  probs<-matrix(nrow=iter_total,ncol=p)
+  }
 
-  rates<-matrix(nrow=iter_total,ncol=num)
-  probs<-matrix(nrow=iter_total,ncol=num)
+  if(n>1){
+
+    start_probs<-sum(cumprod(data_levels)[1:(n-1)])+2 #1 for s0, 1 for next situation
+    end_probs<-sum(cumprod(data_levels)[1:n]) + 1 #+1 for s0
+
+    start_rates<-sum(cumprod(data_levels_zip)[1:(n_zip-1)])+2 #1 for s0, 1 for next situation
+    end_rates<-sum(cumprod(data_levels_zip)[1:n_zip]) + 1
+
+  }else if(n == 1){
+    start_probs<-2
+    end_probs<-1+data_levels[1]
+
+    start_rates<-end+1
+    end_rates<- 1+ sum(cumprod(data_levels_zip)[1:n_zip])
+
+  }else{
+    start<-1
+    end<-1
+
+    start_zip<-2
+    end_zip<-3 #this might not be right
+
+  }
 
   score<-numeric(iter_total)
 
-  for(j in 1:iter_total){
+  for(i in 1:iter_total){
     ceg.temp<-zipceg(data,method=method,iter = iter_f, equivsize=equivsize, poisson_response = poisson_response,
                           variable_time = variable_time , stoch_imputation = stoch_imputation,
                           gamma_alpha =gamma_alpha, gamma_beta = gamma_beta, beta_c = beta_c, beta_d = beta_d,
                           p_0 = p0, l_0 = l_0, tol=tol, var_disc = var_disc, disc_length = disc_length, restrict = restrict, mirror = mirror)
-    risk_stages<-seq(from = start_rates+1, by =2,length.out = num)
-    prob_stages<-seq(from = start_probs,to=end_probs)
-    merged<-ceg.temp$merged
-    merged_rates<-merged[,which(merged[3,]==n2)]
-    merged_probs<-merged[,which(merged[3,]==n1)]
-    data.mat<-matrix(nrow=num,ncol=7)
-    data.mat[,1]<-1:num
-    colnames<-c("leaf","y","t","prior_a","prior_b","rate","prob")
-    for(i in 1:num){
-      data.mat[i,2:3]<-ceg.temp$data[[risk_stages[i]]]
-      data.mat[i,4:5]<-ceg.temp$prior[[risk_stages[i]]]
-      data.mat[i,6]<-sum(data.mat[i,c(2,4)])/sum(data.mat[i,c(3,5)])
-    }
-    ind<-which(is.na(data.mat[,2]))
-    for(k in ind){
-      ref1<-merged[1,which(merged[2,]==risk_stages[k])]
-      ref2<-which(risk_stages==ref1)
-      data.mat[k,-1]=data.mat[ref2,-1]
-    }
-    rates[j,]<-data.mat[,6]
-    score[j]<-ceg.temp$lik
 
-    if(j==1){
+    ind<-ceg.temp$stages
+    ind_probs<-ind[ind>=start_probs & ind<=end_probs]
+    ind_rates<-ind[ind>=start_rates & ind<=end_rates]
+
+    rates.temp<-value_extractor(data,ceg.temp,level_rel_final=0,poisson_response=poisson_response,variable_time=variable_time,posterior=posterior,zip=TRUE)
+    probs.temp<-value_extractor(data,ceg.temp,level_rel_final=-1,poisson_response,variable_time,posterior=posterior,zip=TRUE) #if zip=FALSE, we'll ignore this anyway
+
+    rates.temp<-rates.temp[,dim(rates.temp)[2]] #if start inputting true values, this may be incorrect
+    probs.temp<-probs.temp[,dim(probs.temp)[2]]
+
+    seq_prob<-seq(start_probs,end_probs)
+    seq_rate<-seq(start_rates+1,end_rates,by=2)
+    if(i == 1){
+    tree<-cbind(tree,prob_stage=seq_prob,rate_stage=seq_rate)
+    }else{
+      tree$prob_stage<-seq_prob
+      tree$rate_stage<-seq_rate
+    }
+
+    merged<-ceg.temp$merged
+    m<-max(merged[3,])
+    m_prob<-m-1
+
+    merged_rates<-merged[,which(merged[3,]==m)]
+    merged_probs<-merged[,which(merged[3,]==m_prob)]
+
+    merged_list_rates<-merged_list_extractor(merged_rates)
+    merged_list_prob<-merged_list_extractor(merged_probs)
+
+    if(plot_rates){
+
+    k<-1
+
+    stage_count<-0
+
+    for(j in 1:length(ind_rates)){
+
+      if(k <= length(merged_list_rates)){
+        if(ind_rates[j]==merged_list_rates[[k]][1]){
+          stage_comp<-merged_list_rates[[k]]
+          replace<-which(tree$rate_stage %in% stage_comp)
+          tree$rate_stage[replace]<-j
+          k<-k+1
+          stage_count<-stage_count+length(replace)
+        }else{
+          replace<-which(tree$rate_stage == ind_rates[j])
+          tree$rate_stage[replace]<-j
+          stage_count<-stage_count+length(replace)
+        }
+      }else{
+        replace<-which(tree$rate_stage == ind_rates[j])
+        tree$rate_stage[replace]<-j
+        stage_count<-stage_count+length(replace)
+      }
+    }
+
+    if(stage_count != p){
+      stop("All stages not accounted for - fix")
+    }
+
+    rates[i,]<-rates.temp[tree$rate_stage]
+
+    }
+
+    if(plot_probs){
+      k<-1
+
+      stage_count<-0
+
+      for(j in 1:length(ind_probs)){
+
+        if(k <= length(merged_list_prob)){
+          if(ind_probs[j]==merged_list_prob[[k]][1]){
+            stage_comp<-merged_list_prob[[k]]
+            replace<-which(tree$prob_stage %in% stage_comp)
+            tree$prob_stage[replace]<-j
+            k<-k+1
+            stage_count<-stage_count+length(replace)
+          }else{
+            replace<-which(tree$prob_stage == ind_probs[j])
+            tree$prob_stage[replace]<-j
+            stage_count<-stage_count+length(replace)
+          }
+        }else{
+          replace<-which(tree$prob_stage == ind_probs[j])
+          tree$prob_stage[replace]<-j
+          stage_count<-stage_count+length(replace)
+        }
+      }
+
+      if(stage_count != p){
+        stop("All stages not accounted for - fix")
+      }
+
+      probs[i,]<-probs.temp[tree$prob_stage]
+    }
+
+    score[i]<-ceg.temp$lik
+
+    if(i==1){
       map_mod<-ceg.temp
       map_score<-map_mod$lik
     }
-    if(j>1){
-      if(score[j]>map_score){
+    if(i>1){
+      if(score[i]>map_score){
         map_mod<-ceg.temp
-        map_score<-score[j]
+        map_score<-score[i]
       }
     }
 
@@ -308,6 +410,61 @@ zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, pl
   print(rate_plot)
   }
 
-  return(list(rates = rates, score=score,mod=map_mod))
+  if(plot_probs){
+
+    data.temp<-data.frame(x=1:iter_total,leaf=probs)
+    data.long<-melt(data.temp,id.vars="x")
+
+    data.long<-mutate(data.long,label = if_else(x==iter_total,as.character(variable),NA_character_))
+
+    if(hist){
+      xlim_l<-floor(min(data.temp[,-1]))
+      xlim_u<-ceiling(max(data.temp[,-1]))
+
+      leaves<-list()
+
+      #in order to get leaves arranged vertically rather than horizontally
+
+      index_mat<-data.frame(cbind(1:(num/2),((num/2+1):num)))
+      index_hor<- c(t(index_mat))
+
+      for(j in 1:num){
+        i<-index_hor[j]
+        y=data.temp[,i+1]
+        m=length(y)
+        data.temp2<-data.frame(x=c(1:m),y=y)
+        leaves[[j]]<-  ggplot(data=data.temp2,mapping=aes(x=y))+geom_histogram(col=i,fill=i)+
+          #geom_density()+
+          #  geom_vline(col="red",xintercept=mean(y))+geom_vline(xintercept=true_lambda[i])+
+          xlab("Risk Prob") +ggtitle(paste("Leaf", i, sep = " "))+xlim(xlim_l,xlim_u)+ylim(0,iter_total)
+      }
+
+      prob_plot<-do.call(ggarrange,list(plotlist=leaves,nrow=num/2,ncol=2))
+    }else if(violin){
+      prob_plot<- ggplot(data=data.long,aes(x=variable,y=value))+geom_violin(aes(col=variable,fill=variable))+
+        xlab("Leaf")+ylab("Risk Prob")+
+        ggtitle("Estimated Risk Prob by Iteration for Each leaf")+theme(legend.position="none")
+    }else if(scatter){
+      prob_plot<- ggplot(data=data.long,aes(x=x,y=value,group=variable))+geom_point(aes(col=variable),position=position_jitter(width=0.1,height=0.01))+
+        xlab("Iteration")+ylab("Risk Prob")+
+        ggtitle("Estimated Risk Prob by Iteration for Each leaf")+
+        geom_label_repel(mapping=aes(label=label))
+    }else{prob_plot<-ggplot(data=data.long,aes(x=x,y=value,group=variable))+geom_line(aes(col=variable),position=position_jitter(width=0.1,height=0.01))+
+      xlab("Iteration")+ylab("Risk Prob")+
+      ggtitle("Estimated Risk Prob by Iteration for Each leaf")+
+      geom_label_repel(mapping=aes(label=label))
+    }
+
+    print(prob_plot)
+  }
+
+  if(plot_rates){
+    output<-rates
+  }else if(plot_probs){
+    output<-rates
+  }else{output<-NA}
+
+
+  return(list(output=output, score=score,mod=map_mod))
 
 }

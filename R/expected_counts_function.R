@@ -89,7 +89,7 @@ vec_in<-function(x,v){
 expected_count_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE){
 
   if(!poisson_response & variable_time){
-    stop("Variable Poisson Time Requires Poisson Response")
+    stop("Variable Time Requires Poisson Response")
   }
 
   if(!poisson_response & zip){
