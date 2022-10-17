@@ -79,7 +79,7 @@ vec_in<-function(x,v){
 #'
 #' For each leaf stage in a pceg model created by [pceg()], this function calculates the observed event counts up to some integer limit, and then calculates
 #' the expected event counts for that leaf based on the model estimates of the parameters for the Poisson distribution. Then, for each leaf $i$ and each event count $j$,
-#' a chi-square contribution is calculated using the formula $\frac{(O_{ij}-E_{ij})^2}{E_{ij}}$ and output as a matrix.
+#' a chi-square contribution is calculated using the formula \eqn{\frac{(O_{ij}-E_{ij})^2}{E_{ij}}} and output as a matrix.
 #'
 #' @param data A data set, where the observed count vector and time vector (if variable) are the last two columns
 #' @param ceg A ceg model fit to the data set, as produced by pceg().

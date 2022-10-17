@@ -99,7 +99,7 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #'
 #' This function takes a data set, a prior structure, and various other inputs to fit a PCEG model. It is flexible enough to fit a vanilla CEG, and perform variable discretisation methods.
 #'
-#' @param exampledata A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.
+#' @param data A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.
 #' @param equivsize A numeric value specifying the equivalent sample size for the prior, a measure of confidence in the prior.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
@@ -121,9 +121,11 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' mod$result
-pceg<-function(exampledata=exampledata ,equivsize=3,  poisson_response = FALSE, variable_time = FALSE, zip=FALSE,
+pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FALSE, zip=FALSE,
                         gamma_alpha =1, gamma_beta = 2,structural_zero = FALSE, var_disc = 0, disc_length = 0,
                         restrict = FALSE, mirror = FALSE, cat_limit=0){
+
+  exampledata<-data
 
   no_disc_length_spec<-(disc_length == 0) #if discretisation is chosen but no interval length given
   cat_limit_ind<-(cat_limit>0)
