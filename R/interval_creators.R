@@ -2,6 +2,8 @@
 #'
 #' This function calculates the highest density interval for the parameters of a Gamma posterior, as with a Poisson response variable.
 #'
+#' This function calculates the highest density interval for the estimated rates of the leaf stages in a PCEG or ZIPCEG. The expected value itself can be found using [value_extractor()].
+#'
 #' @param data A data set, where the observed count vector and time vector (if variable) are the last two columns
 #' @param ceg A ceg model fit to the data set, as produced by CEG.AHC.POISS.
 #' @param ci A numeric value between 0 and 1 specifying the perecentage confidence for the highest density interval.
@@ -13,6 +15,8 @@
 #' @export
 #'
 #' @examples
+#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+#' hdi_gamma_extractor(knee_pain_obs,mod,zip=FALSE)
 hdi_gamma_extractor<-function(data,ceg,ci=0.95,N=10000,variable_time=TRUE,zip=TRUE){
   summ<-value_extractor(data=data,ceg=ceg,variable_time = variable_time,zip=zip)
   shapes<-summ[,1]+summ[,3]
@@ -29,7 +33,9 @@ hdi_gamma_extractor<-function(data,ceg,ci=0.95,N=10000,variable_time=TRUE,zip=TR
 #' The Beta Highest Density Interval Creator
 #'
 #' This function calculates the highest density interval for the parameters of a Dirichlet posterior, using a Beta distribution.
-#' The Dirichlet posterior is present for the categorical covariates in a PCEG, or any variable in a CEG.
+#' The Dirichlet posterior is present for the situations with a categorical response variable in any type of CEG.
+#'
+#' This function calculates the highest density interval for the estimated transition probabilities for the situation stages in a PCEG, ZIPCEG or CEG. The expected value itself can be found using [value_extractor()].
 #'
 #' @param data A data set, where the observed count vector and time vector (if variable) are the last two columns
 #' @param ceg A ceg model fit to the data set, as produced by CEG.AHC.POISS.
@@ -44,6 +50,8 @@ hdi_gamma_extractor<-function(data,ceg,ci=0.95,N=10000,variable_time=TRUE,zip=TR
 #' @export
 #'
 #' @examples
+#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+#' hdi_beta_extractor(knee_pain_obs,mod,zip=FALSE)
 hdi_beta_extractor<-function(data,ceg,ci=0.95,N=10000,level_rel_final=-1,poisson_response=TRUE,variable_time = TRUE,zip=TRUE){
   summ<-value_extractor(data=data,ceg=ceg,level_rel_final = level_rel_final,poisson_response = poisson_response,variable_time = variable_time,zip=zip)
   if(level_rel_final == 0 & poisson_response){

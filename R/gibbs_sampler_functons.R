@@ -7,7 +7,6 @@
 #' @param data_levels An integer vector of the number of levels for each covariate.
 #'
 #' @return A data set where the categorical covariates have been refactor to start at 0 and end at the number of levels - 1.
-#' @export
 #'
 #' @examples
 #' N<-100
@@ -45,16 +44,18 @@ path_refactor<-function(data,n,data_levels){
 #' @param data A data set where the observed count vector and time vector (if variable) are the last two columns.
 #' @param N An integer specifying the number of iterations for the Gibbs sampler.
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
-#' @param a A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate.
-#' @param b A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.
-#' @param c A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.
-#' @param d A numeric value for the beta hyperparameter of the Beta prior for the risk probability.
+#' @param a A numeric vector specifying the shape hyperparameter of the Gamma priors for the Poisson rates. If the vector is of length 1, this value will be repeated for each leaf.
+#' @param b A numeric vector specifying the rate hyperparameter of the Gamma priors for the Poisson rates. If the vector is of length 1, this value will be repeated for each leaf.
+#' @param c A numeric vector specifying the alpha hyperparameter of the Beta priors for the risk probabilities. If the vector is of length 1, this value will be repeated for each leaf.
+#' @param d A numeric vector specifying the beta hyperparameter of the Beta priors for the risk probabilities. If the vector is of length 1, this value will be repeated for each leaf.
 #'
 #'
 #' @return A list containing a matrix with the desired outputs for each evolution of the process, as well as vectors of the estimates for the rates and risk probabilities.
 #' @export
 #'
 #' @examples
+#' gibbs_result<-gibbs_zip(knee_pain_obs)
+#' gibbs_result$summary
 gibbs_zip<-function(data,N = 1000, variable_time = TRUE, a = 1, b = 1, c = 1, d  =  1 ){
   n<-dim(data)[2] - 1 - 1*variable_time #if there are variable times, they will be an extra column
   data_levels<-sapply(data[,1:n],nlevels)
@@ -73,6 +74,39 @@ gibbs_zip<-function(data,N = 1000, variable_time = TRUE, a = 1, b = 1, c = 1, d 
 
   l<-list()
   propor<-list()
+
+  if(length(a) != length(b)){
+    warning("Length of vectors of prior hyperparameters for Gamma priors don't match.")
+  }
+
+  if(length(c) != length(d)){
+    warning("Length of vectors of prior hyperparameters for Beta priors don't match.")
+  }
+
+  if(length(a)==1){
+    a<-rep(a,p)
+  }else if(length(a)!=p){
+    stop("Vector of shape hyperparameters doesn't match number of leaves.")
+  }
+
+  if(length(b)==1){
+    b<-rep(b,p)
+  }else if(length(b)!=p){
+    stop("Vector of rate hyperparameters doesn't match number of leaves.")
+  }
+
+  if(length(c)==1){
+    c<-rep(c,p)
+  }else if(length(c)!=p){
+    stop("Vector of alpha hyperparameters doesn't match number of leaves.")
+  }
+
+  if(length(d)==1){
+    d<-rep(d,p)
+  }else if(length(d)!=p){
+    stop("Vector of beta hyperparameters doesn't match number of leaves.")
+  }
+
 
   for(i in 1:p){
     v<-tree_matrix[i,]
@@ -96,8 +130,8 @@ gibbs_zip<-function(data,N = 1000, variable_time = TRUE, a = 1, b = 1, c = 1, d 
 
     for(j in 2:N){
       r=(y==0)*(runif(m)<1/(1+(1-prob[j-1])/(prob[j-1]*exp(-lambda[j-1]*t))))+(y>0)
-      lambda[j]=rgamma(1,a+sum(y),b+sum(r*t))
-      prob[j]=rbeta(1,c+sum(r),m-sum(r)+d)
+      lambda[j]=rgamma(1,a[i]+sum(y),b[i]+sum(r*t))
+      prob[j]=rbeta(1,c[i]+sum(r),m-sum(r)+d[i])
     }
     output_matrix$l_hat[i]=mean(lambda)
     output_matrix$p_hat[i]=mean(prob)

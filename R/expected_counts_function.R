@@ -1,6 +1,6 @@
 #' The Merged Stage Finder
 #'
-#' A function to find which stages have merged with a given unique stage from the merging details of a CEG.
+#' This function finds which stages have merged with a given unique stage from the merging details of a CEG.
 #'
 #' @param unique_stage An integer value
 #' @param M An integer matrix detailing the merging present in a CEG.
@@ -16,7 +16,7 @@ merged_stage_finder<-function(unique_stage,M){
 
 #' The Merged List Extractor
 #'
-#' A function to find a list of the stages which have merged given the merging details of a CEG.
+#' This function finds a list of the stages which have merged given the merging details of a CEG.
 #'
 #' @param merged A matrix specifying the merging present in a CEG.
 #'
@@ -52,7 +52,7 @@ merged_list_extractor<-function(merged){
 
 #' The vec_in function
 #'
-#' A function to check whether a given value is in a vector
+#' This function checks whether a given value is in a vector.
 #'
 #' @param x A numeric value
 #' @param v A numeric vector
@@ -68,7 +68,7 @@ vec_in<-function(x,v){
 
 #' The expected count function.
 #'
-#' A function to test the goodness of fit of a pceg model to a data set.
+#' This function tests the goodness of fit of a pceg model to a data set.
 #'
 #' For each leaf stage in a pceg model created by [pceg()], this function calculates the observed event counts up to some integer limit, and then calculates
 #' the expected event counts for that leaf based on the model estimates of the parameters for the Poisson distribution. Then, for each leaf $i$ and each event count $j$,

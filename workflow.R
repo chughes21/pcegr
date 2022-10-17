@@ -18,6 +18,7 @@ devtools::document()
 devtools::load_all()
 usethis::use_r("prior_function")
 usethis::use_r("covariate_calculator_function")
+usethis::use_r("uniform_time_functions")
 
 devtools::load_all()
 pceg.obs<-pceg(knee_pain_obs,2,TRUE,TRUE)

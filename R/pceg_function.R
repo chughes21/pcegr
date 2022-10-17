@@ -1,10 +1,11 @@
 #' The Poisson Score
 #'
+#' This function calculates the marginal likelihood for Poisson responses.
+#'
 #' @param data_sample A list where each element of the list contains the observed count vector and time vector for a unique unfolding of the process.
 #' @param gamma_prior A list of numeric vectors where the numeric vectors are the prior hyperparameters for the Gamma distribution.
 #'
 #' @return A numeric value of the log marginal likelihood for the data.
-#' @export
 #'
 #' @examples
 poisson_score<-function(data_sample, gamma_prior){
@@ -45,11 +46,10 @@ poisson_score<-function(data_sample, gamma_prior){
 #'
 #' @param sample_sum A list where each element is an integer sum of the event counts for each stage.
 #' @param prior A list of numeric vectors where the numeric vectors are the hyperparameters of the Gamma prior distribution for each stage.
-#' @param stage1 An integer specifying the first stage to be merged.
-#' @param stage2 An integer specifying the second stage to be merged.
+#' @param stage1 An integer value specifying the first stage to be merged.
+#' @param stage2 An integer value specifying the second stage to be merged.
 #'
-#' @return
-#' @export
+#' @return A numeric value specifying the change in log marginal likelihood after the two stages are merged.
 #'
 #' @examples
 bayes_factor<-function(sample_sum, prior, stage1, stage2){
@@ -112,7 +112,9 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #' the comparison set of stages left to be merged, and the log marginal likelihood of the final model.
 #' @export
 #'
-#' @examples pceg(knee_pain_obs,2,TRUE,TRUE)
+#' @examples
+#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+#' mod$result
 pceg<-function(exampledata=exampledata ,equivsize=3,  poisson_response = FALSE, variable_time = FALSE, zip=FALSE,
                         gamma_alpha =1, gamma_beta = 2,structural_zero = FALSE, var_disc = 0, disc_length = 0,
                         restrict = FALSE, mirror = FALSE, cat_limit=0){

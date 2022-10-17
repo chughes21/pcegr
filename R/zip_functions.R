@@ -10,7 +10,6 @@
 #' @param all_risk A logical value indicating whether all observations should be considered at risk. This is necessary when converting a PCEG to a ZIPCEG for the purposes of calculating the Bayes Factor.
 #'
 #' @return A data set containing refactored covariates, imputed risk states, and observed counts and times.
-#' @export
 #'
 #' @examples
 state_imputer<-function(data,lambda=1,prob=1,variable_time=TRUE,stoch=TRUE,all_risk=FALSE){
@@ -71,6 +70,8 @@ state_imputer<-function(data,lambda=1,prob=1,variable_time=TRUE,stoch=TRUE,all_r
 #'
 #' This function fits a ZIPCEG model to the chosen data set, based on chosen methods of parameter estimation and state imputation.
 #'
+#' This function takes the same inputs as the [pceg()], along with chosen methods of parameter estimation and state imputation, to fit a ZIPCEG model. As with [pceg()] it can perform variable discretisation methods, but is not to be used for vanilla CEGs.
+#'
 #' @param data A data set where the observed count vector and time vector (if variable) are the last two columns.
 #' @param method A character string indicating the method for parameter estimation. The character string can be an element of c("Gibbs","nlm","EM","mle","mm").
 #' @param iter The number of iterations for the Gibbs sampler or Expectation-Maximisation algorithm.
@@ -99,10 +100,10 @@ state_imputer<-function(data,lambda=1,prob=1,variable_time=TRUE,stoch=TRUE,all_r
 #' @examples  zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
 zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response = TRUE,
                       variable_time = FALSE, stoch_imputation = TRUE, gamma_alpha =1, gamma_beta = 2, beta_c = 1, beta_d = 1,
-                      p_0 = NA, l_0 = NA, tol=1e-10, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
+                      p_0 = 0.5, l_0 = 1, tol=1e-10, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
 
   if(!(method %in% c("Gibbs","nlm","EM","mle","mm"))){
-    stop("Unknown estimation method chosen - Please choose either Gibbs, nlm or EM")
+    stop("Unknown estimation method chosen - Please choose either Gibbs, nlm, EM, mle or mm")
   }
 
   if((method %in% c("mle","mm")) & variable_time){
@@ -135,14 +136,8 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
     le<-out$lambda
   }
 
-  if(method=="mle"){
-    out<-mle_zip(data,time_input = variable_time)
-    pe<-out$prob
-    le<-out$lambda
-  }
-
-  if(method=="mm"){
-    out<-mm_zip(data,time_input = variable_time)
+  if(method %in% c("mle","mm")){
+    out<-uniform_time_zip(data,method=method,time_input = variable_time)
     pe<-out$prob
     le<-out$lambda
   }
@@ -155,7 +150,9 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 
 #' The Iterative ZIPCEG function
 #'
-#' This function performs the ZIPCEG model selection a specified number of times, capable of producing plots of the rates and risk probabilities, and selecting the model with the largest log marginal likelihood.
+#' This function performs the ZIPCEG model selection a specified number of times and can produce plots and perform model selection.
+#'
+#' This function takes the same inputs as the [zipceg()] function, except carries out the model selection process a specified number of times. Using the results of each iteration, different types of plots can be used to display either the estimated risk probabilities or estimated rates. The function will also select the _maximum_ _a_ _posteriori_ (MAP) model from these iterations.
 #'
 #' @param data A data set where the observed count vector and time vector (if variable) are the last two columns.
 #' @param method A character string indicating the method for parameter estimation. The character string can be an element of c("Gibbs","nlm","EM","mle","mm").
@@ -184,7 +181,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @param cat_limit An integer value specifying the minimum number of categories to the variable can be discretised to. If 0, there is no minimum number of categories.
 #'
 #'
-#' @return A list containing: a matrix of the estimated rates for each leaf, a numeric value of the log marginal likelihood of the MAP model, and the MAP model itself.
+#' @return A list containing: a matrix of the estimated rates or risk probabilities for each leaf across iterations, a numeric value of the log marginal likelihood for the MAP model, and the MAP model itself.
 #' @export
 #'
 #' @examples zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=FALSE,violin=TRUE)

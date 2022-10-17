@@ -1,11 +1,8 @@
-#value extractor
-
-#value extractor can calculate the posterior or sample estimate of the rates for a Poisson
-#or probs for a multinomial
-
 #' The Expected Value Extractor
 #'
-#' This function calculates the expected values of parameters based on the data set and a chosen pceg model.
+#' This function calculates the expected values of parameters based on the data set and a chosen PCEG model.
+#'
+#' This function is capable of calculating the expected rate for the leaf stages in a PCEG or ZIPCEG, or the expected transition probabilities of the situation stages in any type of CEG.
 #'
 #' @param data A data set, where the observed response vector and time vector (if applicable and variable) are the last two columns
 #' @param ceg A ceg model fit to the data set, as produced by pceg().
@@ -20,6 +17,8 @@
 #' @export
 #'
 #' @examples
+#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+#' value_extractor(knee_pain_obs,mod,zip=FALSE)
 value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, true_value = NA){
 
   if(!poisson_response & zip){

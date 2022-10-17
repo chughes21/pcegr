@@ -1,5 +1,9 @@
 #' The Prior Set Function
 #'
+#' This function sets the prior for the situations in the tree.
+#'
+#' This function sets the prior for the situations in the tree which have categorical response variables, based on the equivalent sample size and how zero edge counts should be treated.
+#'
 #' @param sample A list containing the edge counts of the situations in a data set.
 #' @param struc_zero A logical value indicating whether zero edge counts in the sample should be considered as structural zeroes (TRUE) or sampling zeroes (FALSE) for the purposes of setting the prior.
 #' @param numbvariables An integer value specifying how many covariates are in the data set, or levels in the event tree.
@@ -8,7 +12,6 @@
 #' @param equivsize A numeric value specifying the equivalent sample size for the prior, a measure of confidence in the prior.
 #'
 #' @return A list containing the prior hyperparameters for each situation and its outgoing edges in the event tree.
-#' @export
 #'
 #' @examples
 prior_set<-function(sample,struc_zero,numbvariables,numbcat,numb,equivsize){

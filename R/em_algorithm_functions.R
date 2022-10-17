@@ -1,5 +1,3 @@
-#EM Algorithm Functions
-
 #' The complete data log likelihood for a Poisson response
 #'
 #' This function calculates the complete data log likelihood for a count vector and time vector, given values of the parameters of a zero-inflated Poisson distribution.
@@ -9,7 +7,6 @@
 #' @param t A numeric vector of observed times.
 #'
 #' @return A list containing the likelihood value and a vector of weights for the em algorithm
-#' @export
 #'
 #' @examples
 #' y<-c(1,0,2,0)
@@ -41,7 +38,6 @@ cdll<-function(params,y,t){
 #' @param tol A numeric which represents the minimum change in the complete data log likelihood needed to continue the algorithm.
 #'
 #' @return A list containing the estimates of the risk probability and the rate, and the number of iterations necessary
-#' @export
 #'
 #' @examples
 em<-function(p_0,l_0,y,t,max_iter=10000,tol = 1e-10){
@@ -81,8 +77,8 @@ em<-function(p_0,l_0,y,t,max_iter=10000,tol = 1e-10){
 #' For each leaf, which represents a unique evolution of the process, the [em()] function is applied.
 #'
 #' @param data A data set, where the observed count vector and time vector (if variable) are the last two columns.
-#' @param p_0 A numeric initial value for the risk probability.
-#' @param l_0 A numeric initial value for the rate.
+#' @param p_0 A numeric vector of initial values for the risk probabilities. If the vector is of length 1, this value will be repeated for each leaf.
+#' @param l_0 A numeric vector of initial values for the rates. If the vector is of length 1, this value will be repeated for each leaf
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
 #' @param max_iter An integer for the maximum number of iterations for the algorithm.
 #' @param tol A numeric which represents the minimum change in the complete data log likelihood needed to continue the algorithm.
@@ -91,7 +87,8 @@ em<-function(p_0,l_0,y,t,max_iter=10000,tol = 1e-10){
 #' @export
 #'
 #' @examples
-em_zip<-function(data,p_0=NA,l_0=NA, variable_time = TRUE, max_iter = 10000,tol=1e-10){
+#' em_zip(knee_pain_obs)
+em_zip<-function(data,p_0=0.5,l_0=1, variable_time = TRUE, max_iter = 10000,tol=1e-10){
   n<-dim(data)[2] - 1 - 1*variable_time #if there are variable times, they will be an extra column
   data_levels<-sapply(data[,1:n],nlevels)
   data.use<-path_refactor(data,n,data_levels)
@@ -110,16 +107,20 @@ em_zip<-function(data,p_0=NA,l_0=NA, variable_time = TRUE, max_iter = 10000,tol=
   l<-c()
   propor<-c()
 
-  if(is.na(p_0)){
-    p_0<-rep(0.5,p)
-  }else if(length(p_0)==1){
-    p_0<-rep(p_0,p)
+  if(length(p_0) != length(l_0)){
+    warning("Vectors of initial values for parameters don't match")
   }
 
-  if(is.na(l_0)){
-    l_0<-rep(1,p)
-  }else if(length(l_0)==1){
+  if(length(p_0)==1){
+    p_0<-rep(p_0,p)
+  }else if(length(p_0)!=p){
+    stop("Initial value vector for risk probability doesn't match number of leaves.")
+  }
+
+  if(length(l_0)==1){
     l_0<-rep(l_0,p)
+  }else if(length(p_0)!=p){
+    stop("Initial value vector for rates doesn't match number of leaves.")
   }
 
   for(i in 1:p){

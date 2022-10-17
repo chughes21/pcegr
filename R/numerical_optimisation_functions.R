@@ -5,7 +5,6 @@
 #' @param p A numeric value between 0 and 1
 #'
 #' @return A numeric value on the real line.
-#' @export
 #'
 #' @examples
 #' glogit(0.4)
@@ -18,20 +17,21 @@ glogit = function (p){ log(p/(1-sum(p)))}
 #' @param p A numeric value on the real line.
 #'
 #' @return A numeric value between 0 and 1.
-#' @export
 #'
 #' @examples
 #' glogitinv(-0.4054651)
 glogitinv = function(p){ exp(p)/(1+sum(exp(p)))}
 
-#' The zero-inflated poisson likelihood for a single observation.
+#' The zero-inflated Poisson likelihood for a single observation.
 #'
-#' @param p A numeric value between 0 and 1
-#' @param lambda A numeric value
-#' @param y An integer
-#' @param t A positive numeric value
+#' This function calculates the likelihood for a single observation assuming a zero-inflated Poisson distribution
 #'
-#' @return A numeric value
+#' @param p A numeric value between 0 and 1 specifying the risk probability.
+#' @param lambda A numeric value specifying the rate of the Poisson process.
+#' @param y An integer value for the observed event count.
+#' @param t A positive numeric value for the observation time.
+#'
+#' @return A numeric value specifying the likelihood.
 #' @export
 #'
 #' @examples
@@ -40,18 +40,23 @@ f<-function(p, lambda, y, t){
   return(p*(dpois(y,lambda*t))+(1-p)*(y==0))
 }
 
-#' The zero-inflated Poisson likelihood
+#' The zero-inflated Poisson log likelihood
 #'
 #' This function calculates the zero-inflated Poisson log likelihood for a count vector and time vector, given values of the parameters of a zero-inflated Poisson distribution.
 #'
-#' @param params A numeric vector of the parameters for the distribution.
+#' @param params A numeric vector specfiying the parameters for the distribution.
 #' @param y An integer vector of observed event counts.
-#' @param t A numeric vector of observed times.
+#' @param t A numeric vector of observation times.
 #'
-#' @return A numeric of the zero-inflated Poisson log likelihood.
+#' @return A numeric value specifying the zero-inflated Poisson log likelihood.
 #' @export
 #'
 #' @examples
+#' params<-c(0.5,1)
+#' y<-c(1,2,0,0,0,1,5)
+#' t<-c(0.1,0.5,0.2,0.25,0.1,0.3,2)
+#' ziplike(params,y,t)
+
 ziplike<-function(params, y, t){
   p <-glogitinv(params[1]) #for constraints, so pi is a prop
   lambda<-exp(params[-1]) #for constraints, so lambda is nonneg
@@ -68,7 +73,8 @@ ziplike<-function(params, y, t){
 #' @export
 #'
 #' @examples
-nlm_zip<-function(data,variable_time = TRUE){ #no priors
+#' nlm_zip(knee_pain_obs)
+nlm_zip<-function(data,variable_time = TRUE){
   n<-dim(data)[2] - 1 - 1*variable_time #if there are variable times, they will be an extra column
   data_levels<-sapply(data[,1:n],nlevels)
   data.use<-path_refactor(data,n,data_levels)
