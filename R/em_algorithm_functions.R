@@ -35,7 +35,7 @@ cdll<-function(params,y,t){
 #' @param y An integer vector of observed event counts.
 #' @param t A numeric vector of observed times.
 #' @param max_iter An integer for the maximum number of iterations for the algorithm.
-#' @param tol A numeric which represents the minimum change in the complete data log likelihood needed to continue the algorithm.
+#' @param tol A numeric value which represents the minimum change in the complete data log likelihood needed to continue the algorithm.
 #'
 #' @return A list containing the estimates of the risk probability and the rate, and the number of iterations necessary
 #'

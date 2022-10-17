@@ -110,7 +110,7 @@ state_imputer<-function(data,lambda=1,prob=0.5,variable_time=TRUE,stoch=TRUE,all
 #'
 #' @return A list specifying a ZIPCEG model. The list contains: the prior for the final model, the data for the final model, the stage numbers for the final model,
 #' the stage structure for the final model, the vector of likelihoods after each merging, the details of the stages merged at each step,
-#' the comparison set of stages left to be merged, a list of the stages merged, and the log marginal likelihood of the final model.
+#' the comparison set of stages left to be merged, and the log marginal likelihood of the final model.
 #' @export
 #'
 #' @examples  zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
