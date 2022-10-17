@@ -17,7 +17,7 @@ em(p_0, l_0, y, t, max_iter = 10000, tol = 1e-10)
 
 \item{max_iter}{An integer for the maximum number of iterations for the algorithm.}
 
-\item{tol}{A numeric which represents the minimum change in the complete data log likelihood needed to continue the algorithm.}
+\item{tol}{A numeric value which represents the minimum change in the complete data log likelihood needed to continue the algorithm.}
 }
 \value{
 A list containing the estimates of the risk probability and the rate, and the number of iterations necessary
