@@ -40,6 +40,10 @@ cdll<-function(params,y,t){
 #' @return A list containing the estimates of the risk probability and the rate, and the number of iterations necessary
 #'
 #' @examples
+#' y<-c(1,0,2,0)
+#' t<-c(0.5,0.7,0.8,1.2)
+#' params<-c(0.5,1.5)
+#' em(params[1],params[2],y,t)
 em<-function(p_0,l_0,y,t,max_iter=10000,tol = 1e-10){
 
   n<-length(y)
@@ -108,7 +112,7 @@ em_zip<-function(data,p_0=0.5,l_0=1, variable_time = TRUE, max_iter = 10000,tol=
   propor<-c()
 
   if(length(p_0) != length(l_0)){
-    warning("Vectors of initial values for parameters don't match")
+    warning("Length of vectors of initial values for parameters don't match.")
   }
 
   if(length(p_0)==1){
@@ -119,7 +123,7 @@ em_zip<-function(data,p_0=0.5,l_0=1, variable_time = TRUE, max_iter = 10000,tol=
 
   if(length(l_0)==1){
     l_0<-rep(l_0,p)
-  }else if(length(p_0)!=p){
+  }else if(length(l_0)!=p){
     stop("Initial value vector for rates doesn't match number of leaves.")
   }
 

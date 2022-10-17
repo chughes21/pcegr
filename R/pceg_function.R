@@ -8,6 +8,9 @@
 #' @return A numeric value of the log marginal likelihood for the data.
 #'
 #' @examples
+#' data<-list(t(c(10,100)),t(c(5,100)))
+#' prior<-list(t(c(1,1)),t(c(1,1)))
+#' poisson_score(data,prior)
 poisson_score<-function(data_sample, gamma_prior){
   p<-length(data_sample)
   post_a<-0
@@ -44,7 +47,7 @@ poisson_score<-function(data_sample, gamma_prior){
 #'
 #' This function calculates the change in log marginal likelihood of a model when two stages are merged into one.
 #'
-#' @param sample_sum A list where each element is an integer sum of the event counts for each stage.
+#' @param sample_sum A list where each element is an integer sum of the observed event counts and observation time for each stage.
 #' @param prior A list of numeric vectors where the numeric vectors are the hyperparameters of the Gamma prior distribution for each stage.
 #' @param stage1 An integer value specifying the first stage to be merged.
 #' @param stage2 An integer value specifying the second stage to be merged.
@@ -52,6 +55,9 @@ poisson_score<-function(data_sample, gamma_prior){
 #' @return A numeric value specifying the change in log marginal likelihood after the two stages are merged.
 #'
 #' @examples
+#' data<-list(t(c(10,100)),t(c(5,100)))
+#' prior<-list(t(c(1,1)),t(c(1,1)))
+#' bayes_factor(data,prior,1,2)
 bayes_factor<-function(sample_sum, prior, stage1, stage2){
   prior_a_1<-prior[[stage1]][1]
   prior_b_1<-prior[[stage1]][2]

@@ -3,16 +3,16 @@
 #' This function imputes the latent risk states based on the data, the estimated parameters, and the choice of imputation method.
 #'
 #' @param data A data set, where the observed count vector and time vector (if variable) are the last two columns
-#' @param lambda A numeric vector of the Poisson rates used to impute the states.
-#' @param prob A numeric vector of the risk probabilities used to impute the states.
+#' @param lambda A numeric vector of the Poisson rates used to impute the states. If the vector is of length 1, this value will be repeated for each leaf.
+#' @param prob A numeric vector of the risk probabilities used to impute the states.If the vector is of length 1, this value will be repeated for each leaf.
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
 #' @param stoch A logical value indicating whether stochastic (TRUE) or deterministic (FALSE) imputation should be used.
 #' @param all_risk A logical value indicating whether all observations should be considered at risk. This is necessary when converting a PCEG to a ZIPCEG for the purposes of calculating the Bayes Factor.
 #'
 #' @return A data set containing refactored covariates, imputed risk states, and observed counts and times.
 #'
-#' @examples
-state_imputer<-function(data,lambda=1,prob=1,variable_time=TRUE,stoch=TRUE,all_risk=FALSE){
+#' @examples state_imputer(knee_pain_obs)
+state_imputer<-function(data,lambda=1,prob=0.5,variable_time=TRUE,stoch=TRUE,all_risk=FALSE){
   n<-dim(data)[2] - 1 - 1*variable_time #if there are variable times, they will be an extra column
   data_levels<-sapply(data[,1:n],nlevels)
   data.use<-path_refactor(data,n,data_levels)
@@ -25,6 +25,22 @@ state_imputer<-function(data,lambda=1,prob=1,variable_time=TRUE,stoch=TRUE,all_r
     colnames(tree_matrix)[1:i]<-colnames(data.use[,1:n])[1:i]
   }
   tree_matrix<-as.data.frame(tree_matrix)
+
+  if(length(prob) != length(lambda)){
+    warning("Vectors of parameters don't match.")
+  }
+
+  if(length(prob)==1){
+    prob<-rep(prob,p)
+  }else if(length(prob)!=p){
+    stop("Vector of risk probabilities doesn't match number of leaves.")
+  }
+
+  if(length(lambda)==1){
+    lambda<-rep(lambda,p)
+  }else if(length(lambda)!=p){
+    stop("Vector of rates doesn't match number of leaves.")
+  }
 
   data.out<-cbind(data,state = factor(rep("Risk",length(data[,1])),levels=c("No Risk","Risk")))
   if(variable_time){

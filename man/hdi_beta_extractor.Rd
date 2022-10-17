@@ -37,5 +37,12 @@ A series of highest density intervals for each parameter of interest.
 }
 \description{
 This function calculates the highest density interval for the parameters of a Dirichlet posterior, using a Beta distribution.
-The Dirichlet posterior is present for the categorical covariates in a PCEG, or any variable in a CEG.
+The Dirichlet posterior is present for the situations with a categorical response variable in any type of CEG.
+}
+\details{
+This function calculates the highest density interval for the estimated transition probabilities for the situation stages in a PCEG, ZIPCEG or CEG. The expected value itself can be found using \code{\link[=value_extractor]{value_extractor()}}.
+}
+\examples{
+mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+hdi_beta_extractor(knee_pain_obs,mod,zip=FALSE)
 }

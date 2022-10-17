@@ -7,7 +7,7 @@
 state_imputer(
   data,
   lambda = 1,
-  prob = 1,
+  prob = 0.5,
   variable_time = TRUE,
   stoch = TRUE,
   all_risk = FALSE
@@ -16,9 +16,9 @@ state_imputer(
 \arguments{
 \item{data}{A data set, where the observed count vector and time vector (if variable) are the last two columns}
 
-\item{lambda}{A numeric vector of the Poisson rates used to impute the states.}
+\item{lambda}{A numeric vector of the Poisson rates used to impute the states. If the vector is of length 1, this value will be repeated for each leaf.}
 
-\item{prob}{A numeric vector of the risk probabilities used to impute the states.}
+\item{prob}{A numeric vector of the risk probabilities used to impute the states.If the vector is of length 1, this value will be repeated for each leaf.}
 
 \item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).}
 
@@ -31,4 +31,7 @@ A data set containing refactored covariates, imputed risk states, and observed c
 }
 \description{
 This function imputes the latent risk states based on the data, the estimated parameters, and the choice of imputation method.
+}
+\examples{
+state_imputer(knee_pain_obs)
 }

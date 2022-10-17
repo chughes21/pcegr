@@ -2,20 +2,26 @@
 % Please edit documentation in R/numerical_optimisation_functions.R
 \name{ziplike}
 \alias{ziplike}
-\title{The zero-inflated Poisson likelihood}
+\title{The zero-inflated Poisson log likelihood}
 \usage{
 ziplike(params, y, t)
 }
 \arguments{
-\item{params}{A numeric vector of the parameters for the distribution.}
+\item{params}{A numeric vector specfiying the parameters for the distribution.}
 
 \item{y}{An integer vector of observed event counts.}
 
-\item{t}{A numeric vector of observed times.}
+\item{t}{A numeric vector of observation times.}
 }
 \value{
-A numeric of the zero-inflated Poisson log likelihood.
+A numeric value specifying the zero-inflated Poisson log likelihood.
 }
 \description{
 This function calculates the zero-inflated Poisson log likelihood for a count vector and time vector, given values of the parameters of a zero-inflated Poisson distribution.
+}
+\examples{
+params<-c(0.5,1)
+y<-c(1,2,0,0,0,1,5)
+t<-c(0.1,0.5,0.2,0.25,0.1,0.3,2)
+ziplike(params,y,t)
 }

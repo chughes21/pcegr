@@ -33,10 +33,17 @@ expected_count_calculator(
 A list of three matrices and a numeric value. The first matrix is the observed count matrix, the second is the expected count matrix, and the third is the chi-squared contribution matrix.The numeric value is the sum of the chi square contributions.
 }
 \description{
-A function to test the goodness of fit of a pceg model to a data set.
+This function tests the goodness of fit of a pceg model to a data set.
 }
 \details{
 For each leaf stage in a pceg model created by \code{\link[=pceg]{pceg()}}, this function calculates the observed event counts up to some integer limit, and then calculates
 the expected event counts for that leaf based on the model estimates of the parameters for the Poisson distribution. Then, for each leaf $i$ and each event count $j$,
 a chi-square contribution is calculated using the formula $\frac{(O_{ij}-E_{ij})^2}{E_{ij}}$ and output as a matrix.
+}
+\examples{
+mod1<-pceg(knee_pain_obs,2,TRUE,TRUE)
+expected_count_calculator(knee_pain_obs,mod1,zip=FALSE)
+
+mod2<-zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
+expected_count_calculator(knee_pain_obs,mod2)
 }

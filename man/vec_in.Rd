@@ -15,7 +15,7 @@ vec_in(x, v)
 A logical value indicating whether the given value was in the vector (TRUE) or not (FALSE)
 }
 \description{
-A function to check whether a given value is in a vector
+This function checks whether a given value is in a vector.
 }
 \examples{
 vec_in(7,c(1:9))

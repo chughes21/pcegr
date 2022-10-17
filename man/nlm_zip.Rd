@@ -17,3 +17,6 @@ A list containing a matrix with the desired outputs for each evolution of the pr
 \description{
 The Numerical Optimisation Method
 }
+\examples{
+nlm_zip(knee_pain_obs)
+}

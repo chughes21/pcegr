@@ -32,3 +32,10 @@ A series of highest density intervals for each parameter.
 \description{
 This function calculates the highest density interval for the parameters of a Gamma posterior, as with a Poisson response variable.
 }
+\details{
+This function calculates the highest density interval for the estimated rates of the leaf stages in a PCEG or ZIPCEG. The expected value itself can be found using \code{\link[=value_extractor]{value_extractor()}}.
+}
+\examples{
+mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+hdi_gamma_extractor(knee_pain_obs,mod,zip=FALSE)
+}

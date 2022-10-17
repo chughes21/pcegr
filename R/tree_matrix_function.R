@@ -2,8 +2,8 @@
 #'
 #' A function to refactor the data and create a refactored matrix that matches the covariates in the tree.
 #'
-#' @param data
-#' @param variable_time
+#' @param data A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.
+#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #'
 #' @return A list containing the refactored data, the number of levels in the tree, the number of leaves in the tree, a vector of the levels for each variable, and the refactored tree matrix.
 #'

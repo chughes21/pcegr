@@ -13,7 +13,6 @@
 #'
 #' @return A list containing the prior hyperparameters for each situation and its outgoing edges in the event tree.
 #'
-#' @examples
 prior_set<-function(sample,struc_zero,numbvariables,numbcat,numb,equivsize){
   check<-unlist(lapply(sample,zero_checker)) #for each situation, check how many edges have a zero count
   node_starts<-c(1,cumsum(numb[-numbvariables])+1) #start of each level

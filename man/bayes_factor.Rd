@@ -7,17 +7,22 @@
 bayes_factor(sample_sum, prior, stage1, stage2)
 }
 \arguments{
-\item{sample_sum}{A list where each element is an integer sum of the event counts for each stage.}
+\item{sample_sum}{A list where each element is an integer sum of the observed event counts and observation time for each stage.}
 
 \item{prior}{A list of numeric vectors where the numeric vectors are the hyperparameters of the Gamma prior distribution for each stage.}
 
-\item{stage1}{An integer specifying the first stage to be merged.}
+\item{stage1}{An integer value specifying the first stage to be merged.}
 
-\item{stage2}{An integer specifying the second stage to be merged.}
+\item{stage2}{An integer value specifying the second stage to be merged.}
 }
 \value{
-
+A numeric value specifying the change in log marginal likelihood after the two stages are merged.
 }
 \description{
 This function calculates the change in log marginal likelihood of a model when two stages are merged into one.
+}
+\examples{
+data<-list(t(c(10,100)),t(c(5,100)))
+prior<-list(t(c(1,1)),t(c(1,1)))
+bayes_factor(data,prior,1,2)
 }

@@ -8,10 +8,14 @@
 #' @return An integer vector detailing the stages that have merged with the unique stage given
 #'
 #' @examples
+#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+#' merged<-mod$merged
+#' merged_stage_finder(11,merged)
 merged_stage_finder<-function(unique_stage,M){
   M_unique<-as.matrix(M[,which(M[1,]==unique_stage)])
   stages_merged<-c(unique_stage,M_unique[2,])
   stages_merged<-as.vector(sort(stages_merged,decreasing=FALSE))
+  return(stages_merged)
 }
 
 #' The Merged List Extractor
@@ -20,9 +24,12 @@ merged_stage_finder<-function(unique_stage,M){
 #'
 #' @param merged A matrix specifying the merging present in a CEG.
 #'
-#' @return A list of intger vectors detailing the stages which have merged.
+#' @return A list of integer vectors detailing the stages which have merged.
 #'
 #' @examples
+#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+#' merged<-mod$merged
+#' merged_list_extractor(merged)
 merged_list_extractor<-function(merged){
   level<-max(merged[3,])
   merged_stages<-merged[,which(merged[3,]==level)]
@@ -86,6 +93,11 @@ vec_in<-function(x,v){
 #' @export
 #'
 #' @examples
+#' mod1<-pceg(knee_pain_obs,2,TRUE,TRUE)
+#' expected_count_calculator(knee_pain_obs,mod1,zip=FALSE)
+#'
+#' mod2<-zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
+#' expected_count_calculator(knee_pain_obs,mod2)
 expected_count_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE){
 
   if(!poisson_response & variable_time){

@@ -13,17 +13,21 @@ gibbs_zip(data, N = 1000, variable_time = TRUE, a = 1, b = 1, c = 1, d = 1)
 
 \item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).}
 
-\item{a}{A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate.}
+\item{a}{A numeric vector specifying the shape hyperparameter of the Gamma priors for the Poisson rates. If the vector is of length 1, this value will be repeated for each leaf.}
 
-\item{b}{A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.}
+\item{b}{A numeric vector specifying the rate hyperparameter of the Gamma priors for the Poisson rates. If the vector is of length 1, this value will be repeated for each leaf.}
 
-\item{c}{A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.}
+\item{c}{A numeric vector specifying the alpha hyperparameter of the Beta priors for the risk probabilities. If the vector is of length 1, this value will be repeated for each leaf.}
 
-\item{d}{A numeric value for the beta hyperparameter of the Beta prior for the risk probability.}
+\item{d}{A numeric vector specifying the beta hyperparameter of the Beta priors for the risk probabilities. If the vector is of length 1, this value will be repeated for each leaf.}
 }
 \value{
 A list containing a matrix with the desired outputs for each evolution of the process, as well as vectors of the estimates for the rates and risk probabilities.
 }
 \description{
 A function to carry out Gibbs sampling for each unique covariate combination in the data set.
+}
+\examples{
+gibbs_result<-gibbs_zip(knee_pain_obs)
+gibbs_result$summary
 }

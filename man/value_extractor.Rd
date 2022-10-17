@@ -36,5 +36,12 @@ value_extractor(
 A matrix displaying the observed data, the prior values, and the expected values of the parameters.
 }
 \description{
-This function calculates the expected values of parameters based on the data set and a chosen pceg model.
+This function calculates the expected values of parameters based on the data set and a chosen PCEG model.
+}
+\details{
+This function is capable of calculating the expected rate for the leaf stages in a PCEG or ZIPCEG, or the expected transition probabilities of the situation stages in any type of CEG.
+}
+\examples{
+mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+value_extractor(knee_pain_obs,mod,zip=FALSE)
 }

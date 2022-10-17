@@ -16,8 +16,8 @@ zipceg(
   gamma_beta = 2,
   beta_c = 1,
   beta_d = 1,
-  p_0 = NA,
-  l_0 = NA,
+  p_0 = 0.5,
+  l_0 = 1,
   tol = 1e-10,
   var_disc = 0,
   disc_length = 0,
@@ -72,6 +72,9 @@ the comparison set of stages left to be merged, a list of the stages merged, and
 }
 \description{
 This function fits a ZIPCEG model to the chosen data set, based on chosen methods of parameter estimation and state imputation.
+}
+\details{
+This function takes the same inputs as the \code{\link[=pceg]{pceg()}}, along with chosen methods of parameter estimation and state imputation, to fit a ZIPCEG model. As with \code{\link[=pceg]{pceg()}} it can perform variable discretisation methods, but is not to be used for vanilla CEGs.
 }
 \examples{
  zipceg(knee_pain_obs,"nlm",variable_time=TRUE)

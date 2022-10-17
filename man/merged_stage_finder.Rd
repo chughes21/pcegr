@@ -15,5 +15,10 @@ merged_stage_finder(unique_stage, M)
 An integer vector detailing the stages that have merged with the unique stage given
 }
 \description{
-A function to find which stages have merged with a given unique stage from the merging details of a CEG.
+This function finds which stages have merged with a given unique stage from the merging details of a CEG.
+}
+\examples{
+mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+merged<-mod$merged
+merged_stage_finder(11,merged)
 }

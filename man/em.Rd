@@ -29,3 +29,9 @@ This function carries out the Expectation-Maximisation algorithm for a leaf, giv
 For a specific leaf, which is a unique evolution of the process, the event counts and observed times are used, alongside the \code{\link[=cdll]{cdll()}} function and some initial parameter values,
 to carry out the Expectation-Maximisation algorithm.
 }
+\examples{
+y<-c(1,0,2,0)
+t<-c(0.5,0.7,0.8,1.2)
+params<-c(0.5,1.5)
+em(params[1],params[2],y,t)
+}

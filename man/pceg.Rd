@@ -50,7 +50,7 @@ pceg(
 \value{
 A list specifying a PCEG model. The list contains: the prior for the final model, the data for the final model, the stage numbers for the final model,
 the stage structure for the final model, the vector of likelihoods after each merging, the details of the stages merged at each step,
-the comparison set of stages left to be merged, a list of the stages merged, and the log marginal likelihood of the final model.
+the comparison set of stages left to be merged, and the log marginal likelihood of the final model.
 }
 \description{
 This function fits a PCEG model to a data set.
@@ -59,5 +59,6 @@ This function fits a PCEG model to a data set.
 This function takes a data set, a prior structure, and various other inputs to fit a PCEG model. It is flexible enough to fit a vanilla CEG, and perform variable discretisation methods.
 }
 \examples{
-pceg(knee_pain_obs,2,TRUE,TRUE)
+mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+mod$result
 }

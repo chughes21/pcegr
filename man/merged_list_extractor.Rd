@@ -10,8 +10,13 @@ merged_list_extractor(merged)
 \item{merged}{A matrix specifying the merging present in a CEG.}
 }
 \value{
-A list of intger vectors detailing the stages which have merged.
+A list of integer vectors detailing the stages which have merged.
 }
 \description{
-A function to find a list of the stages which have merged given the merging details of a CEG.
+This function finds a list of the stages which have merged given the merging details of a CEG.
+}
+\examples{
+mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+merged<-mod$merged
+merged_list_extractor(merged)
 }

@@ -23,5 +23,8 @@ prior_set(sample, struc_zero, numbvariables, numbcat, numb, equivsize)
 A list containing the prior hyperparameters for each situation and its outgoing edges in the event tree.
 }
 \description{
-The Prior Set Function
+This function sets the prior for the situations in the tree.
+}
+\details{
+This function sets the prior for the situations in the tree which have categorical response variables, based on the equivalent sample size and how zero edge counts should be treated.
 }

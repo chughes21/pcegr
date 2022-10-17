@@ -6,8 +6,8 @@
 \usage{
 em_zip(
   data,
-  p_0 = NA,
-  l_0 = NA,
+  p_0 = 0.5,
+  l_0 = 1,
   variable_time = TRUE,
   max_iter = 10000,
   tol = 1e-10
@@ -16,9 +16,9 @@ em_zip(
 \arguments{
 \item{data}{A data set, where the observed count vector and time vector (if variable) are the last two columns.}
 
-\item{p_0}{A numeric initial value for the risk probability.}
+\item{p_0}{A numeric vector of initial values for the risk probabilities. If the vector is of length 1, this value will be repeated for each leaf.}
 
-\item{l_0}{A numeric initial value for the rate.}
+\item{l_0}{A numeric vector of initial values for the rates. If the vector is of length 1, this value will be repeated for each leaf}
 
 \item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).}
 
@@ -34,4 +34,7 @@ This function carries out the Expectation-Maximisation algorithm across all leav
 }
 \details{
 For each leaf, which represents a unique evolution of the process, the \code{\link[=em]{em()}} function is applied.
+}
+\examples{
+em_zip(knee_pain_obs)
 }
