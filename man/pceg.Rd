@@ -5,7 +5,7 @@
 \title{The PCEG function}
 \usage{
 pceg(
-  exampledata = exampledata,
+  data,
   equivsize = 3,
   poisson_response = FALSE,
   variable_time = FALSE,
@@ -21,7 +21,7 @@ pceg(
 )
 }
 \arguments{
-\item{exampledata}{A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.}
+\item{data}{A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.}
 
 \item{equivsize}{A numeric value specifying the equivalent sample size for the prior, a measure of confidence in the prior.}
 
