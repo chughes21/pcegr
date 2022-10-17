@@ -461,7 +461,7 @@ zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, pl
   if(plot_rates){
     output<-rates
   }else if(plot_probs){
-    output<-rates
+    output<-probs
   }else{output<-NA}
 
 

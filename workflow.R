@@ -33,6 +33,11 @@ zipceg.iter(knee_pain_obs,"nlm",iter_total=10,violin=TRUE,variable_time=TRUE)
 zipceg.iter(knee_pain_obs,"nlm",iter_total=10,hist=TRUE,variable_time=TRUE)
 zipceg.iter(knee_pain_obs,"nlm",iter_total=10,scatter=TRUE,variable_time=TRUE)
 
+zipceg.iter(knee_pain_obs,"nlm",iter_total=10,plot_rates=FALSE,plot_probs=TRUE,variable_time=TRUE)
+zipceg.iter(knee_pain_obs,"nlm",iter_total=10,plot_rates=FALSE,plot_probs=TRUE,violin=TRUE,variable_time=TRUE)
+zipceg.iter(knee_pain_obs,"nlm",iter_total=10,plot_rates=FALSE,plot_probs=TRUE,hist=TRUE,variable_time=TRUE)
+zipceg.iter(knee_pain_obs,"nlm",iter_total=10,plot_rates=FALSE,plot_probs=TRUE,scatter=TRUE,variable_time=TRUE)
+
 hdi_gamma_extractor(knee_pain_obs,pceg.obs,zip=FALSE)
 hdi_beta_extractor(knee_pain_obs,pceg.obs,level_rel_final=-1,zip=FALSE)
 hdi_beta_extractor(knee_pain_obs,pceg.obs,level_rel_final=-2,zip=FALSE)
