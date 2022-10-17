@@ -30,7 +30,7 @@ expected_count_calculator(
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
 }
 \value{
-A list of three matrices. The first matrix is the observed count matrix, the second is the expected count matrix, and the third is the chi-squared contribution matrix.
+A list of three matrices and a numeric value. The first matrix is the observed count matrix, the second is the expected count matrix, and the third is the chi-squared contribution matrix.The numeric value is the sum of the chi square contributions.
 }
 \description{
 A function to test the goodness of fit of a pceg model to a data set.
