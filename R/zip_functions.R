@@ -155,7 +155,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 
 #' The Iterative ZIPCEG function
 #'
-#' This function performs the ZIPCEG model selection a specified number of times, producing plots of the rates and stage ranks, and selecting the model with the largest log marginal likelihood.
+#' This function performs the ZIPCEG model selection a specified number of times, capable of producing plots of the rates and risk probabilities, and selecting the model with the largest log marginal likelihood.
 #'
 #' @param data A data set where the observed count vector and time vector (if variable) are the last two columns.
 #' @param method A character string indicating the method for parameter estimation. The character string can be an element of c("Gibbs","nlm","EM","mle","mm").
@@ -198,7 +198,7 @@ zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, pl
   }
 
   if(plot_rates & plot_probs){
-    stop("Can't Return Rates and State Probabilities - Choose one ")
+    stop("Only 1 plot option possible between rates and risk probabilities ")
   }
 
   path_details<-refactored_tree_matrix(data,variable_time)

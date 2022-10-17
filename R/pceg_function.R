@@ -109,7 +109,7 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #'
 #' @return A list specifying a PCEG model. The list contains: the prior for the final model, the data for the final model, the stage numbers for the final model,
 #' the stage structure for the final model, the vector of likelihoods after each merging, the details of the stages merged at each step,
-#' the comparison set of stages left to be merged, a list of the stages merged, and the log marginal likelihood of the final model.
+#' the comparison set of stages left to be merged, and the log marginal likelihood of the final model.
 #' @export
 #'
 #' @examples pceg(knee_pain_obs,2,TRUE,TRUE)
@@ -565,6 +565,6 @@ pceg<-function(exampledata=exampledata ,equivsize=3,  poisson_response = FALSE, 
   }
   result<-mergedlist[stages]
   newlist <-list(prior=prior ,data=data ,stages=stages ,result=result ,score=score ,
-                 merged=merged_out ,comparisonset=comparisonset ,mergedlist=mergedlist ,lik=lik)
+                 merged=merged_out ,comparisonset=comparisonset ,lik=lik)
   return(newlist)
 }
