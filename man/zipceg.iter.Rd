@@ -9,7 +9,6 @@ zipceg.iter(
   method = "Gibbs",
   iter_f = 10000,
   iter_total = 1,
-  plot_ranks = TRUE,
   plot_rates = TRUE,
   plot_probs = FALSE,
   hist = FALSE,
@@ -41,8 +40,6 @@ zipceg.iter(
 \item{iter_f}{An integer specifying the number of iterations for the parameter estimation method chosen, if necessary.}
 
 \item{iter_total}{An integer specifying the number of iterations the model selection process should be performed for.}
-
-\item{plot_ranks}{A logical value indicating whether the stage ranks, based on rates, should be plotted (TRUE) or not (FALSE).}
 
 \item{plot_rates}{A logical value indicating whether the stage rates should be plotted (TRUE) or not (FALSE).}
 
@@ -87,7 +84,7 @@ zipceg.iter(
 \item{l_0}{A numeric initial value for the rate.}
 }
 \value{
-A list containing: a matrix of the estimated rates for each leaf, a matrix of the ranks for each leaf, a numeric value of the log marginal likelihood of the MAP model, and the MAP model itself.
+A list containing: a matrix of the estimated rates for each leaf, a numeric value of the log marginal likelihood of the MAP model, and the MAP model itself.
 }
 \description{
 This function performs the ZIPCEG model selection a specified number of times, producing plots of the rates and stage ranks, and selecting the model with the largest log marginal likelihood.

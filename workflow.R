@@ -29,7 +29,7 @@ zipceg.obs$result
 expected_count_calculator(knee_pain_obs,zipceg.obs)
 
 zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=FALSE,violin=TRUE,variable_time=TRUE)
-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=FALSE,hist=TRUE,variable_time=TRUE)
+zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=TRUE,hist=TRUE,variable_time=TRUE)
 zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=FALSE,violin=TRUE,variable_time=TRUE)
 
 hdi_gamma_extractor(knee_pain_obs,pceg.obs,zip=FALSE)

@@ -161,7 +161,6 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @param method A character string indicating the method for parameter estimation. The character string can be an element of c("Gibbs","nlm","EM","mle","mm").
 #' @param iter_f An integer specifying the number of iterations for the parameter estimation method chosen, if necessary.
 #' @param iter_total An integer specifying the number of iterations the model selection process should be performed for.
-#' @param plot_ranks A logical value indicating whether the stage ranks, based on rates, should be plotted (TRUE) or not (FALSE).
 #' @param plot_rates A logical value indicating whether the stage rates should be plotted (TRUE) or not (FALSE).
 #' @param plot_probs A logical value indicating whether the risk probabilities should be plotted (TRUE) or not (FALSE).
 #' @param hist A logical value indicating whether the plot should be in the form of a histogram (TRUE) or not (FALSE).
@@ -185,21 +184,17 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @param cat_limit An integer value specifying the minimum number of categories to the variable can be discretised to. If 0, there is no minimum number of categories.
 #'
 #'
-#' @return A list containing: a matrix of the estimated rates for each leaf, a matrix of the ranks for each leaf, a numeric value of the log marginal likelihood of the MAP model, and the MAP model itself.
+#' @return A list containing: a matrix of the estimated rates for each leaf, a numeric value of the log marginal likelihood of the MAP model, and the MAP model itself.
 #' @export
 #'
 #' @examples zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=FALSE,violin=TRUE)
-zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, plot_ranks = TRUE, plot_rates = TRUE,
+zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, plot_rates = TRUE,
                            plot_probs = FALSE, hist = FALSE, violin = FALSE, scatter = FALSE, equivsize=2,
                            poisson_response = TRUE, variable_time = FALSE,stoch_imputation=TRUE, gamma_alpha = 1,
                            gamma_beta = 2, beta_c = 1, beta_d = 1,p0=NA,l0=NA,tol=1e-10,
                            var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
   if(sum(hist,scatter,violin)>1 ){
     stop("Only 1 display option possible between histogram, violin and scatter") #default is lines
-  }
-
-  if((hist | violin) & plot_ranks){
-    warning("Histogram and violin only well defined for rates. Ranks have been excluded")
   }
 
   if(plot_rates & plot_probs){
@@ -220,7 +215,6 @@ zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, pl
 
   num<-p/2
 
-  stage_ranks<-matrix(nrow=iter_total,ncol=num)
   rates<-matrix(nrow=iter_total,ncol=num)
   probs<-matrix(nrow=iter_total,ncol=num)
 
@@ -236,23 +230,21 @@ zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, pl
     merged<-ceg.temp$merged
     merged_rates<-merged[,which(merged[3,]==n2)]
     merged_probs<-merged[,which(merged[3,]==n1)]
-    data.mat<-matrix(nrow=num,ncol=8)
+    data.mat<-matrix(nrow=num,ncol=7)
     data.mat[,1]<-1:num
-    colnames<-c("leaf","y","t","prior_a","prior_b","rate","rate rank","prob")
+    colnames<-c("leaf","y","t","prior_a","prior_b","rate","prob")
     for(i in 1:num){
       data.mat[i,2:3]<-ceg.temp$data[[risk_stages[i]]]
-      data.mat[i,4]<-data.mat[i,2]/data.mat[i,3]
+      data.mat[i,4:5]<-ceg.temp$prior[[risk_stages[i]]]
+      data.mat[i,6]<-sum(data.mat[i,c(2,4)])/sum(data.mat[i,c(3,5)])
     }
-    data.mat[,5]<-rank(data.mat[,4])
     ind<-which(is.na(data.mat[,2]))
     for(k in ind){
       ref1<-merged[1,which(merged[2,]==risk_stages[k])]
       ref2<-which(risk_stages==ref1)
       data.mat[k,-1]=data.mat[ref2,-1]
     }
-    rates[j,]<-data.mat[,4]
-    stage_ranks[j,]<-data.mat[,5]
-
+    rates[j,]<-data.mat[,6]
     score[j]<-ceg.temp$lik
 
     if(j==1){
@@ -266,27 +258,6 @@ zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, pl
       }
     }
 
-  }
-
-  if(plot_ranks){
-
-    data.temp<-data.frame(x=1:iter_total,leaf=stage_ranks)
-    data.long<-melt(data.temp,id.vars="x")
-
-    data.long<-mutate(data.long,label = if_else(x==iter_total,as.character(variable),NA_character_))
-
-    if(scatter){
-      rank_plot<-ggplot(data=data.long,aes(x=x,y=value,group=variable))+geom_point(aes(col=variable),position=position_jitter(width=0.1,height=0.01))+
-        xlab("Iteration")+ylab("Rank")+
-        ggtitle("Stage Rank by Iteration")+
-        geom_label_repel(mapping=aes(label=label))
-    }else{
-
-      rank_plot<-ggplot(data=data.long,aes(x=x,y=value,group=variable))+geom_line(aes(col=variable),position=position_jitter(width=0.1,height=0.01))+
-        xlab("Iteration")+ylab("Rank")+
-        ggtitle("Stage Rank by Iteration")+
-        geom_label_repel(mapping=aes(label=label))
-    }
   }
 
   if(plot_rates){
@@ -333,18 +304,10 @@ zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, pl
       ggtitle("Estimated Rate by Iteration")+
       geom_label_repel(mapping=aes(label=label))
     }
+
+  print(rate_plot)
   }
 
-  if(hist){
-    print(rate_plot)
-  }else if(plot_ranks & plot_rates){
-    print(ggarrange(rank_plot, rate_plot),nrow=2,ncol=1)
-  }else if (plot_ranks){
-    print(rank_plot)
-  }else{
-    print(rate_plot)
-  }
-
-  return(list(rates = rates, stage_ranks = stage_ranks,score=score,mod=map_mod))
+  return(list(rates = rates, score=score,mod=map_mod))
 
 }
