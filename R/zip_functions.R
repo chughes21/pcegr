@@ -377,10 +377,10 @@ zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, pl
 
       #in order to get leaves arranged vertically rather than horizontally
 
-      index_mat<-data.frame(cbind(1:(num/2),((num/2+1):num)))
+      index_mat<-data.frame(cbind(1:(p/2),((p/2+1):p)))
       index_hor<- c(t(index_mat))
 
-      for(j in 1:num){
+      for(j in 1:p){
         i<-index_hor[j]
         y=data.temp[,i+1]
         m=length(y)
@@ -391,7 +391,7 @@ zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, pl
           xlab("Rate") +ggtitle(paste("Leaf", i, sep = " "))+xlim(xlim_l,xlim_u)+ylim(0,iter_total)
       }
 
-      rate_plot<-do.call(ggarrange,list(plotlist=leaves,nrow=num/2,ncol=2))
+      rate_plot<-do.call(ggarrange,list(plotlist=leaves,nrow=p/2,ncol=2))
     }else if(violin){
       rate_plot<- ggplot(data=data.long,aes(x=variable,y=value))+geom_violin(aes(col=variable,fill=variable))+
         xlab("Leaf")+ylab("Rate")+
@@ -425,10 +425,10 @@ zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, pl
 
       #in order to get leaves arranged vertically rather than horizontally
 
-      index_mat<-data.frame(cbind(1:(num/2),((num/2+1):num)))
+      index_mat<-data.frame(cbind(1:(p/2),((p/2+1):p)))
       index_hor<- c(t(index_mat))
 
-      for(j in 1:num){
+      for(j in 1:p){
         i<-index_hor[j]
         y=data.temp[,i+1]
         m=length(y)
@@ -439,7 +439,7 @@ zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, pl
           xlab("Risk Prob") +ggtitle(paste("Leaf", i, sep = " "))+xlim(xlim_l,xlim_u)+ylim(0,iter_total)
       }
 
-      prob_plot<-do.call(ggarrange,list(plotlist=leaves,nrow=num/2,ncol=2))
+      prob_plot<-do.call(ggarrange,list(plotlist=leaves,nrow=p/2,ncol=2))
     }else if(violin){
       prob_plot<- ggplot(data=data.long,aes(x=variable,y=value))+geom_violin(aes(col=variable,fill=variable))+
         xlab("Leaf")+ylab("Risk Prob")+
