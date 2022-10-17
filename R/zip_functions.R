@@ -159,8 +159,8 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #'
 #' @param data A data set where the observed count vector and time vector (if variable) are the last two columns.
 #' @param method A character string indicating the method for parameter estimation. The character string can be an element of c("Gibbs","nlm","EM","mle","mm").
-#' @param iter_f An integer specifying the number of iterations for the parameter estimation method chosen, if necessary.
 #' @param iter_total An integer specifying the number of iterations the model selection process should be performed for.
+#' @param iter_f An integer specifying the number of iterations for the parameter estimation method chosen, if necessary.
 #' @param plot_rates A logical value indicating whether the stage rates should be plotted (TRUE) or not (FALSE).
 #' @param plot_probs A logical value indicating whether the risk probabilities should be plotted (TRUE) or not (FALSE).
 #' @param hist A logical value indicating whether the plot should be in the form of a histogram (TRUE) or not (FALSE).
@@ -188,7 +188,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @export
 #'
 #' @examples zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=FALSE,violin=TRUE)
-zipceg.iter<-function(data, method = "Gibbs", iter_f = 10000, iter_total = 1, plot_rates = TRUE,
+zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 1000, plot_rates = TRUE,
                            plot_probs = FALSE, hist = FALSE, violin = FALSE, scatter = FALSE, equivsize=2,
                            poisson_response = TRUE, variable_time = FALSE,stoch_imputation=TRUE, posterior = TRUE, gamma_alpha = 1,
                            gamma_beta = 2, beta_c = 1, beta_d = 1,p0=NA,l0=NA,tol=1e-10,
