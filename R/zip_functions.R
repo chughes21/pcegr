@@ -10,6 +10,7 @@
 #' @param all_risk A logical value indicating whether all observations should be considered at risk. This is necessary when converting a PCEG to a ZIPCEG for the purposes of calculating the Bayes Factor.
 #'
 #' @return A data set containing refactored covariates, imputed risk states, and observed counts and times.
+#' @export
 #'
 #' @examples state_imputer(knee_pain_obs)
 state_imputer<-function(data,lambda=1,prob=0.5,variable_time=TRUE,stoch=TRUE,all_risk=FALSE){
