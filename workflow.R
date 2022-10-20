@@ -19,11 +19,19 @@ devtools::load_all()
 usethis::use_r("prior_function")
 usethis::use_r("covariate_calculator_function")
 usethis::use_r("uniform_time_functions")
+usethis::use_vignette("pcegr")
 
 devtools::load_all()
+devtools::check()
+
+
 pceg.obs<-pceg(knee_pain_obs,2,TRUE,TRUE)
 pceg.obs$result
 expected_count_calculator(knee_pain_obs,pceg.obs,zip=FALSE)
+
+for(i in 0:3){
+  print(value_extractor(knee_pain_obs,pceg.obs,level_rel_final = i-3,zip=FALSE))
+}
 
 zipceg.obs<-zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
 zipceg.obs$result

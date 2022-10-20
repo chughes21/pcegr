@@ -83,30 +83,31 @@ gibbs_zip<-function(data,N = 1000, variable_time = TRUE, a = 1, b = 1, c = 1, d 
     warning("Length of vectors of prior hyperparameters for Beta priors don't match.")
   }
 
+  ind_even<-seq(2,2*p,2)
+
   if(length(a)==1){
     a<-rep(a,p)
-  }else if(length(a)!=p){
-    stop("Vector of shape hyperparameters doesn't match number of leaves.")
-  }
+  }else if(length(a)==2*p){
+    a<-a[ind_even]
+  }else{stop("Vector of shape hyperparameters doesn't match number of leaves.")}
 
   if(length(b)==1){
     b<-rep(b,p)
-  }else if(length(b)!=p){
-    stop("Vector of rate hyperparameters doesn't match number of leaves.")
-  }
+  }else if(length(b)==2*p){
+    b<-b[ind_even]
+  }else{stop("Vector of rate hyperparameters doesn't match number of leaves.")}
 
   if(length(c)==1){
     c<-rep(c,p)
-  }else if(length(c)!=p){
-    stop("Vector of alpha hyperparameters doesn't match number of leaves.")
-  }
+  }else if(length(c)==2*p){
+    c<-c[ind_even]
+  }else{stop("Vector of alpha hyperparameters doesn't match number of leaves.")}
 
   if(length(d)==1){
     d<-rep(d,p)
-  }else if(length(d)!=p){
-    stop("Vector of beta hyperparameters doesn't match number of leaves.")
-  }
-
+  }else if(length(d)==2*p){
+    d<-d[ind_even]
+  }else{stop("Vector of beta hyperparameters doesn't match number of leaves.")}
 
   for(i in 1:p){
     v<-tree_matrix[i,]
