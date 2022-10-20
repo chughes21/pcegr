@@ -63,14 +63,14 @@ hdi_beta_extractor<-function(data,ceg,ci=0.95,N=10000,level_rel_final=-1,poisson
   a<-summ[,1:p]
   prior<-summ[,(p+1):(2*p)]
 
-  a_star<-matrix(a+prior,ncol=p)
+  a_star<-a+prior
 
   k<-length(a_star[,1])
 
   output<-list()
 
   for(i in 1:k){
-    v<-a_star[i,]
+    v<-as.numeric(a_star[i,])
     m=sum(v)
     output[[i]]<-list()
     for(j in 1:p){
