@@ -54,10 +54,25 @@ value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,var
   k1<-3*p
   k2<- k1 +1*true_value_input
 
-  out.mat<-matrix(nrow=length(ind),ncol=k2)
+  out.mat<-data.frame(matrix(nrow=length(ind),ncol=k2))
 
   j<-1
 
+  num<-c(1:p)
+
+  if(level_rel_final == 0 & poisson_response){
+    colnames(out.mat)[1:p]<-c("y_bar","t_bar")
+    colnames(out.mat)[(p+1):(2*p)]<-c("prior_a","prior_b")
+    colnames(out.mat)[k1]<-"exp_value"
+  }else{
+    colnames(out.mat)[1:p]<-paste0("cat",num)
+    colnames(out.mat)[(p+1):(2*p)]<-paste0("prior",num)
+    colnames(out.mat)[(2*p+1):k1]<-paste0("exp_value",num)
+  }
+
+  if(true_value_input){
+    colnames(out.mat)[k2]<-"true"
+  }
 
   for(i in seq_along(ind)){
     out.mat[i,1:p]<-ceg$data[[ind[i]]]
@@ -81,6 +96,10 @@ value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,var
       }
     }
 
+  }
+
+  if(level_rel_final == 0 & poisson_response){
+    out.mat<-out.mat[,-(2*p+1)]
   }
   return(out.mat)
 }

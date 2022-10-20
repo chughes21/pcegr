@@ -126,8 +126,8 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
     stop(paste0("The ",method," method is only available for uniform time"))
   }
 
-  if((method %in% c("nlm","mle","mm")) & iter){
-    warning(paste0("Nonzero amount of iterations chosen for ",method," method"))
+  if((method %in% c("nlm","mle","mm")) & (iter!=10000)){
+    warning(paste0("Nonzero, non-default amount of iterations chosen for ",method," method"))
   }
 
   if(stoch_imputation & !variable_time){

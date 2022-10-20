@@ -49,7 +49,7 @@ pmod<-pceg(knee_pain_obs,2,TRUE,TRUE, gamma_alpha = 0.25,gamma_beta = 0.1)
 pmod$result
 ```
 
-We can see that the model has correctly identified that the individuals of either Age who are Overweight with a History of injury are in the same stage, and likewise for those with No History. It has also correctly identified that History is independent of Weight given Age. 
+We can see that the model has correctly identified that the individuals of either Age who are Overweight with a History of injury are in the same stage (8), and likewise for those with No History (9). It has also correctly identified that History is independent of Weight given Age (4 and 5). 
 
 We now can estimate the posterior expected values of the tranisiton probabilities for the covariates, and the rates for the response. 
 ```{r}
@@ -77,7 +77,7 @@ TO fit a ZIPCEG model, we must first choose the method of parameter estimation. 
 
 We will keep the same effective sample size as for the PCEG, but we must consider the prior on the leaves. For a ZIPCEG, we want the risk free leaves to have zero prior hyperparameters, and the risk leaves will have the same hyperparameters as for the PCEG. The priors must be input as vectors, where every odd element is a risk free leaf and thus 0. There are 16 leaves in total, 8 of each type.
 ```{r}
-a<-rep(c(0,0.,25),8)
+a<-rep(c(0,0.25),8)
 b<-a/2.5
 ```
 
@@ -88,7 +88,85 @@ d<-0.125
 ```
 We will also run the Gibbs sampler for $N=10000$ iterations. When the parameeters are estimated using the Gibbs sampler, we will impute the states stochastically.
 ```{r}
-zipmod1<-zipceg(knee_pain_obs,"Gibbs",iter=10000,variable_time = TRUE, gamma_alpha = a, gamma_beta = b, beta_c = c, beta_d = d)
+zipmod1<-zipceg(knee_pain_obs,"Gibbs",iter=10000,variable_time = TRUE, stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b, beta_c = c, beta_d = d)
+zipmod1$result
+```
+We can see that the model correctly merges the risk states (8 and 9)and the rates (15 and 16). We can also see that all of the risk free leaves are merged together into one stage (12). The covariate relationships have also been preserved from the PCEG. 
+
+We now compare the goodness of fit to the PCEG. First, we calculate the log marginal likelihood and the Chi-square calculation. 
+```{r}
+zipmod1$lik
+expected_count_calculator(knee_pain_obs,zipmod1,zip=TRUE)
+```
+We can see that the Chi-square value is significantly lower for the ZIPCEG model, which is to be expected as the model was simulated assuming a zero-inflated Poisson distribution.
+
+As for the log marginal likelihood, this is not directly comparable to the PCEG model, due to the extra covariate and different priors. The key here is to fit a ZIPCEG model to the data with the same prior as the regular ZIPCEG model, except every individual is assumed to be at risk. This can be done with the *pceg* function as follows:
+```{r}
+data.risk<-state_imputer(knee_pain_obs,all_risk=TRUE)
+pmod.bf<-pceg(data.risk,2,TRUE,TRUE,TRUE,gamma_alpha=a,gamma_beta=b)
+pmod.bf$lik
+```
+This is the exact same model as the regular PCEG, except we can see that the log marginal likelihood has decreased. This log marginal likelihood is comparable to the ZIPCEG.
+```{r}
+zipmod1$lik-pmod.bf$lik
+```
+Hence, the ZIPCEG is a significantly better fit to the data than the PCEG according to the log Bayes factor also. 
+
+We can also fit the ZIPCEG using the *nlm* method instead. Notably, this doesn't require a Beta($c,d$) prior, or a number of iterations. It is also significantly faster.  
+```{r}
+zipmod2<-zipceg(knee_pain_obs,"nlm",variable_time = TRUE, stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b)
+zipmod2$result
+zipmod2$lik
+expected_count_calculator(knee_pain_obs,zipmod2)
+```
+Comparing the two ZIPCEG models fitted appears to favour the Gibbs sampler method.
+```{r}
+zipmod1$lik-zipmod2$lik
+expected_count_calculator(knee_pain_obs,zipmod1)$chi_sq-expected_count_calculator(knee_pain_obs,zipmod2)$chi_sq
+```
+However, both of these models are the result of one iteration, and the ZIPCEG model selection process is not deterministic. We can thus carry out the model selection a number of times, for example 100, and compare the risk probabilities and rates for each leaf, as well as select the MAP model from those iterations. Comparing the probabilities and rates for each leaf gives an idea of how the leaves merge with each other, as those who have similar plots will merge regularly. This is useful for data that is not simulated, as there may be significant variability from iteration to iteration. 
+
+we will use violin plots to visualise, but there are options to use line plots (default), scatter plots, or histograms. We will use the *nlm* method, due to its lower computational cost per iteration. 
+```{r}
+mapmod<-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,violin=TRUE,variable_time = TRUE,gamma_alpha=a,gamma_beta=b)$mod
+zipceg.iter(knee_pain_obs,"nlm",iter_total=100,violin=TRUE,variable_time = TRUE,plot_rates=FALSE,plot_probs=TRUE,gamma_alpha=a,gamma_beta=b)
+```
+We can see in the plot of the rates the merging that is present for leaves 3 and 7, and 4 and 8. The violin plots are identical, indicating that they always merge, and so we can be confident in the result from our initial model selection. In general, the violin plots are quite tight, which is a result of the large sample size and demarcation between the leaves. The risk probabilities also show these mergings, although not as consistently as for the rates. For example, leaf 4 occasionally merges with leaf 6 instead of 8. In both plots, leaf 5 is by far the most variable, and this is a result of it having the smallest sample size.
+
+After looking at the plots above, we can be confident in the mergings produced by the single iteration of the model selection process. However, the way the states are imputed can still significantly affect the log marginal likelihood of the final model. We have selected a MAP model, and we can investigate its properties.
+```{r}
+mapmod$result
+mapmod$lik
+mapmod$lik-zipmod1$lik
+expected_count_calculator(knee_pain_obs,mapmod,zip=TRUE)$chi_sq-expected_count_calculator(knee_pain_obs,zipmod1,zip=TRUE)$chi_sq
+
+```
+Interestingly, the MAP model outperforms the single iteration of the Gibbs sampler in terms of log marginal likelihood, but not in terms of the Chi-square. We can compare the matrix of their Chi-square contributions to examine why.
+```{r}
+expected_count_calculator(knee_pain_obs,mapmod,zip=TRUE)$chi.mat-expected_count_calculator(knee_pain_obs,zipmod1,zip=TRUE)$chi.mat
+```
+We can see that there are some differences between the two models for leaves 1, 3 and 6. We now look at the posterior expected values of the risk probabilities and rates from the MAP model. We also compare these to the true values of $\lambda_i$ and $\pi_i$. Note that the estimates below are for each stage, not leaf. For example, stage 3 contains leaves 3 and 7. The first row for $\lambda$ is the risk free stage, and so the second row is stage 1.  
+```{r}
+true_lambda<-c(0.5,2.5,3,5,1.5,4,3,5)
+true_p<-c(0.2,0.6,0.7,0.9,0.45,0.8,0.7,0.9)
+value_extractor(knee_pain_obs,mapmod,true_value=true_lambda)
+value_extractor(knee_pain_obs,mapmod,level_rel_final = -1,true_value=true_p)
+
+```
+We can also calculate the expected values for the single iteration of the Gibbs sampler.
+```{r}
+value_extractor(knee_pain_obs,zipmod1,true_value=true_lambda)
+value_extractor(knee_pain_obs,zipmod1,level_rel_final = -1,true_value=true_p)
+```
+Rather unexpectedly, the *zipmod1* appears to generally outperform *mapmod* in estimating the true values of the parameters. The key to why this happens lies in the imputation of states. 
+
+We will once again fit a PCEG model, except this time to the true data. 
+```{r}
+truemod<-pceg(knee_pain,2,TRUE,TRUE,gamma_alpha=a,gamma_beta=b,zip=TRUE)
+truemod$lik
+truemod$result
+value_extractor(knee_pain,truemod,true_value=c(0,true_lambda),zip=FALSE)
+value_extractor(knee_pain,truemod,level_rel_final=-1,true_value=true_p,zip=FALSE)
 ```
 
 
