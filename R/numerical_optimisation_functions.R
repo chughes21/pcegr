@@ -114,7 +114,7 @@ nlm_zip<-function(data,variable_time = TRUE){
       l_0<-log(sum(y)/(sum(t[y>0])))
     }
 
-    est<-nlm(ziplike,c(p_0,l_0),y = y,t = t)$estimate #leaf = i is just for when it's being printed really
+    est<-suppressWarnings(nlm(ziplike,c(p_0,l_0),y = y,t = t)$estimate) #leaf = i is just for when it's being printed really
     prob<-glogitinv(est[1])
     lambda<-exp(est[2])
 
