@@ -51,7 +51,7 @@ We can thus isolate the true values for $\pi$ and $\lambda$, along with what sho
 ```{r}
 true_lambda<-leaf_params$Rate
 true_p<-leaf_params$Risk_Prob
-pceg_lambda<-true_lambda*true_p
+pceg_lambda<-true_lambda*true_p;pceg_lambda
 ```
 
 
@@ -79,8 +79,10 @@ We now can estimate the posterior expected values of the tranisiton probabilitie
 for(i in 0:2){
   print(value_extractor(knee_pain_obs,pmod,level_rel_final = i-3,zip=FALSE))
 }
-value_extractor(knee_pain_obs,pmod,level_rel_final = 0,true_value_input = pceg_lambda, zip=FALSE)
+value_extractor(knee_pain_obs,pmod,level_rel_final = 0,true_value = pceg_lambda, zip=FALSE)
 ```
+As can be seen, while the model is misspecified, it correctly identifies the transition probabilities, and the estimates of the rates are close to what we would expect.
+
 We can also find 95% highest density intervals for these parameters. For example:
 ```{r}
 hdi_gamma_extractor(knee_pain_obs,pmod,zip=FALSE)
