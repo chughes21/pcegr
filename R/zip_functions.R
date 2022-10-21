@@ -207,7 +207,7 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 1000, pl
                            poisson_response = TRUE, variable_time = FALSE,stoch_imputation=TRUE, posterior = TRUE, gamma_alpha = 1,
                            gamma_beta = 2, beta_c = 1, beta_d = 1,p0=NA,l0=NA,tol=1e-10,
                            var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
-  if(sum(hist,scatter,violin)>1 ){
+  if(sum(hist,scatter,line)>1 ){
     stop("Only 1 display option possible between histogram, line and scatter") #default is lines
   }
 
