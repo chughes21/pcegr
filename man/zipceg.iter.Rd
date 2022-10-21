@@ -19,6 +19,7 @@ zipceg.iter(
   variable_time = FALSE,
   stoch_imputation = TRUE,
   posterior = TRUE,
+  print_output = FALSE,
   gamma_alpha = 1,
   gamma_beta = 2,
   beta_c = 1,
@@ -57,6 +58,10 @@ zipceg.iter(
 \item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.}
 
 \item{stoch_imputation}{A logical value indicating whether stochastic (TRUE) or deterministic (FALSE) imputation should be used.}
+
+\item{posterior}{A logical value indicating whether the posterior expected value (TRUE) or sample mean (FALSE) should be output.}
+
+\item{print_output}{A logical value indicating whether the output for each iteration should be printed (TRUE) or not (FALSE).}
 
 \item{gamma_alpha}{A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.}
 
