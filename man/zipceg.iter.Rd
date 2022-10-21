@@ -8,7 +8,7 @@ zipceg.iter(
   data,
   method = "Gibbs",
   iter_total = 10,
-  iter_f = 1000,
+  iter_f = 10000,
   plot_rates = TRUE,
   plot_probs = FALSE,
   hist = FALSE,
