@@ -8,29 +8,52 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
+library(kableExtra)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 ```
 
-The pcegr package can be used to fit Poisson Chain Event Graphs (PCEGs) and Zero-Inflated Poisson Chain Event Graphs (ZIPCEGs) to data. We will demonstrate the functionality of the package using an example based around knee pain. 
+The pcegr package can be used to fit Poisson Chain Event Graphs (PCEGs) and Zero-Inflated Poisson Chain Event Graphs (ZIPCEGs) to data. We will demonstrate the functionality of the package using a simulated example based around knee pain. 
 
-Suppose a study is carried out on the instances of knee pain in a population. For each individual, their age, weight and history of injury to the legs are recorded, along with the amount of instances of knee pain they suffered over a certain period of time, in years. This period of time is variable between individuals, and varies uniformly between 1 day and 2 years.
+Suppose a study is carried out on the instances of knee pain in a population. For each individual, their age, weight and whether they have injured their legs before are recorded, along with the amount of instances of knee pain they suffered over a certain period of time, in years. This period of time is variable between individuals, and varies uniformly between 1 day and 2 years.
 
-Each of the three covariates are binary, with values:
-+ Age (A): Old or Young
-+ Weight (W): Over(weight) or Normal
-+ History (H): Yes or No
+Each of the three covariates are binary, with categories and associated binary values:
++ Age (A): Old (0) or Young (1)
++ (Over)weight (W): Yes (0) or No (1)
++ History (H): Yes (0) or No (1)
 
-while the response variable of Knee Pain (K) is assumed to come from a Zero-Inflated Poisson process where the risk probability and intensity is dependent on these three covariates. For each individual, they are assumed to have a latent risk state (S), either At Risk or Risk Free, where those who are At Risk have a nonzero probability of suffering an instance of knee pain. 
+while the response variable of Knee Pain (K) is assumed to come from a Zero-Inflated Poisson process where the risk probability and intensity is dependent on these three covariates. For each individual, they are assumed to have a latent risk state (S), either At Risk (0) or Risk Free (1), where those who are At Risk have a nonzero probability of suffering an instance of knee pain. 
 
-For an individual with risk probability $\pi$ and Poisson intensity $\lambda$, the expected number of event counts $Y$ observed over time $t$ is $E[Y] = \pi \lambda t$. Assume instead that a Poisson process with rate $\mu$ was modelling the counts, with rate estimated as $\hat{\mu}$. We would expect (for a large sample size) that \[\hat{\mu} \simeq \pi \lambda.\] Now, if we assume for two populations with different covariates that having the same rate $\lambda$ means they have the same risk probability $\pi$, a significant simplification, then we can fit either a PCEG model or ZIPCEG model to the data set, and the estimated rates and risk probabilities should be in line with the relationship above.
+For an individual with risk probability $\pi$ and Poisson intensity $\lambda$, the expected number of event counts $Y$ observed over time $t$ is $E[Y] = \pi \lambda t$. Assume instead that a Poisson process with rate $\mu$ was used to model the counts, with rate estimated as $\hat{\mu}$. We would expect (for a large sample size) that \[\hat{\mu} \simeq \pi \lambda.\] Now, if we assume for two populations with different covariates that having the same rate $\lambda$ means they have the same risk probability $\pi$, a significant simplification, then we can fit either a PCEG model or ZIPCEG model to the data set, and the estimated rates and risk probabilities should be in line with the relationship above.
 
-We have simulated $N=10000$ observations for the knee pain data set from a zero-inflated Poisson distribution with uniformly distributed observation times. We have also assumed the simplification that individuals with the same rate have the same risk probabilities, across covariate combinations. The data has been simulated under the following conditional independence statements:
+As these models are based on staged trees, we will use leaf to refer to a specific covariate combination, and also the individuals with that specific covariate combination. We use the notation $l_i$ for the $i^{\text{th}}$ leaf in the tree, and assume it has rate $\lambda_i$ and associated risk probability $\pi_i$. A leaf stage $u$ contains leaves that are assumed to have the same rate. That is: $l_i, l_j \in u \Rightarrow \lambda_i = \lambda_j$.
+
+Generally, we would not assume that $\lambda_i = \lambda_j \Rightarrow \pi_i = \pi$, but for the purposes of simulating the data in this package we have. This is a simplification, but means that when a PCEG is fit instead of a ZIPCEG, the merging for the leaves will be the same, but the PCEG will have lower posterior expected values, as outlined above. We have chosen this simplifying assumption in order to easily compare the PCEG and ZIPCEG models.  
+
+We have thus simulated $N=10000$ observations for the knee pain data set from a zero-inflated Poisson distribution with uniformly distributed observation times. The data has been simulated under the following conditional independence statements:
 + Weight is independent of Age: W $\indep$ A;
 + History is independent of Weight given Age: H $\indep$ W $\vert$ A;
 + Knee Pain (and thus State) is independent of Age given History and the individual is Overweight: K, S $\indep$ A $\vert$ H, W = "Over"
+
+In the following table, we can see each conditional transition probability, informed by the conditional independence statements above. Each probability has its definition alongside its associated stage and situations.
+```{r}
+cov_probs
+```
+
+For each leaf stage, we have the definition of the stage and its constituent leaves based on the conditional independence statements above, alongside the associated risk probability and rate.
+```{r}
+leaf_params
+```
+
+We can thus isolate the true values for $\pi$ and $\lambda$, along with what should be the PCEG estimate.
+```{r}
+true_lambda<-leaf_params$Rate
+true_p<-leaf_params$Risk_Prob
+pceg_lambda<-true_lambda*true_p
+```
+
 
 This simulation creates two data sets. The first, *knee_pain*, is the simulated data set, containing the true risk state for each individual. The second, *knee_pain_obs*, is the observed data set, which is simply *knee_pain* with the risk states removed. We can investigate these:
 ```{r}
@@ -51,11 +74,12 @@ pmod$result
 
 We can see that the model has correctly identified that the individuals of either Age who are Overweight with a History of injury are in the same stage (8), and likewise for those with No History (9). It has also correctly identified that History is independent of Weight given Age (4 and 5). 
 
-We now can estimate the posterior expected values of the tranisiton probabilities for the covariates, and the rates for the response. 
+We now can estimate the posterior expected values of the tranisiton probabilities for the covariates, and the rates for the response. The transition probabilities can be compared to *cov_probs*, while we have included what the PCEG estimate should be for $\lambda$, based on the true $\pi$ and $\lambda$.
 ```{r}
-for(i in 0:3){
+for(i in 0:2){
   print(value_extractor(knee_pain_obs,pmod,level_rel_final = i-3,zip=FALSE))
 }
+value_extractor(knee_pain_obs,pmod,level_rel_final = 0,true_value_input = pceg_lambda, zip=FALSE)
 ```
 We can also find 95% highest density intervals for these parameters. For example:
 ```{r}
@@ -129,7 +153,7 @@ However, both of these models are the result of one iteration, and the ZIPCEG mo
 we will use violin plots to visualise, but there are options to use histograms, scatter plots, or line plots. We will use the *nlm* method, due to its lower computational cost per iteration. 
 ```{r}
 mapmod<-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time = TRUE,gamma_alpha=a,gamma_beta=b)$mod
-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time = TRUE,plot_rates=FALSE,plot_probs=TRUE,gamma_alpha=a,gamma_beta=b)
+mapmod.alt<-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time = TRUE,plot_rates=FALSE,plot_probs=TRUE,gamma_alpha=a,gamma_beta=b)
 ```
 We can see in the plot of the rates the merging that is present for leaves 3 and 7, and 4 and 8. The violin plots are identical, indicating that they always merge, and so we can be confident in the result from our initial model selection. In general, the violin plots are quite tight, which is a result of the large sample size and demarcation between the leaves. The risk probabilities also show these mergings, although not as consistently as for the rates. For example, leaf 4 occasionally merges with leaf 6 instead of 8. In both plots, leaf 5 is by far the most variable, and this is a result of it having the smallest sample size.
 
@@ -145,10 +169,8 @@ Interestingly, the MAP model outperforms the single iteration of the Gibbs sampl
 ```{r}
 expected_count_calculator(knee_pain_obs,mapmod,zip=TRUE)$chi.mat-expected_count_calculator(knee_pain_obs,zipmod1,zip=TRUE)$chi.mat
 ```
-We can see that there are some differences between the two models for leaves 1, 3 and 6. We now look at the posterior expected values of the risk probabilities and rates from the MAP model. We also compare these to the true values of $\lambda_i$ and $\pi_i$. Note that the estimates below are for each stage, not leaf. For example, stage 3 contains leaves 3 and 7. The first row for $\lambda$ is the risk free stage, and so the second row is stage 1.  
+We can see that there are some differences between the two models for leaves 1, 3 and 6. We now look at the posterior expected values of $\pi_$ and $\lambda_i$ from the MAP model. We also compare these to the true values of $\lambda_i$ and $\pi_i$. Note that the estimates below are for each stage, not leaf. For example, stage 3 contains leaves 3 and 7. The first row for $\lambda$ is the risk free stage, and so the second row is stage 1.  
 ```{r}
-true_lambda<-c(0.5,2.5,3,5,1.5,4,3,5)
-true_p<-c(0.2,0.6,0.7,0.9,0.45,0.8,0.7,0.9)
 value_extractor(knee_pain_obs,mapmod,true_value=true_lambda)
 value_extractor(knee_pain_obs,mapmod,level_rel_final = -1,true_value=true_p)
 
