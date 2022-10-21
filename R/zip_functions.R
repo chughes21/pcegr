@@ -202,7 +202,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @export
 #'
 #' @examples zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=FALSE,violin=TRUE)
-zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 1000, plot_rates = TRUE,
+zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, plot_rates = TRUE,
                            plot_probs = FALSE, hist = FALSE, line = FALSE, scatter = FALSE, equivsize=2,
                            poisson_response = TRUE, variable_time = FALSE,stoch_imputation=TRUE, posterior = TRUE, gamma_alpha = 1,
                            gamma_beta = 2, beta_c = 1, beta_d = 1,p0=NA,l0=NA,tol=1e-10,
