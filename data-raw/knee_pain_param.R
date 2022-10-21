@@ -1,4 +1,18 @@
-## code to prepare `knee_pain_param` dataset goes here
+#' Knee Pain Parameters
+#'
+#' 2 data sets, one with the conditional transition probabilities for the covariate situations (cov_probs), and one for the risk probabilities and rates for the leaves (leaf_params).
+#'
+#' @format 2 data frames with several variables
+#' \describe{
+#' \item{Statement}{A string detailing a specific conditional probability or dependence.}
+#' \item{Stage}{A string detailing which stage the statement belongs to, for the covariates only.}
+#' \item{Situation}{A string detailing which situations are in the stage, for the covariates only.}
+#' \item{Prob}{A numeric specifying the conditional transition probability for the stage, for the covariates only.}
+#' \item{Leaves}{A string detailing which leaves are associated with the specific conditional dependence statement.}
+#' \item{Risk_Prob}{A numeric specifying the risk probability probability for the leaf stage.}
+#' \item{Rate}{A numeric specifying the rate for the leaf stage.}
+#' }
+
 
 cov_statement<-c("P(A = 1)","P(W = 0 | A = 1 )","P(W = 0 | A = 0 )","P(H = 0 | A = 1 )","P(H = 0 | A = 0 )")
 cov_stages<-c("u1","u2","u3","u4","u5")

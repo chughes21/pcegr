@@ -20,6 +20,7 @@ usethis::use_r("prior_function")
 usethis::use_r("covariate_calculator_function")
 usethis::use_r("uniform_time_functions")
 usethis::use_vignette("pcegr")
+usethis::use_data_raw("knee_pain_param")
 
 devtools::load_all()
 devtools::check()
