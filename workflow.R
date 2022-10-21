@@ -38,12 +38,12 @@ zipceg.obs$result
 expected_count_calculator(knee_pain_obs,zipceg.obs)
 
 zipceg.iter(knee_pain_obs,"nlm",iter_total=10,variable_time=TRUE)
-zipceg.iter(knee_pain_obs,"nlm",iter_total=10,violin=TRUE,variable_time=TRUE)
+zipceg.iter(knee_pain_obs,"nlm",iter_total=10,line=TRUE,variable_time=TRUE)
 zipceg.iter(knee_pain_obs,"nlm",iter_total=10,hist=TRUE,variable_time=TRUE)
 zipceg.iter(knee_pain_obs,"nlm",iter_total=10,scatter=TRUE,variable_time=TRUE)
 
 zipceg.iter(knee_pain_obs,"nlm",iter_total=10,plot_rates=FALSE,plot_probs=TRUE,variable_time=TRUE)
-zipceg.iter(knee_pain_obs,"nlm",iter_total=10,plot_rates=FALSE,plot_probs=TRUE,violin=TRUE,variable_time=TRUE)
+zipceg.iter(knee_pain_obs,"nlm",iter_total=10,plot_rates=FALSE,plot_probs=TRUE,line=TRUE,variable_time=TRUE)
 zipceg.iter(knee_pain_obs,"nlm",iter_total=10,plot_rates=FALSE,plot_probs=TRUE,hist=TRUE,variable_time=TRUE)
 zipceg.iter(knee_pain_obs,"nlm",iter_total=10,plot_rates=FALSE,plot_probs=TRUE,scatter=TRUE,variable_time=TRUE)
 
