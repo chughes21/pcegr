@@ -12,7 +12,7 @@ zipceg.iter(
   plot_rates = TRUE,
   plot_probs = FALSE,
   hist = FALSE,
-  violin = FALSE,
+  line = FALSE,
   scatter = FALSE,
   equivsize = 2,
   poisson_response = TRUE,
@@ -48,8 +48,6 @@ zipceg.iter(
 
 \item{hist}{A logical value indicating whether the plot should be in the form of a histogram (TRUE) or not (FALSE).}
 
-\item{violin}{A logical value indicating whether the plot should be in the form of a violin plot (TRUE) or not (FALSE).}
-
 \item{scatter}{A logical value indicating whether the plot should be in the form of a scatter plot (TRUE) or not (FALSE).}
 
 \item{equivsize}{A numeric value specifying the equivalent sample size for the prior, a measure of confidence in the prior.}
@@ -76,6 +74,8 @@ zipceg.iter(
 
 \item{cat_limit}{An integer value specifying the minimum number of categories to the variable can be discretised to. If 0, there is no minimum number of categories.}
 
+\item{violin}{A logical value indicating whether the plot should be in the form of a line plot (TRUE) or not (FALSE).}
+
 \item{c}{A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.}
 
 \item{d}{A numeric value for the beta hyperparameter of the Beta prior for the risk probability.}
@@ -91,7 +91,7 @@ A list containing: a matrix of the estimated rates or risk probabilities for eac
 This function performs the ZIPCEG model selection a specified number of times and can produce plots and perform model selection.
 }
 \details{
-This function takes the same inputs as the \code{\link[=zipceg]{zipceg()}} function, except carries out the model selection process a specified number of times. Using the results of each iteration, different types of plots can be used to display either the estimated risk probabilities or estimated rates. The function will also select the \emph{maximum} \emph{a} \emph{posteriori} (MAP) model from these iterations.
+This function takes the same inputs as the \code{\link[=zipceg]{zipceg()}} function, except carries out the model selection process a specified number of times. Using the results of each iteration, different types of plots can be used to display either the estimated risk probabilities or estimated rates. The default plot is a violin plot. The function will also select the \emph{maximum} \emph{a} \emph{posteriori} (MAP) model from these iterations.
 }
 \examples{
 zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=FALSE,violin=TRUE)
