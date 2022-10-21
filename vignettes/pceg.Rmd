@@ -126,10 +126,10 @@ expected_count_calculator(knee_pain_obs,zipmod1)$chi_sq-expected_count_calculato
 ```
 However, both of these models are the result of one iteration, and the ZIPCEG model selection process is not deterministic. We can thus carry out the model selection a number of times, for example 100, and compare the risk probabilities and rates for each leaf, as well as select the MAP model from those iterations. Comparing the probabilities and rates for each leaf gives an idea of how the leaves merge with each other, as those who have similar plots will merge regularly. This is useful for data that is not simulated, as there may be significant variability from iteration to iteration. 
 
-we will use violin plots to visualise, but there are options to use line plots (default), scatter plots, or histograms. We will use the *nlm* method, due to its lower computational cost per iteration. 
+we will use violin plots to visualise, but there are options to use histograms, scatter plots, or line plots. We will use the *nlm* method, due to its lower computational cost per iteration. 
 ```{r}
-mapmod<-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,violin=TRUE,variable_time = TRUE,gamma_alpha=a,gamma_beta=b)$mod
-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,violin=TRUE,variable_time = TRUE,plot_rates=FALSE,plot_probs=TRUE,gamma_alpha=a,gamma_beta=b)
+mapmod<-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time = TRUE,gamma_alpha=a,gamma_beta=b)$mod
+zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time = TRUE,plot_rates=FALSE,plot_probs=TRUE,gamma_alpha=a,gamma_beta=b)
 ```
 We can see in the plot of the rates the merging that is present for leaves 3 and 7, and 4 and 8. The violin plots are identical, indicating that they always merge, and so we can be confident in the result from our initial model selection. In general, the violin plots are quite tight, which is a result of the large sample size and demarcation between the leaves. The risk probabilities also show these mergings, although not as consistently as for the rates. For example, leaf 4 occasionally merges with leaf 6 instead of 8. In both plots, leaf 5 is by far the most variable, and this is a result of it having the smallest sample size.
 

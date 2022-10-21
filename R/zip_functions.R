@@ -169,7 +169,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #'
 #' This function performs the ZIPCEG model selection a specified number of times and can produce plots and perform model selection.
 #'
-#' This function takes the same inputs as the [zipceg()] function, except carries out the model selection process a specified number of times. Using the results of each iteration, different types of plots can be used to display either the estimated risk probabilities or estimated rates. The function will also select the _maximum_ _a_ _posteriori_ (MAP) model from these iterations.
+#' This function takes the same inputs as the [zipceg()] function, except carries out the model selection process a specified number of times. Using the results of each iteration, different types of plots can be used to display either the estimated risk probabilities or estimated rates. The default plot is a violin plot. The function will also select the _maximum_ _a_ _posteriori_ (MAP) model from these iterations.
 #'
 #' @param data A data set where the observed count vector and time vector (if variable) are the last two columns.
 #' @param method A character string indicating the method for parameter estimation. The character string can be an element of c("Gibbs","nlm","EM","mle","mm").
@@ -178,7 +178,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @param plot_rates A logical value indicating whether the stage rates should be plotted (TRUE) or not (FALSE).
 #' @param plot_probs A logical value indicating whether the risk probabilities should be plotted (TRUE) or not (FALSE).
 #' @param hist A logical value indicating whether the plot should be in the form of a histogram (TRUE) or not (FALSE).
-#' @param violin A logical value indicating whether the plot should be in the form of a violin plot (TRUE) or not (FALSE).
+#' @param violin A logical value indicating whether the plot should be in the form of a line plot (TRUE) or not (FALSE).
 #' @param scatter A logical value indicating whether the plot should be in the form of a scatter plot (TRUE) or not (FALSE).
 #' @param equivsize A numeric value specifying the equivalent sample size for the prior, a measure of confidence in the prior.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
@@ -203,12 +203,12 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #'
 #' @examples zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=FALSE,violin=TRUE)
 zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 1000, plot_rates = TRUE,
-                           plot_probs = FALSE, hist = FALSE, violin = FALSE, scatter = FALSE, equivsize=2,
+                           plot_probs = FALSE, hist = FALSE, line = FALSE, scatter = FALSE, equivsize=2,
                            poisson_response = TRUE, variable_time = FALSE,stoch_imputation=TRUE, posterior = TRUE, gamma_alpha = 1,
                            gamma_beta = 2, beta_c = 1, beta_d = 1,p0=NA,l0=NA,tol=1e-10,
                            var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
   if(sum(hist,scatter,violin)>1 ){
-    stop("Only 1 display option possible between histogram, violin and scatter") #default is lines
+    stop("Only 1 display option possible between histogram, line and scatter") #default is lines
   }
 
   if(plot_rates & plot_probs){
@@ -406,19 +406,20 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 1000, pl
       }
 
       rate_plot<-do.call(ggarrange,list(plotlist=leaves,nrow=p/2,ncol=2))
-    }else if(violin){
-      rate_plot<- ggplot(data=data.long,aes(x=variable,y=value))+geom_violin(aes(col=variable,fill=variable))+
-        xlab("Leaf")+ylab("Rate")+
-        ggtitle("Estimated rates for each leaf")+theme(legend.position="none")
+    }else if(line){
+      rate_plot<-ggplot(data=data.long,aes(x=x,y=value,group=variable))+geom_line(aes(col=variable),position=position_jitter(width=0.1,height=0.01))+
+        xlab("Iteration")+ylab("Rate")+
+        ggtitle("Estimated Rate by Iteration")+
+        geom_label_repel(mapping=aes(label=label))
     }else if(scatter){
       rate_plot<- ggplot(data=data.long,aes(x=x,y=value,group=variable))+geom_point(aes(col=variable),position=position_jitter(width=0.1,height=0.01))+
         xlab("Iteration")+ylab("Rate")+
         ggtitle("Rate by Iteration")+
         geom_label_repel(mapping=aes(label=label))
-    }else{rate_plot<-ggplot(data=data.long,aes(x=x,y=value,group=variable))+geom_line(aes(col=variable),position=position_jitter(width=0.1,height=0.01))+
-      xlab("Iteration")+ylab("Rate")+
-      ggtitle("Estimated Rate by Iteration")+
-      geom_label_repel(mapping=aes(label=label))
+    }else{
+    rate_plot<- ggplot(data=data.long,aes(x=variable,y=value))+geom_violin(aes(col=variable,fill=variable))+
+      xlab("Leaf")+ylab("Rate")+
+      ggtitle("Estimated rates for each leaf")+theme(legend.position="none")
     }
 
   print(rate_plot)
@@ -454,19 +455,20 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 1000, pl
       }
 
       prob_plot<-do.call(ggarrange,list(plotlist=leaves,nrow=p/2,ncol=2))
-    }else if(violin){
-      prob_plot<- ggplot(data=data.long,aes(x=variable,y=value))+geom_violin(aes(col=variable,fill=variable))+
-        xlab("Leaf")+ylab("Risk Prob")+
-        ggtitle("Estimated Risk Prob by Iteration for Each leaf")+theme(legend.position="none")
+    }else if(line){
+      prob_plot<-ggplot(data=data.long,aes(x=x,y=value,group=variable))+geom_line(aes(col=variable),position=position_jitter(width=0.1,height=0.01))+
+        xlab("Iteration")+ylab("Risk Prob")+
+        ggtitle("Estimated Risk Prob by Iteration for Each leaf")+
+        geom_label_repel(mapping=aes(label=label))
     }else if(scatter){
       prob_plot<- ggplot(data=data.long,aes(x=x,y=value,group=variable))+geom_point(aes(col=variable),position=position_jitter(width=0.1,height=0.01))+
         xlab("Iteration")+ylab("Risk Prob")+
         ggtitle("Estimated Risk Prob by Iteration for Each leaf")+
         geom_label_repel(mapping=aes(label=label))
-    }else{prob_plot<-ggplot(data=data.long,aes(x=x,y=value,group=variable))+geom_line(aes(col=variable),position=position_jitter(width=0.1,height=0.01))+
-      xlab("Iteration")+ylab("Risk Prob")+
-      ggtitle("Estimated Risk Prob by Iteration for Each leaf")+
-      geom_label_repel(mapping=aes(label=label))
+    }else{
+    prob_plot<- ggplot(data=data.long,aes(x=variable,y=value))+geom_violin(aes(col=variable,fill=variable))+
+      xlab("Leaf")+ylab("Risk Prob")+
+      ggtitle("Estimated Risk Prob by Iteration for Each leaf")+theme(legend.position="none")
     }
 
     print(prob_plot)
