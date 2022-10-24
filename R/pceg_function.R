@@ -373,7 +373,7 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
 
       num_nodes<-length(comparisonset1)
 
-      if(length(comparisonset1) >1){ # can only merge if more than one stage in the comparisonset, might need to change this
+      if(num_nodes >1){ # can only merge if more than one stage in the comparisonset, might need to change this
 
         #first need to decide what function can search over, based on discretisation restrictions
 
@@ -428,14 +428,14 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
         }
 
         for (i in possible_i){
-          compare1_temp <-comparisonset2[i] #changed this
+          compare1_temp <-comparisonset2[i]
           num_nodes = length(comparisonset2) #might not need this but I checked and its necessary, unless more changes are made
           disc_length_temp<-disc_length
           if(no_disc_length_spec | (disc_length > num_nodes)){disc_length_temp = num_nodes} #might not need this
           #they may not be required due to "restrict" being in place anyway
           if(restrict & disc){
             interval_num<-findInterval(compare1_temp,intervals_init_temp) #added temp
-            max_val<-intervals_temp[interval_num + 1]-1 #added temp #these aren't matching up
+            max_val<-intervals_temp[interval_num + 1]-1 #added temp
           }else{max_val<-length(comparisonset[[k]])}
 
           if(i >= max_val){
