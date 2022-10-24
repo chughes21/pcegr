@@ -1,6 +1,6 @@
 #' Knee Pain Data
 #'
-#' A data set of the instances of knee pain for individuals.over a variable observation time.
+#' A data set of the instances of knee pain for individuals over a variable observation time.
 #'
 #' @format A data frame with 4 covariates, a response and an observed time:
 #' \describe{

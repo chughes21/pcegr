@@ -21,6 +21,8 @@ usethis::use_r("covariate_calculator_function")
 usethis::use_r("uniform_time_functions")
 usethis::use_vignette("pcegr")
 usethis::use_data_raw("knee_pain_param")
+usethis::use_data_raw("knee_pain_age")
+usethis::use_data_raw("knee_pain_age_obs")
 
 devtools::load_all()
 devtools::check()
