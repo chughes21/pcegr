@@ -131,8 +131,24 @@ event.tree.creator<-function(data,poisson_response=TRUE,variable_time=TRUE){
 #'  mod1<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #'  staged.tree<-staged.tree.creator(mod1)
 #'  plot(staged.tree)
-staged.tree.creator<-function(data,mod,poisson_response=TRUE,variable_time=TRUE,score=0){
-  event.tree<-event.tree.creator(data,poisson_response,variable_time)
+staged.tree.creator<-function(data,mod,poisson_response=TRUE,variable_time=TRUE,zip=FALSE,score=0){
+
+  if(!poisson_response & variable_time){
+    stop("Variable time requires a Poisson response")
+  }
+
+  if(!poisson_response & zip){
+    stop("Zero Inflated Poisson requires Poisson response")
+  }
+
+  if(zip=TRUE){
+    n<-dim(data)[2]-1*poisson_response -1*variable_time
+    state<-factor(rep("No Risk",length(data[,1])),levels<-c("No Risk", "Risk"))
+    data.final<-data.frame(data[,1:n], State = state, data[,-(1:n)])
+  }else{
+    data.final<-data
+  }
+  event.tree<-event.tree.creator(data.final,poisson_response,variable_time)
   stage.struc<-stage_structure(mod,score)
   staged.tree<-new("Stratified.staged.tree", event.tree,
                    situation = list(), contingency.table = list(), stage.structure = stage.struc,

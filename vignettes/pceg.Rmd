@@ -68,18 +68,27 @@ As there are $2^3 = 8$ leaves, we will assume each has a prior weight of $a = \t
 ```{r}
 
 pmod<-pceg(knee_pain_obs,2,TRUE,TRUE, gamma_alpha = 0.25,gamma_beta = 0.1)
-pmod$result
+ptree<-staged.tree.creator(knee_pain_obs,pmod)
+plot(ptree)
 ```
 
-We can see that the model has correctly identified that the individuals of either Age who are Overweight with a History of injury are in the same stage (8), and likewise for those with No History (9). It has also correctly identified that History is independent of Weight given Age (4 and 5). 
+We can see that the model has correctly identified that the individuals of either Age who are Overweight with a History of injury are in the same stage ($s_{10}$ and $s_{14}$), and likewise for those with No History ($s_{9}$ and $s_{13}$). It has also correctly identified that History is independent of Weight given Age ($s_{3}$ and $s_{4}$ versus ($s_{5}$ and $s_{6}$)). 
 
-We now can estimate the posterior expected values of the tranisiton probabilities for the covariates, and the rates for the response. The transition probabilities can be compared to *cov_probs*, while we have included what the PCEG estimate should be for $\lambda$, based on the true $\pi$ and $\lambda$.
+We can also see this staged tree in pceg form:
+
+```{r}
+pceg1<-sceg(ptree)
+plot(pceg1)
+```
+
+
+We now can estimate the posterior expected values of the transition probabilities for the covariates, and the rates for the response. The transition probabilities can be compared to *cov_probs*, while we have included what the PCEG estimate should be for $\lambda$, based on the true $\pi$ and $\lambda$.
 ```{r}
 for(i in 0:2){
   print(colnames(knee_pain_obs)[i+1])
-  print(value_extractor(knee_pain_obs,pmod,level_rel_final = i-3,zip=FALSE))
+  print(value_extractor(knee_pain_obs,pmod,level_rel_final = i-3,zip=FALSE,dec_place=2))
 }
-value_extractor(knee_pain_obs,pmod,level_rel_final = 0,true_value = pceg_lambda, zip=FALSE)
+value_extractor(knee_pain_obs,pmod,level_rel_final = 0,true_value = pceg_lambda, zip=FALSE,dec_place=2)
 ```
 As can be seen, while the model is misspecified, it correctly identifies the transition probabilities, and the estimates of the rates are close to what we would expect.
 
@@ -93,7 +102,7 @@ We can also check the log marginal likelihood and Chi-square calculation for the
 
 ```{r}
 pmod$lik
-expected_count_calculator(knee_pain_obs,pmod,zip=FALSE)
+expected_count_calculator(knee_pain_obs,pmod,zip=FALSE,dec_place=2)
 ```
 In the Chi-square contribution matrix, we can see some large values. In particular, for the leaves with low rates, for example the first row, we can see large contributions for the higher event counts. This is because there are a much higher number of observed counts greater than 3 than we would expect based on the small rate. In contrast, for the leaves with higher rates, such as 4, 6 and 8, we can see that the contributions for the zero counts are much higher. This is because there are much more observed zero counts than would be expected with such a high rate. 
 
@@ -115,7 +124,10 @@ d<-0.125
 We will also run the Gibbs sampler for $N=10000$ iterations. When the parameeters are estimated using the Gibbs sampler, we will impute the states stochastically.
 ```{r}
 zipmod1<-zipceg(knee_pain_obs,"Gibbs",iter=10000,variable_time = TRUE, stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b, beta_c = c, beta_d = d)
-zipmod1$result
+ziptree<-staged.tree.creator(knee_pain_obs,zipmod1)
+zipceg1<-sceg(ziptree)
+plot(ziptree)
+plot(zipceg1)
 ```
 We can see that the model correctly merges the risk states (8 and 9)and the rates (15 and 16). We can also see that all of the risk free leaves are merged together into one stage (12). The covariate relationships have also been preserved from the PCEG. 
 
