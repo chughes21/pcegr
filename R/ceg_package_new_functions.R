@@ -135,8 +135,8 @@ staged.tree.creator<-function(data,mod,poisson_response=TRUE,variable_time=TRUE,
   event.tree<-event.tree.creator(data,poisson_response,variable_time)
   stage.struc<-stage_structure(mod,score)
   staged.tree<-new("Stratified.staged.tree", event.tree,
-                   situation = list(), contingency.table = list(), stage.structure = struc,
+                   situation = list(), contingency.table = list(), stage.structure = stage.struc,
                    stage.probability = list(), prior.distribution=list(), posterior.distribution=list(),
-                   model.score=mod2$lik)
+                   model.score=mod$lik)
   return(staged.tree)
 }
