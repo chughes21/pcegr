@@ -60,6 +60,18 @@ hdi_beta_extractor(knee_pain_obs,pceg.obs,level_rel_final=-3,zip=FALSE)
 hdi_gamma_extractor(knee_pain_obs,zipceg.obs,zip=TRUE)
 hdi_beta_extractor(knee_pain_obs,zipceg.obs,level_rel_final=-1,zip=TRUE)
 
+df<-knee_pain_obs
+ind<-which(df$y>0)
+bin.resp<-factor(rep("No",10000),levels=c("Yes","No"))
+bin.resp[ind]<-"Yes"
+df<-data.frame(df,resp=bin.resp)
+df<-df[,-c(4:5)]
+summary(df)
+
+mod1<-pceg(df,2)
+mod1$result
+tree1<-set(df)
+plot(tree1)
 
 
 
