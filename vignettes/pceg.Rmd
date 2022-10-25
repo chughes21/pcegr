@@ -171,7 +171,7 @@ Interestingly, the MAP model outperforms the single iteration of the Gibbs sampl
 ```{r}
 expected_count_calculator(knee_pain_obs,mapmod,zip=TRUE)$chi.mat-expected_count_calculator(knee_pain_obs,zipmod1,zip=TRUE)$chi.mat
 ```
-We can see that there are some differences between the two models for leaves 1, 3 and 6. We now look at the posterior expected values of $\pi_$ and $\lambda_i$ from the MAP model. We also compare these to the true values of $\lambda_i$ and $\pi_i$. Note that the estimates below are for each stage, not leaf. For example, stage 3 contains leaves 3 and 7. The first row for $\lambda$ is the risk free stage, and so the second row is stage 1.  
+We can see that there are some differences between the two models for leaves 1, 3 and 6. We now look at the posterior expected values of $\pi_i$ and $\lambda_i$ from the MAP model. We also compare these to the true values of $\lambda_i$ and $\pi_i$. Note that the estimates below are for each stage, not leaf. For example, stage 3 contains leaves 3 and 7. The first row for $\lambda$ is the risk free stage, and so the second row is stage 1.  
 ```{r}
 value_extractor(knee_pain_obs,mapmod,true_value=true_lambda)
 value_extractor(knee_pain_obs,mapmod,level_rel_final = -1,true_value=true_p)
@@ -197,7 +197,7 @@ We can also use the *pceg* function to carry out variable discretisation. To dem
 
 The *pceg* function has several inputs related to variable discretisation. They are:
 +var_disc: The variable in the order of which to discretise. Generally, we will want the variable of interest to be the last covariate and immediately precede the response.
-+disc_length: The interval length to search for stages with which to merge. For example, if this is 1, it will only merge stages that are immediate neighbours when ordered. This is necessary when dealing with sparse edge counts. 
++disc_length: The length over which to search for stages to merge. For example, if this is 1, it will only merge stages that are immediate neighbours when ordered. This is particularly useful when dealing with sparse edge counts, as it enables the user to adjust their search length where necessary.  
 +restrict: Whether or not stages can only be merged when they have the same covariate values for everything else. This will generally be assumed to be true, as the goal is to discretise the variable, which requires the rest of the process to be kept fixed for each possible evolution.
 +mirror: If TRUE, this will have the same discretisation for each set of covariates. If the goal is to find one single discretisation (i.e. anything over 40 is old), this should be TRUE. However, if this is FALSE, it allows the flexibility for each unfolding of the process to have its own discretisation (i.e. 40 could be old for men, but still young for women.)
 +cat_limit: The minimum number of categories the variable can be discretised to. 

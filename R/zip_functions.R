@@ -206,10 +206,9 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @examples zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=FALSE,violin=TRUE)
 zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, plot_rates = TRUE,
                            plot_probs = FALSE, hist = FALSE, line = FALSE, scatter = FALSE, equivsize=2,
-                           poisson_response = TRUE, variable_time = FALSE,stoch_imputation=TRUE, posterior = TRUE,print_output = FALSE,
-                           gamma_alpha = 1,
-                           gamma_beta = 2, beta_c = 1, beta_d = 1,p0=NA,l0=NA,tol=1e-10,
-                           var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
+                           poisson_response = TRUE, variable_time = FALSE,stoch_imputation=TRUE, posterior = TRUE,
+                           print_output = FALSE, gamma_alpha = 1, gamma_beta = 2, beta_c = 1, beta_d = 1,p0=NA,l0=NA,
+                           tol=1e-10, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
   if(sum(hist,scatter,line)>1 ){
     stop("Only 1 display option possible between histogram, line and scatter") #default is lines
   }
@@ -403,26 +402,24 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, p
         m=length(y)
         data.temp2<-data.frame(x=c(1:m),y=y)
         leaves[[j]]<-  ggplot(data=data.temp2,mapping=aes(x=y))+geom_histogram(col=i,fill=i)+
-          #geom_density()+
-          #  geom_vline(col="red",xintercept=mean(y))+geom_vline(xintercept=true_lambda[i])+
-          xlab("Rate") +ggtitle(paste("Leaf", i, sep = " "))+xlim(xlim_l,xlim_u)+ylim(0,iter_total)
+          xlab(paste0("Rate over ",iter_total," Iterations")) + ggtitle(paste("Leaf", i, sep = " "))+xlim(xlim_l,xlim_u)+ylim(0,iter_total)
       }
 
       rate_plot<-do.call(ggarrange,list(plotlist=leaves,nrow=p/2,ncol=2))
     }else if(line){
       rate_plot<-ggplot(data=data.long,aes(x=x,y=value,group=variable))+geom_line(aes(col=variable),position=position_jitter(width=0.1,height=0.01))+
         xlab("Iteration")+ylab("Rate")+
-        ggtitle("Estimated Rate by Iteration")+
+        ggtitle(paste0("Estimated Rate over ",iter_total," Iterations - Line Plot"))+
         geom_label_repel(mapping=aes(label=label))
     }else if(scatter){
       rate_plot<- ggplot(data=data.long,aes(x=x,y=value,group=variable))+geom_point(aes(col=variable),position=position_jitter(width=0.1,height=0.01))+
         xlab("Iteration")+ylab("Rate")+
-        ggtitle("Rate by Iteration")+
+        ggtitle(paste0("Estimated Rate over ",iter_total," Iterations - Scatter Plot"))+
         geom_label_repel(mapping=aes(label=label))
     }else{
     rate_plot<- ggplot(data=data.long,aes(x=variable,y=value))+geom_violin(aes(col=variable,fill=variable))+
       xlab("Leaf")+ylab("Rate")+
-      ggtitle("Estimated rates for each leaf")+theme(legend.position="none")
+      ggtitle(paste0("Estimated Rate over ",iter_total," Iterations - Violin Plot"))+theme(legend.position="none")
     }
 
   print(rate_plot)

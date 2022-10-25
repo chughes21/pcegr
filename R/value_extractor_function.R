@@ -11,6 +11,7 @@
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param posterior A logical value indicating whether the estimates of the posterior (TRUE) or sample (FALSE) expected value should be calculated.
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
+#' @param dec_place An integer value detailing how many decimal places the outputs should be rounded to. If NA, no rounding will occur.
 #' @param true_value A numeric vector specifying the true values of the parameters for comparison, if known. If unknown, this will be NA.
 #'
 #' @return A matrix displaying the observed data, the prior values, and the expected values of the parameters.
@@ -19,7 +20,7 @@
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' value_extractor(knee_pain_obs,mod,zip=FALSE)
-value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, true_value = NA){
+value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA, true_value = NA){
 
   if(!poisson_response & zip){
     stop("Zero Inflated Poisson Requires Poisson Response")
@@ -101,5 +102,11 @@ value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,var
   if(level_rel_final == 0 & poisson_response){
     out.mat<-out.mat[,-(2*p+1)]
   }
+
+  if(!(is.na(dec_place))){
+    out.mat<-round(out.mat,dec_place)
+  }
+
+
   return(out.mat)
 }

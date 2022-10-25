@@ -88,6 +88,7 @@ vec_in<-function(x,v){
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
 #' @param posterior A logical value indicating whether the estimates of the parameters used should be the posterior estimate (TRUE) or sample estimate (FALSE).
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
+#' @param dec_place An integer value detailing how many decimal places the outputs should be rounded to. If NA, no rounding will occur.
 #'
 #' @return A list of three matrices and a numeric value. The first matrix is the observed count matrix, the second is the expected count matrix, and the third is the chi-squared contribution matrix.The numeric value is the sum of the chi square contributions.
 #' @export
@@ -98,7 +99,7 @@ vec_in<-function(x,v){
 #'
 #' mod2<-zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
 #' expected_count_calculator(knee_pain_obs,mod2)
-expected_count_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE){
+expected_count_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA){
 
   if(!poisson_response & variable_time){
     stop("Variable Time Requires Poisson Response")
@@ -278,6 +279,12 @@ expected_count_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,varia
     exp.mat[k,limit+1]<-length(ind)-sum(exp.mat[k,1:limit])
 
     chi.mat<-(exp.mat-obs.mat)^2/exp.mat
+  }
+
+
+  if(!is.na(dec_place)){
+    exp.mat<-round(exp.mat,dec_place)
+    chi.mat<-round(chi.mat,dec_place)
   }
 
   return(list(obs=obs.mat,exp=exp.mat,chi.mat=chi.mat,chi_sq = sum(chi.mat)))
