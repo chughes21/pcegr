@@ -48,7 +48,7 @@ pceg(
 \item{cat_limit}{An integer value specifying the minimum number of categories to the variable can be discretised to. If 0, there is no minimum number of categories.}
 }
 \value{
-A list specifying a PCEG model. The list contains: the prior for the final model, the data for the final model, the stage numbers for the final model,
+A list specifying a PCEG model. The list contains: the prior for the final model, the data for the final model, the number of nodes at each level of the tree, the stage numbers for the final model,
 the stage structure for the final model, the vector of likelihoods after each merging, the details of the stages merged at each step,
 the comparison set of stages left to be merged, and the log marginal likelihood of the final model.
 }
