@@ -141,7 +141,7 @@ staged.tree.creator<-function(data,mod,poisson_response=TRUE,variable_time=TRUE,
     stop("Zero Inflated Poisson requires Poisson response")
   }
 
-  if(zip=TRUE){
+  if(zip){
     n<-dim(data)[2]-1*poisson_response -1*variable_time
     state<-factor(rep("No Risk",length(data[,1])),levels<-c("No Risk", "Risk"))
     data.final<-data.frame(data[,1:n], State = state, data[,-(1:n)])
