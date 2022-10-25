@@ -113,7 +113,7 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #' @param mirror A logical value indicating whether variable discretisation should be equivalent across each unfolding of the process (TRUE) or not (FALSE).
 #' @param cat_limit An integer value specifying the minimum number of categories to the variable can be discretised to. If 0, there is no minimum number of categories.
 #'
-#' @return A list specifying a PCEG model. The list contains: the prior for the final model, the data for the final model, the stage numbers for the final model,
+#' @return A list specifying a PCEG model. The list contains: the prior for the final model, the data for the final model, the number of nodes at each level of the tree, the stage numbers for the final model,
 #' the stage structure for the final model, the vector of likelihoods after each merging, the details of the stages merged at each step,
 #' the comparison set of stages left to be merged, and the log marginal likelihood of the final model.
 #' @export
@@ -574,7 +574,7 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
     stages<-c(stages ,comparisonset[[i-1]])
   }
   result<-mergedlist[stages]
-  newlist <-list(prior=prior ,data=data ,stages=stages ,result=result ,score=score ,
+  newlist <-list(prior=prior ,data=data ,numb=numb,stages=stages ,result=result ,score=score ,
                  merged=merged_out ,comparisonset=comparisonset ,lik=lik)
   return(newlist)
 }
