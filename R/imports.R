@@ -7,5 +7,5 @@
 #' @import ggplot2
 #' @import ggrepel
 #' @importClassesFrom ceg Stratified.event.tree Stratified.staged.tree Stratified.ceg.model
-#' @importMethodsFrom ceg plot summary
+#' @importMethodsFrom ceg plot
 NULL
