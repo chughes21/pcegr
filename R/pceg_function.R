@@ -150,6 +150,7 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
   numbvariables<-dim(exampledata)[2] - 1*variable_time #this means if there is a variable time, it must come last
   numbcat <-sapply(exampledata[,1:numbvariables],FUN=nlevels) #number of categories at each level
   numb<-c(1,cumprod(numbcat[1:(numbvariables-1)])) #number of nodes at each level
+  numb_out<-numb
 
   if(var_disc > numbvariables){
     stop("Variable to discretise does not exist")
@@ -574,7 +575,7 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
     stages<-c(stages ,comparisonset[[i-1]])
   }
   result<-mergedlist[stages]
-  newlist <-list(prior=prior ,data=data ,numb=numb,stages=stages ,result=result ,score=score ,
+  newlist <-list(prior=prior ,data=data ,numb=numb_out,stages=stages ,result=result ,score=score ,
                  merged=merged_out ,comparisonset=comparisonset ,lik=lik)
   return(newlist)
 }

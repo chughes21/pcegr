@@ -72,6 +72,26 @@ mod1<-pceg(df,2)
 mod1$result
 tree1<-set(df)
 plot(tree1)
+tree2<-event.tree.creator(df,FALSE,FALSE)
+plot(tree2)
 
+stagedtree1<-staged.tree.creator(df,mod1,FALSE,FALSE)
+plot(stagedtree1)
 
+ceg1<-sceg(stagedtree1)
+plot(ceg1)
+
+mod2<-pceg(knee_pain_obs,2,TRUE,TRUE,gamma_alpha=0.25,gamma_beta=0.1)
+mod2$result
+
+tree2<-event.tree.creator(knee_pain_obs,TRUE,TRUE)
+plot(tree2)
+
+#need to fix numb output in pceg
+
+stagedtree2<-staged.tree.creator(knee_pain_obs,mod2)
+plot(stagedtree2)
+
+ceg2<-sceg(stagedtree2)
+plot(ceg2)
 
