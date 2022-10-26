@@ -134,7 +134,7 @@ We can see that the model correctly merges the risk states (8 and 9)and the rate
 We now compare the goodness of fit to the PCEG. First, we calculate the log marginal likelihood and the Chi-square calculation. 
 ```{r}
 zipmod1$lik
-expected_count_calculator(knee_pain_obs,zipmod1,zip=TRUE)
+expected_count_calculator(knee_pain_obs,zipmod1,zip=TRUE,dec_place=2)
 ```
 We can see that the Chi-square value is significantly lower for the ZIPCEG model, which is to be expected as the model was simulated assuming a zero-inflated Poisson distribution.
 

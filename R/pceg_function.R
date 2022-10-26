@@ -112,6 +112,7 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #' @param restrict A logical value indicating whether variable discretisation should be restricted to stages with the same unfolding of the process (TRUE) or not (FALSE).
 #' @param mirror A logical value indicating whether variable discretisation should be equivalent across each unfolding of the process (TRUE) or not (FALSE).
 #' @param cat_limit An integer value specifying the minimum number of categories to the variable can be discretised to. If 0, there is no minimum number of categories.
+#' @param collapse A logical value indicating whether, when a restricted discretisation occurs, the final output should be compact (TRUE) or not (FALSE).
 #'
 #' @return A list specifying a PCEG model. The list contains: the prior for the final model, the data for the final model, the number of nodes at each level of the tree, the stage numbers for the final model,
 #' the stage structure for the final model, the vector of likelihoods after each merging, the details of the stages merged at each step,
@@ -123,7 +124,7 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #' mod$result
 pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FALSE, zip=FALSE,
                         gamma_alpha =1, gamma_beta = 2,structural_zero = FALSE, var_disc = 0, disc_length = 0,
-                        restrict = FALSE, mirror = FALSE, cat_limit=0){
+                        restrict = FALSE, mirror = FALSE, cat_limit=0, collapse = FALSE){
 
   exampledata<-data
 
@@ -574,6 +575,22 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
   for (i in 2:numbvariables){
     stages<-c(stages ,comparisonset[[i-1]])
   }
+
+  if(restrict & (var_disc > 1) & collapse){
+    stages_disc<-comparisonset[[var_disc-1]]
+    mergedlist_disc<-mergedlist[[stages_disc]]
+    for(j in 1:length(mergedlist_disc)){
+      n<-length(mergedlist_disc[[j]][1,])
+      start<-mergedlist_disc[[j]][var_disc,1]
+      end<-mergedlist_disc[[j]][var_disc,n]
+      state.out<-paste0(start," - ",end)
+      vec.out<-mergedlist_disc[[j]][,1]
+      vec.out[var_disc,1]<-state.out
+      mergedlist_disc[[j]]<-vec.out
+    }
+    mergedlist[[stages_disc]]<-mergedlist_disc
+  }
+
   result<-mergedlist[stages]
   newlist <-list(prior=prior ,data=data ,numb=numb_out,stages=stages ,result=result ,score=score ,
                  merged=merged_out ,comparisonset=comparisonset ,lik=lik)
