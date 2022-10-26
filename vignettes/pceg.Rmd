@@ -66,13 +66,12 @@ First, we will fit a PCEG model to the data set. This requires specifying an eff
 
 As there are $2^3 = 8$ leaves, we will assume each has a prior weight of $a = \tfrac{2}{8} = 0.25$. In order to enforce a prior mean for the rate of 2.5, the simple average for the data set, we choose $b = \tfrac{0.25}{2.5}=0.1$. If we were to desire more bespoke priors for each leaf, they could be input as vectors rather than scalars.
 ```{r}
-
 pmod<-pceg(knee_pain_obs,2,TRUE,TRUE, gamma_alpha = 0.25,gamma_beta = 0.1)
 ptree<-staged.tree.creator(knee_pain_obs,pmod)
 plot(ptree)
 ```
 
-We can see that the model has correctly identified that the individuals of either Age who are Overweight with a History of injury are in the same stage ($s_{10}$ and $s_{14}$), and likewise for those with No History ($s_{9}$ and $s_{13}$). It has also correctly identified that History is independent of Weight given Age ($s_{3}$ and $s_{4}$ versus ($s_{5}$ and $s_{6}$)). 
+We note that that any node that is uncoloured is a singleton stage. We can see that the model has correctly identified that the individuals of either Age who are Overweight with a History of injury are in the same stage ($s_{10}$ and $s_{14}$), and likewise for those with No History ($s_{9}$ and $s_{13}$). It has also correctly identified that History is independent of Weight given Age ($s_{3}$ and $s_{4}$ versus ($s_{5}$ and $s_{6}$)). We can also see that the nodes corresponding to the Poisson response variable have one outgoing edge labelled $y$. This is because the plotting function for this class requires at least one outgoing edge. In reality, we would not draw the Poisson staged tree with these edges, instead stopping at the leaves.
 
 We can also see this staged tree in pceg form:
 
@@ -80,7 +79,7 @@ We can also see this staged tree in pceg form:
 pceg1<-sceg(ptree)
 plot(pceg1)
 ```
-
+Similarly to the staged tree, any uncoloured node in the PCEG is a singleton *position*. This is a function of the plotting method used, and if the PCEG was drawn by hand, the positions with non-singleton stages ($w_9$ and $w_{10}$) would be coloured with the same colour in the associated Poisson staged tree. 
 
 We now can estimate the posterior expected values of the transition probabilities for the covariates, and the rates for the response. The transition probabilities can be compared to *cov_probs*, while we have included what the PCEG estimate should be for $\lambda$, based on the true $\pi$ and $\lambda$.
 ```{r}
@@ -121,15 +120,15 @@ For the Gibbs sampler, we must also specify the hyperparameters of the Beta($c,d
 c<-0.125
 d<-0.125
 ```
-We will also run the Gibbs sampler for $N=10000$ iterations. When the parameeters are estimated using the Gibbs sampler, we will impute the states stochastically.
+We will also run the Gibbs sampler for $N=10000$ iterations. When the parameters are estimated using the Gibbs sampler, we will impute the states stochastically.
 ```{r}
 zipmod1<-zipceg(knee_pain_obs,"Gibbs",iter=10000,variable_time = TRUE, stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b, beta_c = c, beta_d = d)
-ziptree<-staged.tree.creator(knee_pain_obs,zipmod1)
-zipceg1<-sceg(ziptree)
-plot(ziptree)
+ziptree1<-staged.tree.creator(knee_pain_obs,zipmod1,zip=TRUE)
+zipceg1<-sceg(ziptree1)
+plot(ziptree1)
 plot(zipceg1)
 ```
-We can see that the model correctly merges the risk states (8 and 9)and the rates (15 and 16). We can also see that all of the risk free leaves are merged together into one stage (12). The covariate relationships have also been preserved from the PCEG. 
+We can see that the model correctly merges the risk states ($s_{9}$ and $s_{13}$, $s_{10}$ and $s_{14}$). We can also see that all of the risk free leaves are in the same stage. The rates for the risk leaves are in the expected stages ($s_{20}$ and $s_{28}$ and $s_{22}$ and $s_{30}$). The covariate relationships have also been preserved from the PCEG. 
 
 We now compare the goodness of fit to the PCEG. First, we calculate the log marginal likelihood and the Chi-square calculation. 
 ```{r}
@@ -181,7 +180,7 @@ expected_count_calculator(knee_pain_obs,mapmod,zip=TRUE)$chi_sq-expected_count_c
 ```
 Interestingly, the MAP model outperforms the single iteration of the Gibbs sampler in terms of log marginal likelihood, but not in terms of the Chi-square. We can compare the matrix of their Chi-square contributions to examine why.
 ```{r}
-expected_count_calculator(knee_pain_obs,mapmod,zip=TRUE)$chi.mat-expected_count_calculator(knee_pain_obs,zipmod1,zip=TRUE)$chi.mat
+expected_count_calculator(knee_pain_obs,mapmod,zip=TRUE,dec_place=2)$chi.mat-expected_count_calculator(knee_pain_obs,zipmod1,zip=TRUE,dec_place=2)$chi.mat
 ```
 We can see that there are some differences between the two models for leaves 1, 3 and 6. We now look at the posterior expected values of $\pi_i$ and $\lambda_i$ from the MAP model. We also compare these to the true values of $\lambda_i$ and $\pi_i$. Note that the estimates below are for each stage, not leaf. For example, stage 3 contains leaves 3 and 7. The first row for $\lambda$ is the risk free stage, and so the second row is stage 1.  
 ```{r}
@@ -238,18 +237,18 @@ We can see that for the Normal Weight, No History and Overweight, Yes History gr
 We thus choose to restrict between combinations now. We also shorten the interval length to just look at neighbours. 
 
 ```{r}
-disc.mod1<-pceg(df.bin,2,var_disc=3,disc_length=1,restrict=TRUE)
+disc.mod1<-pceg(df.bin,2,var_disc=3,disc_length=1,restrict=TRUE,collapse=TRUE)
 disc.mod1$result
 ```
 We can see that the short interval length tends to lead to small stages. We thus increase the interval length to 2. 
 
 ```{r}
-disc.mod3<-pceg(df.bin,2,var_disc=3,disc_length=2,restrict=TRUE)
+disc.mod3<-pceg(df.bin,2,var_disc=3,disc_length=2,restrict=TRUE,collapse=TRUE)
 disc.mod3$result
 ```
 We can see that increasing the interval length has lead to both of the Overweight covariate combinations having only one category. If we instead require a minimum of 2 categories:
 ```{r}
-disc.mod4<-pceg(df.bin,2,var_disc=3,disc_length=2,restrict=TRUE,cat_limit=2)
+disc.mod4<-pceg(df.bin,2,var_disc=3,disc_length=2,restrict=TRUE,cat_limit=2,collapse=TRUE)
 disc.mod4$result
 ```
 We can see that now Over, Yes has 3 categories, rather than the expected 2. This is because the model is unable to join the 1-14 stage and 17-80 stage as it would like, as that would lead to just one stage. Meanwhile, the 15-16 stage leads to a decrease in the Bayes Factor so will not merge. Currently, there is no functionality to add a maximum number of categories, which would mean decreasing the Bayes Factor by the minimum amount until that number of categories is enforced, but this is something to consider for future updates to the function. 
@@ -257,7 +256,7 @@ We can see that now Over, Yes has 3 categories, rather than the expected 2. This
 We now instead mirror the mergings across each covariate combination. 
 
 ```{r}
-disc.mod5<-pceg(df.bin,2,var_disc=3,disc_length=2,restrict=TRUE,mirror=TRUE,cat_limit=2)
+disc.mod5<-pceg(df.bin,2,var_disc=3,disc_length=2,restrict=TRUE,mirror=TRUE,cat_limit=2,collapse=TRUE)
 disc.mod5$result
 ```
 We can see that once the mergings are equivalent across all four covariate combinations, the model almost exactly names the correct discretisation. Considering the fact that this model is misspecified in the first place, this is an excellent result. 
@@ -265,17 +264,23 @@ We can see that once the mergings are equivalent across all four covariate combi
 We now see if this discretisation works as well when the model is a PCEG instead. We will begin by restricting to covariate combinations while also searching over an interval of 2.
 
 ```{r}
-disc.pmod0<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=2,restrict=TRUE)
+disc.pmod0<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=2,restrict=TRUE,collapse=TRUE)
 disc.pmod0$result
 ```
 We can see that the mergings are not particularly helpful. We now once again mirror the results across covariate combinations.
 
 ```{r}
-disc.pmod1<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=2,restrict=TRUE,mirror=TRUE)
+disc.pmod1<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=2,restrict=TRUE,mirror=TRUE,collapse=TRUE)
 disc.pmod1$result
 ```
 We can see now that the model correctly identifies the Age breakpoint of 40 years of age, without even needing to specify a minimum number of categories. 
 
 
+```{r}
+disc.tree5<-staged.tree.creator(df.bin,disc.mod5,FALSE,FALSE)
+plot(disc.tree5)
+disc.ceg5<-sceg(disc.tree5)
+plot(disc.ceg5)
+```
 
 

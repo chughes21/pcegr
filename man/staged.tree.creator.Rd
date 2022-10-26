@@ -9,6 +9,7 @@ staged.tree.creator(
   mod,
   poisson_response = TRUE,
   variable_time = TRUE,
+  zip = FALSE,
   score = 0
 )
 }
@@ -18,6 +19,8 @@ staged.tree.creator(
 \item{poisson_response}{A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).}
 
 \item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.}
+
+\item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
 
 \item{score}{A numeric vector of the score contributions from each level}
 }

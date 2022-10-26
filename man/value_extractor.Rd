@@ -12,6 +12,7 @@ value_extractor(
   variable_time = TRUE,
   posterior = TRUE,
   zip = TRUE,
+  dec_place = NA,
   true_value = NA
 )
 }
@@ -29,6 +30,8 @@ value_extractor(
 \item{posterior}{A logical value indicating whether the estimates of the posterior (TRUE) or sample (FALSE) expected value should be calculated.}
 
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
+
+\item{dec_place}{An integer value detailing how many decimal places the outputs should be rounded to. If NA, no rounding will occur.}
 
 \item{true_value}{A numeric vector specifying the true values of the parameters for comparison, if known. If unknown, this will be NA.}
 }

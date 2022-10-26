@@ -147,6 +147,10 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
     stop("Equivalent Sample size should be greater than 0")
   }
 
+  if((var_disc > 0) & collapse & !(restrict | mirror )){
+    stop("Collapsed results only possible when merging is restricted")
+  }
+
 
   numbvariables<-dim(exampledata)[2] - 1*variable_time #this means if there is a variable time, it must come last
   numbcat <-sapply(exampledata[,1:numbvariables],FUN=nlevels) #number of categories at each level
@@ -580,15 +584,22 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
     stages_disc<-comparisonset[[var_disc]]
     mergedlist_disc<-mergedlist[stages_disc]
     for(j in 1:length(mergedlist_disc)){
-      n<-length(mergedlist_disc[[j]][1,])
+      v<-as.matrix(mergedlist_disc[[j]])
+      n<-dim(v)[2]
+      if(n>1){
       start<-mergedlist_disc[[j]][var_disc,1]
       end<-mergedlist_disc[[j]][var_disc,n]
-      state.out<-paste0(start," - ",end)
       vec.out<-mergedlist_disc[[j]][,1]
-      vec.out[var_disc,1]<-state.out
+      state.out<-paste0(start," - ",end)
+      }else{
+      start<-mergedlist_disc[[j]][var_disc]
+      vec.out<-mergedlist_disc[[j]]
+      state.out<-paste0(start)
+      }
+      vec.out[var_disc]<-state.out
       mergedlist_disc[[j]]<-vec.out
     }
-    mergedlist[[stages_disc]]<-mergedlist_disc
+    mergedlist[stages_disc]<-mergedlist_disc
   }
 
   result<-mergedlist[stages]

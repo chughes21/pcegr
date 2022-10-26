@@ -11,7 +11,8 @@ expected_count_calculator(
   poisson_response = TRUE,
   variable_time = TRUE,
   posterior = TRUE,
-  zip = TRUE
+  zip = TRUE,
+  dec_place = NA
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ expected_count_calculator(
 \item{posterior}{A logical value indicating whether the estimates of the parameters used should be the posterior estimate (TRUE) or sample estimate (FALSE).}
 
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
+
+\item{dec_place}{An integer value detailing how many decimal places the outputs should be rounded to. If NA, no rounding will occur.}
 }
 \value{
 A list of three matrices and a numeric value. The first matrix is the observed count matrix, the second is the expected count matrix, and the third is the chi-squared contribution matrix.The numeric value is the sum of the chi square contributions.

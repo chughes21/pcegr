@@ -4,12 +4,14 @@
 \alias{stage_structure}
 \title{The Stage Structure Function}
 \usage{
-stage_structure(mod, score = 0)
+stage_structure(mod, score = 0, zip = FALSE)
 }
 \arguments{
 \item{mod}{A list detailing the output from \code{\link[=pceg]{pceg()}}}
 
 \item{score}{A numeric vector detailing the change in score for each level of the tree}
+
+\item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
 }
 \value{
 A list specifying the stage structure from the output of \code{\link[=pceg]{pceg()}} in a way that is compatible with the "Stratified.staged.tree" S4 class.

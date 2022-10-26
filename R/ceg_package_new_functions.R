@@ -18,13 +18,14 @@ oahc_definer<-function(cluster,score=0){
 #'
 #' @param mod A list detailing the output from [pceg()]
 #' @param score A numeric vector detailing the change in score for each level of the tree
+#' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #'
 #' @return A list specifying the stage structure from the output of [pceg()] in a way that is compatible with the "Stratified.staged.tree" S4 class.
 #'
 #' @examples
 #' mod1<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' stage_structure(mod1)
-stage_structure<-function(mod,score=0){
+stage_structure<-function(mod,score=0,zip=FALSE){
   output<-list()
   M<-mod$merged
   comparisonset<-mod$comparisonset
@@ -57,22 +58,52 @@ stage_structure<-function(mod,score=0){
       check<-NA
     }
 
+    zip_ind<-(i==length(numb))& zip
+
+    if(zip_ind){
+      no_risk_ind<-seq(from=1,to=numb[i]-1,by=2)
+    }else{no_risk_ind<-NA}
+
     k<-1
 
     for(j in 1:numb[[i]]){
 
-      if(all(is.na(check))){
-        cluster[[j]]=j
+      if((j==1)&zip_ind ){
+        cluster[[j]]<-no_risk_ind
+      } else if((j %in% no_risk_ind[-1])&zip_ind){
+        cluster[[j]]<-NA
+      }else if(all(is.na(check))){
+        cluster[[j]]<-j
+      }else if(!(j %in% comp)){
+        cluster[[j]]<-NA
+      }else if(!(j%in%m[1:2,])){
+        cluster[[j]]<-j
       }else{
-        if(!(j %in% comp)){
-          cluster[[j]]<-NA
-        } else if(!(j%in%m[1:2,])){
-          cluster[[j]]<-j
-        }else{
-          cluster[[j]]<-as.vector(unlist(check[k]))
-          k<-k+1
-        }
+        cluster[[j]]<-as.vector(unlist(check[k]))
+        k<-k+1
       }
+
+
+
+
+     # if((j==1)&zip ){
+     #   cluster[[j]]<-no_risk_ind
+    #  }
+
+    # if(all(is.na(check))){
+     #   cluster[[j]]=j
+    #  }else{
+    #    if(!(j %in% comp)){
+     #     cluster[[j]]<-NA
+     #   } else if(!(j%in%m[1:2,])){
+    #      if(zip & (j %in% no_risk_ind[-1])){
+      #      cluster[[j]]<-NA
+      #    }else{cluster[[j]]<-j}
+      #  }else{
+    #      cluster[[j]]<-as.vector(unlist(check[k]))
+     #     k<-k+1
+    #    }
+   #   }
     }
     output[[i]]=oahc_definer(cluster,score=lik)
   }
@@ -122,6 +153,7 @@ event.tree.creator<-function(data,poisson_response=TRUE,variable_time=TRUE){
 #' @param mod
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
+#' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #' @param score A numeric vector of the score contributions from each level
 #'
 #' @return An object of the class "Stratified.staged.tree"
@@ -149,7 +181,7 @@ staged.tree.creator<-function(data,mod,poisson_response=TRUE,variable_time=TRUE,
     data.final<-data
   }
   event.tree<-event.tree.creator(data.final,poisson_response,variable_time)
-  stage.struc<-stage_structure(mod,score)
+  stage.struc<-stage_structure(mod,score,zip=zip)
   staged.tree<-new("Stratified.staged.tree", event.tree,
                    situation = list(), contingency.table = list(), stage.structure = stage.struc,
                    stage.probability = list(), prior.distribution=list(), posterior.distribution=list(),
