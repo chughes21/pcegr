@@ -577,7 +577,7 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
   }
 
   if(restrict & (var_disc > 1) & collapse){
-    stages_disc<-comparisonset[[var_disc-1]]
+    stages_disc<-comparisonset[[var_disc]]
     mergedlist_disc<-mergedlist[[stages_disc]]
     for(j in 1:length(mergedlist_disc)){
       n<-length(mergedlist_disc[[j]][1,])
