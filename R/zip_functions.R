@@ -449,26 +449,24 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, p
         m=length(y)
         data.temp2<-data.frame(x=c(1:m),y=y)
         leaves[[j]]<-  ggplot(data=data.temp2,mapping=aes(x=y))+geom_histogram(col=i,fill=i)+
-          #geom_density()+
-          #  geom_vline(col="red",xintercept=mean(y))+geom_vline(xintercept=true_lambda[i])+
-          xlab("Risk Prob") +ggtitle(paste("Leaf", i, sep = " "))+xlim(xlim_l,xlim_u)+ylim(0,iter_total)
+          xlab(paste0("Risk Prob over ",iter_total," Iterations")) +ggtitle(paste("Leaf", i, sep = " "))+xlim(xlim_l,xlim_u)+ylim(0,iter_total)
       }
 
       prob_plot<-do.call(ggarrange,list(plotlist=leaves,nrow=p/2,ncol=2))
     }else if(line){
       prob_plot<-ggplot(data=data.long,aes(x=x,y=value,group=variable))+geom_line(aes(col=variable),position=position_jitter(width=0.1,height=0.01))+
         xlab("Iteration")+ylab("Risk Prob")+
-        ggtitle("Estimated Risk Prob by Iteration for Each leaf")+
+        ggtitle(paste0("Estimated Risk Prob over ",iter_total," Iterations - Line Plot"))+
         geom_label_repel(mapping=aes(label=label))
     }else if(scatter){
       prob_plot<- ggplot(data=data.long,aes(x=x,y=value,group=variable))+geom_point(aes(col=variable),position=position_jitter(width=0.1,height=0.01))+
         xlab("Iteration")+ylab("Risk Prob")+
-        ggtitle("Estimated Risk Prob by Iteration for Each leaf")+
+        ggtitle(paste0("Estimated Risk Prob over ",iter_total," Iterations - Scatter Plot"))+
         geom_label_repel(mapping=aes(label=label))
     }else{
     prob_plot<- ggplot(data=data.long,aes(x=variable,y=value))+geom_violin(aes(col=variable,fill=variable))+
       xlab("Leaf")+ylab("Risk Prob")+
-      ggtitle("Estimated Risk Prob by Iteration for Each leaf")+theme(legend.position="none")
+      ggtitle(paste0("Estimated Risk Prob over ",iter_total," Iterations - Violin Plot"))+theme(legend.position="none")
     }
 
     print(prob_plot)

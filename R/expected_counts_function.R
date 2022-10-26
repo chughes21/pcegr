@@ -32,7 +32,7 @@ merged_stage_finder<-function(unique_stage,M){
 #' merged_list_extractor(merged)
 merged_list_extractor<-function(merged){
   level<-max(merged[3,])
-  merged_stages<-merged[,which(merged[3,]==level)]
+  merged_stages<-as.matrix(merged[,which(merged[3,]==level)])
   stages_top<-unique(merged_stages[1,])
   stages_bottom<-unique(merged_stages[2,])
 

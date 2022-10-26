@@ -39,7 +39,7 @@ stage_structure<-function(mod,score=0,zip=FALSE){
     }else{lik<-0}
 
     cluster<-vector(mode="list",length=numb[i])
-    m<-M[,which(M[3,]==(i-1))]
+    m<-as.matrix(M[,which(M[3,]==(i-1))])
 
     if(i>1){
       comp<-comparisonset[[i-1]]
@@ -82,10 +82,6 @@ stage_structure<-function(mod,score=0,zip=FALSE){
         cluster[[j]]<-as.vector(unlist(check[k]))
         k<-k+1
       }
-
-
-
-
      # if((j==1)&zip ){
      #   cluster[[j]]<-no_risk_ind
     #  }
