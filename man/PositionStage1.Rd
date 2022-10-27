@@ -7,10 +7,14 @@
 PositionStage1(stage.vector, num.category, pos.next.level)
 }
 \arguments{
-\item{pos.next.level}{}
+\item{stage.vector}{An integer vector detailing the stages merged at a single level.}
+
+\item{num.category}{An integer value for the number of categories for the associated variable.}
+
+\item{pos.next.level}{An integer vector detailing the position structure for a single level.}
 }
 \value{
-
+A list
 }
 \description{
 The Position Stage Function

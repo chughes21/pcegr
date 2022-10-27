@@ -12,11 +12,17 @@ PositionLevel1(
 )
 }
 \arguments{
-\item{pos.next.level}{}
+\item{stage.list}{A list detailing the stage structure for a single level.}
+
+\item{num.category}{An integer value detailing the number of stages at a single level.}
+
+\item{num.situation.next}{An integer value detailing the number of situations at the next level.}
+
+\item{pos.next.level}{A list detailing the position structure for the next level.}
 }
 \value{
-
+A list detailing the position structure for a single level.
 }
 \description{
-The Position Level Function
+The function \code{\link[ceg:PositionLevel]{ceg::PositionLevel()}}
 }

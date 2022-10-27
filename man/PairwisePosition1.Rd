@@ -7,11 +7,15 @@
 PairwisePosition1(pair.situation, num.category, pos.next.level)
 }
 \arguments{
-\item{pos.next.level}{}
+\item{pair.situation}{An integer vector}
+
+\item{num.category}{An integer value}
+
+\item{pos.next.level}{An integer vector}
 }
 \value{
-
+A logical value indicating whether two situations are in the same position.
 }
 \description{
-The Pairwise Position Function
+The function \code{\link[ceg:PairWisePosition]{ceg::PairWisePosition()}}
 }

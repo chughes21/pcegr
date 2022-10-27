@@ -2,11 +2,21 @@
 % Please edit documentation in R/ceg_package_updated_functions.R
 \name{TruncatedPath1}
 \alias{TruncatedPath1}
-\title{The Label Stage Function}
+\title{The Truncated Path Function}
 \usage{
 TruncatedPath1(ref, k, var, num.category, num.situation, label.category)
 }
 \arguments{
+\item{ref}{An integer value}
+
+\item{k}{An integer value}
+
+\item{var}{An integer value}
+
+\item{num.category}{An integer value}
+
+\item{num.situation}{An integer value}
+
 \item{label.category}{}
 }
 \value{

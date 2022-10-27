@@ -7,6 +7,14 @@
 LabelStage1(k, num.variable, num.situation, label.category, num.category)
 }
 \arguments{
+\item{k}{An integer value}
+
+\item{num.variable}{An integer value}
+
+\item{num.situation}{An integer value}
+
+\item{label.category}{A string detailing the label of the category}
+
 \item{num.category}{}
 }
 \description{

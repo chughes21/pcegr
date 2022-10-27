@@ -29,6 +29,7 @@ CheckForCleanData1<-function(data.frame){
 #' @return A cleaned data set
 #'
 #' @examples
+#' CheckAndCleanData1(knee_pain_obs)
 CheckAndCleanData1<-function(data.frame){
   if (!methods::is(data.frame, "data.frame")) {
     message("Input is not a data frame, please check it")
@@ -50,10 +51,10 @@ CheckAndCleanData1<-function(data.frame){
 #' The function [ceg::LabelStage]
 #'
 #'
-#' @param k
-#' @param num.variable
-#' @param num.situation
-#' @param label.category
+#' @param k An integer value
+#' @param num.variable An integer value
+#' @param num.situation An integer value
+#' @param label.category A string detailing the label of the category
 #' @param num.category
 #'
 #' @examples
@@ -73,15 +74,15 @@ LabelStage1<-function(k, num.variable, num.situation, label.category, num.catego
   return(label)
 }
 
-#' The Label Stage Function
+#' The Truncated Path Function
 #'
 #' The function [ceg::TruncatedPath]
 #'
-#' @param ref
-#' @param k
-#' @param var
-#' @param num.category
-#' @param num.situation
+#' @param ref An integer value
+#' @param k An integer value
+#' @param var An integer value
+#' @param num.category An integer value
+#' @param num.situation An integer value
 #' @param label.category
 #'
 #' @return
@@ -137,11 +138,13 @@ set<-function(x = "data.frame", ...)
 
 #' The StratifiedCEGPosition1 Function
 #'
-#' @param stage
-#' @param num.category
-#' @param num.situation
+#'The function [ceg::StratifiedCEGPosition()]
 #'
-#' @return
+#' @param stage A list detailing the stage structure of a Stratified.staged.tree model at each level.
+#' @param num.category An integer vector detailing the number of categories for each variable.
+#' @param num.situation An integer vector detailing the number of situations at each level.
+#'
+#' @return A list detailing the position structure at each level.
 #'
 #' @examples
 StratifiedCegPosition1<-function (stage, num.category, num.situation)
@@ -161,12 +164,14 @@ StratifiedCegPosition1<-function (stage, num.category, num.situation)
 
 #' The Position Level Function
 #'
-#' @param stage.list
-#' @param num.category
-#' @param num.situation.next
-#' @param pos.next.level
+#' The function [ceg::PositionLevel()]
 #'
-#' @return
+#' @param stage.list A list detailing the stage structure for a single level.
+#' @param num.category An integer value detailing the number of stages at a single level.
+#' @param num.situation.next An integer value detailing the number of situations at the next level.
+#' @param pos.next.level A list detailing the position structure for the next level.
+#'
+#' @return A list detailing the position structure for a single level.
 #'
 #' @examples
 PositionLevel1<-function(stage.list, num.category, num.situation.next, pos.next.level = list())
@@ -186,11 +191,12 @@ PositionLevel1<-function(stage.list, num.category, num.situation.next, pos.next.
 
 #' The Position Vector Function
 #'
-#' @param num.situation
-#' @param pos.list
+#' The function [ceg::PositionVector()]
 #'
-#' @return
-#' @export
+#' @param num.situation An integer value detailing the number of situations at a single level.
+#' @param pos.list A list detailing the position structure for a single level.
+#'
+#' @return An integer vector detailing the position structure for a single level.
 #'
 #' @examples
 PositionVector1<-function (num.situation, pos.list)
@@ -209,11 +215,11 @@ PositionVector1<-function (num.situation, pos.list)
 
 #' The Position Stage Function
 #'
-#' @param stage.vector
-#' @param num.category
-#' @param pos.next.level
+#' @param stage.vector An integer vector detailing the stages merged at a single level.
+#' @param num.category An integer value for the number of categories for the associated variable.
+#' @param pos.next.level An integer vector detailing the position structure for a single level.
 #'
-#' @return
+#' @return A list
 #'
 #' @examples
 PositionStage1<-function (stage.vector, num.category, pos.next.level)
@@ -245,11 +251,13 @@ PositionStage1<-function (stage.vector, num.category, pos.next.level)
 
 #' The Pairwise Position Function
 #'
-#' @param pair.situation
-#' @param num.category
-#' @param pos.next.level
+#' The function [ceg::PairWisePosition()]
 #'
-#' @return
+#' @param pair.situation An integer vector
+#' @param num.category An integer value
+#' @param pos.next.level An integer vector
+#'
+#' @return A logical value indicating whether two situations are in the same position.
 #'
 #' @examples
 PairwisePosition1<-function (pair.situation, num.category, pos.next.level)

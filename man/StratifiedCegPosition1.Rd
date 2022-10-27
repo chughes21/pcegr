@@ -7,11 +7,15 @@
 StratifiedCegPosition1(stage, num.category, num.situation)
 }
 \arguments{
-\item{num.situation}{}
+\item{stage}{A list detailing the stage structure of a Stratified.staged.tree model at each level.}
+
+\item{num.category}{An integer vector detailing the number of categories for each variable.}
+
+\item{num.situation}{An integer vector detailing the number of situations at each level.}
 }
 \value{
-
+A list detailing the position structure at each level.
 }
 \description{
-The StratifiedCEGPosition1 Function
+The function \code{\link[ceg:StratifiedCEGPosition]{ceg::StratifiedCEGPosition()}}
 }

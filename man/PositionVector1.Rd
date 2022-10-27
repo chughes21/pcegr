@@ -7,11 +7,13 @@
 PositionVector1(num.situation, pos.list)
 }
 \arguments{
-\item{pos.list}{}
+\item{num.situation}{An integer value detailing the number of situations at a single level.}
+
+\item{pos.list}{A list detailing the position structure for a single level.}
 }
 \value{
-
+An integer vector detailing the position structure for a single level.
 }
 \description{
-The Position Vector Function
+The function \code{\link[ceg:PositionVector]{ceg::PositionVector()}}
 }
