@@ -15,7 +15,7 @@
 knee_pain_age<-knee_pain
 
 young_limit<-40
-old_limit<-80
+old_limit<-70
 
 ind_old<-which(knee_pain_age$age == "Old")
 ind_young<-which(knee_pain_age$age == "Young")
@@ -23,7 +23,7 @@ ind_young<-which(knee_pain_age$age == "Young")
 knee_pain_age$age<-numeric(length(knee_pain_age$age))
 
 knee_pain_age$age[ind_old]<-sample(c((young_limit+1):old_limit),length(ind_old),replace=TRUE)
-knee_pain_age$age[ind_young]<-sample(c(1:young_limit),length(ind_young),replace=TRUE)
+knee_pain_age$age[ind_young]<-sample(c(10:young_limit),length(ind_young),replace=TRUE)
 
 knee_pain_age
 

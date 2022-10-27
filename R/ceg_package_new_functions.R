@@ -200,7 +200,7 @@ event.tree.creator<-function(data,poisson_response=TRUE,variable_time=TRUE){
 #'#' A function to create an object of the "Stratified.event.tree" S4 class that is compatible with the outputs of the [pceg()] function.
 #'
 #' @param data A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.
-#' @param mod A list from the output of the [pcegr()] function.
+#' @param mod A list from the output of the [pceg()] function.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).

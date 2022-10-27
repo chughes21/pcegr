@@ -11,6 +11,6 @@
 
 NULL
 
-#Below are what I think are the proper imports, but couldn't get to work without loading ceg
+#Below are what I think are the proper imports, but couldn't get to work without loading ceg (even importing ceg doesn't seem to work)
 #@importClassesFrom ceg Stratified.event.tree Stratified.staged.tree Stratified.ceg.model
 #@importMethodsFrom ceg plot
