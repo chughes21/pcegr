@@ -230,6 +230,7 @@ staged.tree.creator<-function(data,mod,poisson_response=TRUE,variable_time=TRUE,
   }else{
     data.final<-data
   }
+
   event.tree<-event.tree.creator(data.final,poisson_response,variable_time)
   temp<-output_list_converter(mod,poisson_response)
   prior.struc<-temp$prior

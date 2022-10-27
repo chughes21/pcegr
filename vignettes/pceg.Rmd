@@ -73,7 +73,7 @@ plot(ptree)
 
 We note that that any node that is uncoloured is a singleton stage. We can see that the model has correctly identified that the individuals of either Age who are Overweight with a History of injury are in the same stage ($s_{10}$ and $s_{14}$), and likewise for those with No History ($s_{9}$ and $s_{13}$). It has also correctly identified that History is independent of Weight given Age ($s_{3}$ and $s_{4}$ versus ($s_{5}$ and $s_{6}$)). We can also see that the nodes corresponding to the Poisson response variable have one outgoing edge labelled $y$. This is because the plotting function for this class requires at least one outgoing edge. In reality, we would not draw the Poisson staged tree with these edges, instead stopping at the leaves.
 
-We can also see this staged tree in pceg form:
+We can also see this staged tree in PCEG form:
 
 ```{r}
 pceg1<-sceg(ptree)
@@ -214,17 +214,17 @@ v5<-c(54,45);v5/sum(v5)
 value_extractor(knee_pain_obs,mapmod,level_rel_final = -1,true_value=true_p,dec_place=2)[c(2,5),]
 ```
 
-
-We can also use the *pceg* function to carry out variable discretisation. To demonstrate this, we will use two new data sets. The first, *knee_pain_age* is the same data set as *knee_pain*, except the Age covariate is now continuous. Any individual who was Young previously now has an integer value uniformly distributed between 1 and 40, while an Old individual has an integer between 41 and 80. The *knee_pain_age_obs* data set is the observed *knee_pain_age* data set, and so has the State covariate removed, as before. 
+We can also use the *pceg* function to carry out variable discretisation. To demonstrate this, we will use two new data sets. The first, *knee_pain_age* is the same data set as *knee_pain*, except the Age covariate is now continuous. Any individual who was Young previously now has an integer value uniformly distributed between 10 and 40, while an Old individual has an integer between 41 and 70. The *knee_pain_age_obs* data set is the observed *knee_pain_age* data set, and so has the State covariate removed, as before. 
 
 The *pceg* function has several inputs related to variable discretisation. They are:
 +var_disc: The variable in the order of which to discretise. Generally, we will want the variable of interest to be the last covariate and immediately precede the response.
 +disc_length: The length over which to search for stages to merge. For example, if this is 1, it will only merge stages that are immediate neighbours when ordered. This is particularly useful when dealing with sparse edge counts, as it enables the user to adjust their search length where necessary.  
-+restrict: Whether or not stages can only be merged when they have the same covariate values for everything else. This will generally be assumed to be true, as the goal is to discretise the variable, which requires the rest of the process to be kept fixed for each possible evolution.
++restrict: Whether or not stages can only be merged when they have the same covariate values for everything else. This will generally be assumed to be true, as the goal is to discretise the variable, which requires the rest of the process to be kept fixed for each possible evolution. 
 +mirror: If TRUE, this will have the same discretisation for each set of covariates. If the goal is to find one single discretisation (i.e. anything over 40 is old), this should be TRUE. However, if this is FALSE, it allows the flexibility for each unfolding of the process to have its own discretisation (i.e. 40 could be old for men, but still young for women.)
 +cat_limit: The minimum number of categories the variable can be discretised to. 
++collapse: It's difficult to display the variable discretisation through trees, due to their size, so often we will look at the outputs from the *pceg* function directly. In order to decrease the size of the outputs, when restrict is TRUE, we can collapse each stage into one more compacy statement i.e. instead of ages 1, 2, .., 40 being separate elements, there is one element labelled "1-40".
 
-We will demonstrate the variable discretisation functionality of the *pceg* function in two ways. First, we will fit a Vanilla CEG, then we will fit a PCEG model, in both cases discretising the Age variable. In order to fit a Vanilla CEG, we must first create a suitable data set where the response variable is binary. The response variable we will choose is simply whether an event occured or not. Furthermore, any data set we will analyse is required to have Age as the last covariate, so it must be reordered. Finally, while the Age values in the data set are integers, they must be converted to factors and assumed as categorical in order for the functions to work.
+We will demonstrate the variable discretisation functionality of the *pceg* function in two ways. First, we will fit a Vanilla CEG, then we will fit a PCEG model, in both cases discretising the Age variable. In order to fit a Vanilla CEG, we must first create a suitable data set where the response variable is binary. The response variable we will choose is simply whether an event occurred or not. Furthermore, any data set we will analyse is required to have Age as the last covariate, so it must be reordered. Finally, while the Age values in the data set are integers, they must be converted to factors and assumed as categorical in order for the functions to work.
 
 ```{r}
 df<-knee_pain_age_obs[,c(2,3,1,4,5)]
@@ -263,15 +263,15 @@ We can see that increasing the search length has lead to both of the Overweight 
 disc.mod3<-pceg(df.bin,2,var_disc=3,disc_length=2,restrict=TRUE,cat_limit=2,collapse=TRUE)
 disc.mod3$result
 ```
-We can see that now Over, Yes has 3 categories, rather than the expected 2. This is because the model is unable to join the 1-14 stage and 17-80 stage as it desires, as that would lead to just one stage, breaking the minimum category rule. Meanwhile, the 15-16 stage leads to a decrease in the log marginal likelihood so will not merge. This is an example of how variable discretisation can identify nonlinearity in the covariate effects, while also being able to discover possibly ideal values. Of course, there is no such nonlinearity in this case, and we investigate why this happens.
+We can see that now Over, Yes has 3 categories, rather than the expected 2. This is because the model is unable to join the 10-25 stage and 28-70 stage as it desires, as that would lead to just one stage, breaking the minimum category rule. Meanwhile, the 26-27 stage leads to a decrease in the log marginal likelihood so will not merge. This is an example of how variable discretisation can identify nonlinearity in the covariate effects, while also being able to discover possibly ideal values. Of course, there is no such nonlinearity in this case, and we investigate why this happens.
 
 ```{r}
-summary(dplyr::filter(df.bin,weight=="Over",history=="Yes",age %in% c(15,16)))
-summary(dplyr::filter(df.bin,weight=="Over",history=="Yes",!(age %in% c(15,16))))
+summary(dplyr::filter(df.bin,weight=="Over",history=="Yes",age %in% c(26,27)))
+summary(dplyr::filter(df.bin,weight=="Over",history=="Yes",!(age %in% c(26,27))))
 3192/3898
 ```
 
-We can see that due to the small sample size, all 10 observations in the 15-16 age group have suffered knee pain, versus a group proportion of 0.82. This is why the algorithm will not merge this stage with either of the other two.  
+We can see that due to the small sample size, all 10 observations in the 26-27 age group have suffered knee pain, versus a group proportion of 0.82. This is why the algorithm will not merge this stage with either of the other two.  
 
 Currently, there is no functionality to add a maximum number of categories, which would mean decreasing the score by the minimum amount until that number of categories is enforced, but this is something to consider for future updates to the function. 
 

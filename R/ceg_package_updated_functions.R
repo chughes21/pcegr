@@ -8,6 +8,7 @@
 #' @return A logical value indicating whether the data set is clean, along with a message if it isn't
 #'
 #' @examples
+#' CheckForCleanData1(knee_pain_obs)
 CheckForCleanData1<-function(data.frame){
   out <- TRUE
   data.frame <- as.data.frame(apply(data.frame, 2, function(x) gsub("^\\s*$",

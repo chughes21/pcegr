@@ -15,3 +15,6 @@ A logical value indicating whether the data set is clean, along with a message i
 \description{
 The function \link[ceg:CheckForCleanData]{ceg::CheckForCleanData}
 }
+\examples{
+CheckForCleanData1(knee_pain_obs)
+}

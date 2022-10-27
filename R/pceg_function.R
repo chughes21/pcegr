@@ -170,6 +170,10 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
 
   nv<-numbvariables-1*poisson_response
 
+  if(any(numbcat[1:nv]==0)){
+    stop("Covariate and/or non Poisson response should be a factor - check again")
+  }
+
   prior_output<-prior_set(situation_data,structural_zero,nv,numbcat[1:nv],numb[1:nv],equivsize)
   prior<-prior_output$prior
   no_merge_ind<-prior_output$no_merge
