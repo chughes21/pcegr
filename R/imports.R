@@ -6,6 +6,7 @@
 #' @importFrom ggpubr ggarrange
 #' @import ggplot2
 #' @import ggrepel
+#' @import methods
 #' @importClassesFrom ceg Stratified.event.tree Stratified.staged.tree Stratified.ceg.model
 #' @importMethodsFrom ceg plot
 NULL
