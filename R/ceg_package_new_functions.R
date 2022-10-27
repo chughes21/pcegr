@@ -108,6 +108,60 @@ stage_structure<-function(mod,score=0,zip=FALSE){
 
 }
 
+#' The Output List Converter Function
+#'
+#' A function to transform the list of prior and data outputs into the S4 class versions of the prior and posterior.
+#'
+#' @param mod A list from the output of the [pcegr()] function.
+#' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
+#'
+#' @return A list for the prior distribution and a list for the posterior distribution.
+#'
+#' @examples
+#' pmod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+#' output_list_converter(pmod,TRUE)
+output_list_converter<-function(mod,poisson_response=TRUE){
+  prior<-mod$prior
+  data<-mod$data
+  numb<-mod$numb
+  n<-length(numb)
+
+  numb_temp<-c(1,numb)
+
+  nodes_start<-cumsum(numb_temp)[1:n]
+  nodes_end<-cumsum(numb)
+
+  nodes<-nodes_end-nodes_start + 1
+
+  prior_out<-vector(mode="list",length=n)
+  data_out<-vector(mode="list",length=n)
+  post_out<-vector(mode="list",length=n)
+
+  for(i in 1:n){
+    prior_mat_temp<-matrix(nrow=nodes[i],ncol=dim(prior[[nodes_start[i]]])[2])
+    data_mat_temp<-matrix(nrow=nodes[i],ncol=dim(prior[[nodes_start[i]]])[2])
+
+    nodes_temp<-seq(nodes_start[i],nodes_end[i],by=1)
+    for(j in 1:nodes[i]){
+      prior_mat_temp[j,]<-prior[[nodes_temp[j]]]
+      data_mat_temp[j,]<-data[[nodes_temp[j]]]
+    }
+    prior_out[[i]]<-prior_mat_temp
+    data_out[[i]]<-data_mat_temp
+
+    sum_out<-prior_mat_temp+data_mat_temp
+
+    if((i==n)&poisson_response){
+      post_out[[i]]<-sum_out[,1]/sum_out[,2]
+    }else{
+      post_out[[i]]<-sum_out/rowSums(sum_out)
+      }
+    }
+  return(list(prior=prior_out,posterior=post_out))
+}
+
+
+
 #' The Event Tree Creator
 #'
 #' A function to create an object of the "Stratified.event.tree" S4 class that is compatible with Poisson response variables.
@@ -146,7 +200,7 @@ event.tree.creator<-function(data,poisson_response=TRUE,variable_time=TRUE){
 #'#' A function to create an object of the "Stratified.event.tree" S4 class that is compatible with the outputs of the [pceg()] function.
 #'
 #' @param data A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.
-#' @param mod
+#' @param mod A list from the output of the [pcegr()] function.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
@@ -177,10 +231,13 @@ staged.tree.creator<-function(data,mod,poisson_response=TRUE,variable_time=TRUE,
     data.final<-data
   }
   event.tree<-event.tree.creator(data.final,poisson_response,variable_time)
+  temp<-output_list_converter(mod,poisson_response)
+  prior.struc<-temp$prior
+  post.struc<-temp$posterior
   stage.struc<-stage_structure(mod,score,zip=zip)
   staged.tree<-new("Stratified.staged.tree", event.tree,
                    situation = list(), contingency.table = list(), stage.structure = stage.struc,
-                   stage.probability = list(), prior.distribution=list(), posterior.distribution=list(),
+                   stage.probability = list(), prior.distribution=prior.struc, posterior.distribution=post.struc,
                    model.score=mod$lik)
   return(staged.tree)
 }

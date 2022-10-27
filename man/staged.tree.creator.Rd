@@ -16,6 +16,8 @@ staged.tree.creator(
 \arguments{
 \item{data}{A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.}
 
+\item{mod}{A list from the output of the \code{\link[=pcegr]{pcegr()}} function.}
+
 \item{poisson_response}{A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).}
 
 \item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.}
