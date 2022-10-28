@@ -303,7 +303,7 @@ When we increase the search length to 6, the correct discretisation is inferred.
 disc.pmod4<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=6,restrict=TRUE,collapse=TRUE)
 disc.pmod4$result
 ```
-We believe the counterintutive results for the search length of 5, where it somehow produces more categories than both 3 and 6, is due to the interaction between a search length and the AHC algorithm itself. The AHC algorithm is unable to separate stages once they are merged, as it is a greedy search algorithm. Different search lengths lead to different mergings early in the process, which mean that later in the process, the stage structures are not the same and so the score may not increase when certain stages are merged. This highlights that a sensitivity analysis should be done on this search length, as it is essentially a tuning parameter, and the results of one single search length should not be considered infallible.   
+We believe the counter-intutive results for the search length of 5, where it somehow produces more categories than both 3 and 6, is due to the interaction between a search length and the AHC algorithm itself. The AHC algorithm is unable to separate stages once they are merged, as it is a greedy search algorithm. Different search lengths lead to different mergings early in the process, which mean that later in the process, the stage structures are not the same and so the score may not increase when certain stages are merged. This highlights that a sensitivity analysis should be done on this search length, as it is essentially a tuning parameter, and the results of one single search length should not be considered infallible.   
 
 
 
