@@ -287,6 +287,20 @@ expected_count_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,varia
     chi.mat<-round(chi.mat,dec_place)
   }
 
+  v1<-c(0:(limit-1))
+  v2<-paste0(limit,"+")
+  v<-c(v1,v2)
+
+  colnames(obs.mat)<-v
+  colnames(exp.mat)<-v
+  colnames(chi.mat)<-v
+
+  u<-paste0("Leaf",1:p)
+
+  rownames(obs.mat)<-u
+  rownames(exp.mat)<-u
+  rownames(chi.mat)<-u
+
   return(list(obs=obs.mat,exp=exp.mat,chi.mat=chi.mat,chi_sq = sum(chi.mat)))
 
 }

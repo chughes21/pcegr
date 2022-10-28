@@ -8,21 +8,20 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-library(kableExtra)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 ```
 
-The pcegr package can be used to fit Poisson Chain Event Graphs (PCEGs) and Zero-Inflated Poisson Chain Event Graphs (ZIPCEGs) to data. We will demonstrate the functionality of the package using a simulated example based around knee pain. 
+The *pcegr* package can be used to fit Poisson Chain Event Graphs (PCEGs) and Zero-Inflated Poisson Chain Event Graphs (ZIPCEGs) to data. We will demonstrate the functionality of the package using a simulated example based around knee pain. 
 
 Suppose a study is carried out on the instances of knee pain in a population. For each individual, their age, weight and whether they have injured their legs before are recorded, along with the amount of instances of knee pain they suffered over a certain period of time, in years. This period of time is variable between individuals, and varies uniformly between 1 day and 2 years.
 
 Each of the three covariates are binary, with categories and associated binary values:
-+ Age (A): Old (0) or Young (1)
-+ (Over)weight (W): Yes (0) or No (1)
-+ History (H): Yes (0) or No (1)
+* Age (A): Old (0) or Young (1)
+* (Over)weight (W): Yes (0) or No (1)
+* History (H): Yes (0) or No (1)
 
 while the response variable of Knee Pain (K) is assumed to come from a Zero-Inflated Poisson process where the risk probability and intensity is dependent on these three covariates. For each individual, they are assumed to have a latent risk state (S), either At Risk (0) or Risk Free (1), where those who are At Risk have a nonzero probability of suffering an instance of knee pain. 
 
@@ -30,16 +29,17 @@ For an individual with risk probability $\pi$ and Poisson intensity $\lambda$, t
 
 As these models are based on staged trees, we will use leaf to refer to a specific covariate combination, and also the individuals with that specific covariate combination. We use the notation $l_i$ for the $i^{\text{th}}$ leaf in the tree, and assume it has rate $\lambda_i$ and associated risk probability $\pi_i$. A leaf stage $u$ contains leaves that are assumed to have the same rate. That is: $l_i, l_j \in u \Rightarrow \lambda_i = \lambda_j$.
 
-Generally, we would not assume that $\lambda_i = \lambda_j \Rightarrow \pi_i = \pi$, but for the purposes of simulating the data in this package we have. This is a simplification, but means that when a PCEG is fit instead of a ZIPCEG, the merging for the leaves will be the same, but the PCEG will have lower posterior expected values, as outlined above. We have chosen this simplifying assumption in order to easily compare the PCEG and ZIPCEG models.  
+Generally, we would not assume that $\lambda_i = \lambda_j \Rightarrow \pi_i = \pi_j$, but for the purposes of simulating the data in this package we have. This is a simplification, but means that when a PCEG is fit instead of a ZIPCEG, the merging for the leaves will be the same, with the PCEG having lower posterior expected values, as outlined above. We have chosen this simplifying assumption in order to easily compare the PCEG and ZIPCEG models and their performance in relation to the data and each other.  
 
-We have thus simulated $N=10000$ observations for the knee pain data set from a zero-inflated Poisson distribution with uniformly distributed observation times. The data has been simulated under the following conditional independence statements:
-+ Weight is independent of Age: W $\indep$ A;
-+ History is independent of Weight given Age: H $\indep$ W $\vert$ A;
-+ Knee Pain (and thus State) is independent of Age given History and the individual is Overweight: K, S $\indep$ A $\vert$ H, W = "Over"
+We have thus simulated $N=10,000$ observations for the knee pain data set from a Zero-Inflated Poisson distribution with uniformly distributed observation times. The data has been simulated under the following conditional independence statements:
+* Weight is independent of Age: W $\perp$ A;
+* History is independent of Weight given Age: H $\perp$ W $\vert$ A;
+* Knee Pain (and thus State) is independent of Age given History and the individual is Overweight: K, S $\perp$ A $\vert$ H, W = "Over"
 
-In the following table, we can see each conditional transition probability, informed by the conditional independence statements above. Each probability has its definition alongside its associated stage and situations.
+In the following table, we can see each conditional transition probability, informed by the conditional independence statements above. Each probability has its definition alongside its associated stage and situations. We load the *pcegr* package, but also the *ceg* package, as we will use its classes and methods for plotting. Some of the functions in *pcegr* are slightly modified from *ceg*, while others are direct ports, but we have relabeled them so as to not confuse the two. 
 ```{r}
 library(pcegr)
+library(ceg)
 cov_probs
 ```
 
@@ -48,30 +48,35 @@ For each leaf stage, we have the definition of the stage and its constituent lea
 leaf_params
 ```
 
+The covariate values being conditioned on uniquely define the stage. For example, when all covariates take a value of 1, this is $l_1$. We can see that incorporating some form of conditional independence essentially merges leaves like $l_3$ and $l_7$, as they are both specified by the shortened covariate combination ($l_3$ has A = 1, $l_7$ has A = 0). 
+
 We can thus isolate the true values for $\pi$ and $\lambda$, along with what should be the PCEG estimate.
 ```{r}
 true_lambda<-leaf_params$Rate
 true_p<-leaf_params$Risk_Prob
 pceg_lambda<-true_lambda*true_p;pceg_lambda
 ```
+Due to the simplification, when we fit a PCEG model, we would ideally get correct merging with the above scaled rates. 
 
-This simulation creates two data sets. The first, *knee_pain*, is the simulated data set, containing the true risk state for each individual. The second, *knee_pain_obs*, is the observed data set, which is simply *knee_pain* with the risk states removed. We can investigate these:
+We create two data sets. The first, *knee_pain*, is the simulated data set, containing the true risk state for each individual. The second, *knee_pain_obs*, is the observed data set, which is simply *knee_pain* with the risk states removed. We can investigate these:
 ```{r}
 head(knee_pain)
 summary(knee_pain)
 summary(knee_pain_obs)
 ```
+We can see that the data sets are identical, except for the State variable. In order to greater approximate real world applications, we will generally be using the Observed data set.
 
-First, we will fit a PCEG model to the data set. This requires specifying an effective sample size. The default choice for CEGs is usually the greatest number of categories a single variable takes, in this case 2. A sensitivity analysis can be carried out on the effects of this choice. 
+First, we will fit a PCEG model to this data set. This requires specifying an effective sample size, the amount of confidence in the prior. The default choice for CEGs is usually the greatest number of categories a single variable takes, in this case 2, and this is true for PCEGs also. A sensitivity analysis can be carried out on the effects of this choice, but we will not delve into that. 
 
-As there are $2^3 = 8$ leaves, we will assume each has a prior weight of $a = \tfrac{2}{8} = 0.25$. In order to enforce a prior mean for the rate of 2.5, the simple average for the data set, we choose $b = \tfrac{0.25}{2.5}=0.1$. If we were to desire more bespoke priors for each leaf, they could be input as vectors rather than scalars.
+This effective sample size is propagated through the tree, and at each level is distributed evenly amongst the nodes and their outgoing edges. As there are $2^3 = 8$ leaves, we will assume each has a prior weight of $a = \tfrac{2}{8} = 0.25$. In order to enforce a prior mean for the rate of 2.5, the simple average for the data set, we choose $b = \tfrac{0.25}{2.5}=0.1$. If we were to desire more bespoke priors for each leaf, they can be input as vectors rather than scalars (which we will see later).
 ```{r}
 pmod<-pceg(knee_pain_obs,2,TRUE,TRUE, gamma_alpha = 0.25,gamma_beta = 0.1)
 ptree<-staged.tree.creator(knee_pain_obs,pmod)
 plot(ptree)
 ```
+First, we point out that the nodes corresponding to the Poisson response variable have one outgoing edge labelled $y$. This is because the plotting function for this class requires at least one outgoing edge. In reality, we would not draw the Poisson staged tree with these edges, instead stopping at the leaves. Thus, the situations labeled $s_7$ to $s_{14}$ would instead be the leaves $l_1$ to $l_8$. We also note that that any node that is uncoloured is a singleton stage.
 
-We note that that any node that is uncoloured is a singleton stage. We can see that the model has correctly identified that the individuals of either Age who are Overweight with a History of injury are in the same stage ($s_{10}$ and $s_{14}$), and likewise for those with No History ($s_{9}$ and $s_{13}$). It has also correctly identified that History is independent of Weight given Age ($s_{3}$ and $s_{4}$ versus ($s_{5}$ and $s_{6}$)). We can also see that the nodes corresponding to the Poisson response variable have one outgoing edge labelled $y$. This is because the plotting function for this class requires at least one outgoing edge. In reality, we would not draw the Poisson staged tree with these edges, instead stopping at the leaves.
+We can see that the model has correctly identified that the individuals of either Age who are Overweight with a History of injury are in the same stage ($s_{10} / l_4$ and $s_{14}/l_8$), and likewise for those with No History ($s_{9}/l_3$ and $s_{13}/l_7$). The model has also correctly identified that History is independent of Weight given Age ($s_{3}$ and $s_{4}$ versus $s_{5}$ and $s_{6}$). 
 
 We can also see this staged tree in PCEG form:
 
@@ -79,9 +84,11 @@ We can also see this staged tree in PCEG form:
 pceg1<-sceg(ptree)
 plot(pceg1)
 ```
-Similarly to the staged tree, any uncoloured node in the PCEG is a singleton *position*. This is a function of the plotting method used, and if the PCEG was drawn by hand, the positions with non-singleton stages ($w_9$ and $w_{10}$) would be coloured with the same colour in the associated Poisson staged tree. 
+There are two graphs plotted, but only the final PCEG on the right hand side should be considered. On the left hand side is an intermediate plot used for propagation analysis, and while not particularly useful, is a legacy of the plotting method for the class.
 
-We now can estimate the posterior expected values of the transition probabilities for the covariates, and the rates for the response. The transition probabilities can be compared to *cov_probs*, while we have included what the PCEG estimate should be for $\lambda$, based on the true $\pi$ and $\lambda$.
+Similarly to the staged tree, any uncoloured node in the PCEG is a singleton *position*. This is once again a function of the plotting method used, and if the PCEG was drawn by hand, the positions with non-singleton stages ($w_9$ and $w_{10}$) would be coloured with the same colour in the associated Poisson staged tree. 
+
+We now can estimate the posterior expected values of the transition probabilities for the covariates, and the rates for the response. The transition probabilities can be compared to *cov_probs*, while we have included what the PCEG estimate should be for $\lambda$, based on the product of the true $\pi$ and $\lambda$.
 ```{r}
 for(i in 0:2){
   print(colnames(knee_pain_obs)[i+1])
@@ -91,11 +98,12 @@ value_extractor(knee_pain_obs,pmod,level_rel_final = 0,true_value = pceg_lambda,
 ```
 As can be seen, while the model is misspecified, it correctly identifies the transition probabilities, and the estimates of the rates are close to what we would expect.
 
-We can also find 95% highest density intervals for these parameters. For example:
+We can also find 95% highest density intervals for these parameters. For example, the 95% HDIs for the rates and risk probabilities:
 ```{r}
 hdi_gamma_extractor(knee_pain_obs,pmod,zip=FALSE)
 hdi_beta_extractor(knee_pain_obs,pmod,level_rel_final = -1, zip=FALSE)
 ```
+For a Poisson response, we use the Gamma function, but for the transition probabilities we use the Gamma function.
 
 We can also check the log marginal likelihood and Chi-square calculation for the model, to assess the fit. 
 
