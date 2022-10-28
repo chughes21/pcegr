@@ -103,7 +103,7 @@ We can also check the log marginal likelihood and Chi-square calculation for the
 pmod$lik
 expected_count_calculator(knee_pain_obs,pmod,zip=FALSE,dec_place=2)
 ```
-In the Chi-square contribution matrix, we can see some large values. In particular, for the leaves with low rates, for example the first row, we can see large contributions for the higher event counts. This is because there are a much higher number of observed counts greater than 3 than we would expect based on the small rate. In contrast, for the leaves with higher rates, such as 4, 6 and 8, we can see that the contributions for the zero counts are much higher. This is because there are much more observed zero counts than would be expected with such a high rate. 
+In the Chi-square contribution matrix, we can see some large values. In particular, for the leaves with low rates, like the first row, we can see large contributions for the higher event counts. This is because there are a much higher number of observed counts greater than 3 than we would expect based on the small rate. In contrast, for the leaves with higher rates, such as 4, 6 and 8, we can see that the contributions for the zero counts are much higher. This is because there are much more observed zero counts than would be expected with such a high rate. 
 
 These results are all indicative of the true underlying model instead being a zero-inflated Poisson distribution. We thus fit a ZIPCEG model to the data. 
 
@@ -120,15 +120,16 @@ For the Gibbs sampler, we must also specify the hyperparameters of the Beta($c,d
 c<-0.125
 d<-0.125
 ```
-We will also run the Gibbs sampler for $N=10000$ iterations. When the parameters are estimated using the Gibbs sampler, we will impute the states stochastically.
+We will also run the Gibbs sampler for $N=10000$ iterations. When the parameters are estimated using the Gibbs sampler, we will impute the states stochastically. Due to this randomness, and to make sure the results are replicable, we will also set the seed.
 ```{r}
+set.seed(13579)
 zipmod1<-zipceg(knee_pain_obs,"Gibbs",iter=10000,variable_time = TRUE, stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b, beta_c = c, beta_d = d)
 ziptree1<-staged.tree.creator(knee_pain_obs,zipmod1,zip=TRUE)
 zipceg1<-sceg(ziptree1)
 plot(ziptree1)
 plot(zipceg1)
 ```
-We can see that the model correctly merges the risk states ($s_{9}$ and $s_{13}$, $s_{10}$ and $s_{14}$). We can also see that all of the risk free leaves are in the same stage. The rates for the risk leaves are in the expected stages ($s_{20}$ and $s_{28}$ and $s_{22}$ and $s_{30}$). The covariate relationships have also been preserved from the PCEG. 
+We can see that the model correctly merges the risk states ($s_{9}$ and $s_{13}$, $s_{10}$ and $s_{14}$). We can also see that all of the risk free leaves are in the same stage. Additionally, the rates for the risk leaves are in their expected stages ($s_{20}$ and $s_{28}$ and $s_{22}$ and $s_{30}$). The covariate relationships have also been preserved from the PCEG. 
 
 We now compare the goodness of fit to the PCEG. First, we calculate the log marginal likelihood and the Chi-square calculation. 
 ```{r}
@@ -149,14 +150,15 @@ zipmod1$lik-pmod.bf$lik
 ```
 Hence, the ZIPCEG is a significantly better fit to the data than the PCEG according to the log Bayes factor also. 
 
-We can also fit the ZIPCEG using the *nlm* method instead. Notably, this doesn't require a Beta($c,d$) prior, or a number of iterations. It is also significantly faster.  
+We can also fit the ZIPCEG using the *nlm* method instead. Notably, this doesn't require a Beta($c,d$) prior, or a number of iterations. It is also significantly faster. We once again set the seed. 
 ```{r}
+set.seed(2468)
 zipmod2<-zipceg(knee_pain_obs,"nlm",variable_time = TRUE, stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b)
-zipmod2$result
-zipmod2$lik
-expected_count_calculator(knee_pain_obs,zipmod2)
+ziptree2<-staged.tree.creator(knee_pain_obs,zipmod2,zip=TRUE)
+plot(ziptree2)
+
 ```
-Comparing the two ZIPCEG models fitted appears to favour the Gibbs sampler method.
+The staged tree matches the result from using the Gibbs sampler. Comparing the two ZIPCEG models fitted, the Bayes Factor appears to favour the *nlm* method while the Chi square barely favours the Gibbs sampler.
 ```{r}
 zipmod1$lik-zipmod2$lik
 expected_count_calculator(knee_pain_obs,zipmod1)$chi_sq-expected_count_calculator(knee_pain_obs,zipmod2)$chi_sq
@@ -165,36 +167,25 @@ However, both of these models are the result of one iteration, and the ZIPCEG mo
 
 we will use violin plots to visualise, but there are options to use histograms, scatter plots, or line plots. We will use the *nlm* method, due to its lower computational cost per iteration. 
 ```{r}
+set.seed(1098765)
 mapmod<-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time = TRUE,gamma_alpha=a,gamma_beta=b)$mod
+set.seed(314159)
 mapmod.alt<-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time = TRUE,plot_rates=FALSE,plot_probs=TRUE,gamma_alpha=a,gamma_beta=b)
 ```
 We can see in the plot of the rates the merging that is present for leaves 3 and 7, and 4 and 8. The violin plots are identical, indicating that they always merge, and so we can be confident in the result from our initial model selection. In general, the violin plots are quite tight, which is a result of the large sample size and demarcation between the leaves. The risk probabilities also show these mergings, although not as consistently as for the rates. For example, the risk probability of leaf 4 occasionally merges with leaf 6 instead of 8. In both plots, leaf 5 is by far the most variable, and this is a result of it having the smallest sample size.
+
+We saved the second model as mapmod.alt simply to minimise the rest of the output alongside the graphs, as not saving the model will instead print the output from the model. It will not be used. 
 
 After looking at the plots above, we can be confident in the mergings produced by the single iteration of the model selection process. However, the way the states are imputed can still significantly affect the log marginal likelihood of the final model. We have selected a MAP model, and we can investigate its properties.
 ```{r}
 maptree<-staged.tree.creator(knee_pain_obs,mapmod,zip=TRUE)
 plot(maptree)
 mapmod$lik
-mapmod$lik-zipmod1$lik
+mapmod$lik-zipmod2$lik
 expected_count_calculator(knee_pain_obs,mapmod,zip=TRUE)$chi_sq-expected_count_calculator(knee_pain_obs,zipmod1,zip=TRUE)$chi_sq
 
 ```
-Interestingly, the MAP model outperforms the single iteration of the Gibbs sampler in terms of log marginal likelihood, but not in terms of the Chi-square. We can compare the matrix of their Chi-square contributions to examine why.
-```{r}
-expected_count_calculator(knee_pain_obs,mapmod,zip=TRUE,dec_place=2)$chi.mat-expected_count_calculator(knee_pain_obs,zipmod1,zip=TRUE,dec_place=2)$chi.mat
-```
-We can see that there are some differences between the two models for leaves 1, 2 and 6. We now look at the posterior expected values of $\pi_i$ and $\lambda_i$ from the MAP model. We also compare these to the true values of $\lambda_i$ and $\pi_i$. Note that the estimates below are for each stage, not leaf. For example, stage 3 contains leaves 3 and 7. The first row for $\lambda$ is the risk free stage, and so the second row is stage 1.  
-```{r}
-value_extractor(knee_pain_obs,mapmod,true_value=true_lambda,dec_place=2)
-value_extractor(knee_pain_obs,mapmod,level_rel_final = -1,true_value=true_p,dec_place=2)
-
-```
-We can also calculate the expected values for the single iteration of the Gibbs sampler.
-```{r}
-value_extractor(knee_pain_obs,zipmod1,true_value=true_lambda,dec_place=2)
-value_extractor(knee_pain_obs,zipmod1,level_rel_final = -1,true_value=true_p,dec_place=2)
-```
-Rather unexpectedly, the *zipmod1* appears to generally outperform *mapmod* in estimating the true values of the parameters. The key to why this happens lies in the randomness in the state imputation. 
+As we would expect, the MAP model outperforms both models in terms of Bayes Factor and Chi-square, although only barely in this case.
 
 We will once again fit a PCEG model, except this time to the true data. 
 ```{r}
@@ -213,18 +204,19 @@ v2<-c(285,402);v2/sum(v2)
 v5<-c(54,45);v5/sum(v5)
 value_extractor(knee_pain_obs,mapmod,level_rel_final = -1,true_value=true_p,dec_place=2)[c(2,5),]
 ```
+We can see that the states have been imputed almost perfectly for leaf 2, but not for the smaller leaf 5. 
 
-We can also use the *pceg* function to carry out variable discretisation. To demonstrate this, we will use two new data sets. The first, *knee_pain_age* is the same data set as *knee_pain*, except the Age covariate is now continuous. Any individual who was Young previously now has an integer value uniformly distributed between 10 and 40, while an Old individual has an integer between 41 and 70. The *knee_pain_age_obs* data set is the observed *knee_pain_age* data set, and so has the State covariate removed, as before. 
+We can also use the *pceg* function to carry out variable discretisation. To demonstrate this, we will use two new data sets. The first, *knee_pain_age* is the same data set as *knee_pain*, except the Age covariate is no longer categorical. Any individual who was Young previously now has an integer value uniformly distributed between 10 and 40, while an Old individual has an integer between 41 and 70. The *knee_pain_age_obs* data set is the observed *knee_pain_age* data set, and so has the State covariate removed, as before. 
 
 The *pceg* function has several inputs related to variable discretisation. They are:
-+var_disc: The variable in the order of which to discretise. Generally, we will want the variable of interest to be the last covariate and immediately precede the response.
++var_disc: The place in the order of the variable to discretise. Generally, we will want this variable of interest to be the last covariate and immediately precede the response.
 +disc_length: The length over which to search for stages to merge. For example, if this is 1, it will only merge stages that are immediate neighbours when ordered. This is particularly useful when dealing with sparse edge counts, as it enables the user to adjust their search length where necessary.  
 +restrict: Whether or not stages can only be merged when they have the same covariate values for everything else. This will generally be assumed to be true, as the goal is to discretise the variable, which requires the rest of the process to be kept fixed for each possible evolution. 
-+mirror: If TRUE, this will have the same discretisation for each set of covariates. If the goal is to find one single discretisation (i.e. anything over 40 is old), this should be TRUE. However, if this is FALSE, it allows the flexibility for each unfolding of the process to have its own discretisation (i.e. 40 could be old for men, but still young for women.)
++mirror: If TRUE, this will have the same discretisation for each set of covariates. If the goal is to find one single discretisation (i.e. anything over 40 is old), this should be TRUE. However, if this is FALSE, it allows the flexibility for each unfolding of the process to have its own discretisation (i.e. 40 could be old for men, but still young for women). 
 +cat_limit: The minimum number of categories the variable can be discretised to. 
-+collapse: It's difficult to display the variable discretisation through trees, due to their size, so often we will look at the outputs from the *pceg* function directly. In order to decrease the size of the outputs, when restrict is TRUE, we can collapse each stage into one more compacy statement i.e. instead of ages 1, 2, .., 40 being separate elements, there is one element labelled "1-40".
++collapse: It's difficult to display the variable discretisation through trees, due to their size, so often we will look at the outputs from the *pceg* function directly. In order to decrease the size of the outputs, when restrict is also TRUE, we can collapse each stage into one compact statement i.e. instead of ages 10, 11, .., 40 being separate elements, there is one element labelled "10-40".
 
-We will demonstrate the variable discretisation functionality of the *pceg* function in two ways. First, we will fit a Vanilla CEG, then we will fit a PCEG model, in both cases discretising the Age variable. In order to fit a Vanilla CEG, we must first create a suitable data set where the response variable is binary. The response variable we will choose is simply whether an event occurred or not. Furthermore, any data set we will analyse is required to have Age as the last covariate, so it must be reordered. Finally, while the Age values in the data set are integers, they must be converted to factors and assumed as categorical in order for the functions to work.
+We will demonstrate the variable discretisation functionality of the *pceg* function in two ways. First, we will fit a Vanilla CEG, then we will fit a PCEG model, in both cases discretising the Age variable. In order to fit a Vanilla CEG, we must first create a suitable data set where the response variable is categorical. The response variable we will choose is simply whether an event occurred or not, so binary. Furthermore, any data set we will analyse is required to have Age as the last covariate, so it must be reordered. Finally, while the Age values in the data set are integers, they must be converted to factors and assumed as categorical in order for the functions to work.
 
 ```{r}
 df<-knee_pain_age_obs[,c(2,3,1,4,5)]
@@ -237,22 +229,22 @@ summary(df)
 summary(df.bin)
 ```
 We have now created two data sets: *df* for the PCEG and *df.bin* for the Vanilla CEG. We start with the Vanilla CEG. 
-We first begin by performing the variable discretisation without any of the inputs described above. We also note that for the purposes of the equivalent sample size, Age is not assumed to have any categories and thus it is still 2. 
+We first begin by performing the variable discretisation without any of the inputs described above. We also note that for the purposes of the equivalent sample size, Age is not assumed to be categorical and thus it is still 2. 
 
-Furthermore, the plot function does not deal well with the size of the trees that are produced, and so we will only be showing the outputs from the functions themselves.
+As discussed, the plot function does not deal well with the size of the trees that are produced, and so we will only be showing the outputs from the functions themselves. As we are not restricting merging, we can not collapse the results just yet.
 ```{r}
 disc.mod0<-pceg(df.bin,2,var_disc=3)
 disc.mod0$result
 ```
-We can see that for the Normal Weight, No History and Overweight, Yes History groups, they have almost correctly identified the Age break-point of 40. However, because there was no restriction on interval length or discretisation between covariate combinations, the rest of the mergings are together and the result is rather nonsensical. 
+We can see that for the Overweight, Yes History group, it has almost correctly identified the Age break-point of 40. However, the ages before 40 have merged with all of the ages from Over, No and Normal, Yes, while the Normal, No group has only one stage. Hence, because there was no restriction on search length or discretisation between covariate combinations, the result is rather nonsensical for the purposes of discretisation. 
 
-We thus choose to restrict between combinations now. We also shorten the search length to be 1, so it just looks at neighbours. Short interval lengths avoid spurious mergings between stages that are far from each other, which leads to all intermediate stages being merged, even if they are quite different, while also lowering the computational cost.
+We thus choose to restrict between combinations now. We also shorten the search length to be 1, so it just looks at neighbours. Short search lengths avoid spurious mergings between stages that are far from each other, which leads to all intermediate stages being merged, even if they are quite different. Search lengths also lower the computational cost.
 
 ```{r}
 disc.mod1<-pceg(df.bin,2,var_disc=3,disc_length=1,restrict=TRUE,collapse=TRUE)
 disc.mod1$result
 ```
-We can see that the short search length tends to lead to small stages. We thus increase the interval length to 2. 
+We can see that the short search length tends to lead to small stages, which are not particularly useful for discretisation purposes. We thus increase the search length to 2. 
 
 ```{r}
 disc.mod2<-pceg(df.bin,2,var_disc=3,disc_length=2,restrict=TRUE,collapse=TRUE)
@@ -273,7 +265,7 @@ summary(dplyr::filter(df.bin,weight=="Over",history=="Yes",!(age %in% c(26,27)))
 
 We can see that due to the small sample size, all 10 observations in the 26-27 age group have suffered knee pain, versus a group proportion of 0.82. This is why the algorithm will not merge this stage with either of the other two.  
 
-Currently, there is no functionality to add a maximum number of categories, which would mean decreasing the score by the minimum amount until that number of categories is enforced, but this is something to consider for future updates to the function. 
+Currently, there is no functionality to add a maximum number of categories, which would mean decreasing the score by the minimum amount until that maximum number of categories is enforced, but this is something to consider for future updates to the function. 
 
 We now instead mirror the mergings across each covariate combination. 
 
@@ -281,7 +273,7 @@ We now instead mirror the mergings across each covariate combination.
 disc.mod4<-pceg(df.bin,2,var_disc=3,disc_length=2,restrict=TRUE,mirror=TRUE,cat_limit=2,collapse=TRUE)
 disc.mod4$result
 ```
-We can see that once the mergings are equivalent across all four covariate combinations, the model almost exactly finds the correct discretisation. Considering the fact that this model is misspecified in the first place, this is an excellent result. 
+We can see that once the mergings are equivalent across all four covariate combinations, the model discovers the correct discretisation. Considering the fact that this model is misspecified in the first place, this is an excellent result. We also note that the model was generated assuming the same categorisation across covariate combinations, hence why mirroring performs best. 
 
 We now see if this discretisation works as well when the model is a PCEG instead. We will begin by restricting to covariate combinations while also searching over an interval of 2.
 
@@ -289,14 +281,29 @@ We now see if this discretisation works as well when the model is a PCEG instead
 disc.pmod0<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=2,restrict=TRUE,collapse=TRUE)
 disc.pmod0$result
 ```
-We can see that the mergings are not particularly helpful. We now once again mirror the results across covariate combinations.
+We can see that the mergings are not particularly helpful due to their small size. We now once again mirror the results across covariate combinations.
 
 ```{r}
 disc.pmod1<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=2,restrict=TRUE,mirror=TRUE,collapse=TRUE)
 disc.pmod1$result
 ```
-We can see now that the model correctly identifies the breakpoint of 40 years of age, without even needing to specify a minimum number of categories. 
+We can see now that the model correctly identifies the breakpoint of 40 years of age, but with another breakpoint of 27 years of age. As the number of categories is 3, enforcing a minimum categorisation won't help, so we instead increase the search length. 
 
+```{r}
+disc.pmod2<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=3,restrict=TRUE,mirror=TRUE,collapse=TRUE)
+disc.pmod2$result
+```
+Increasing the search length to 3 leads to the same discretisation. However, a search length of 5 does not behave how we would expect.
+```{r}
+disc.pmod3<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=5,restrict=TRUE,mirror=TRUE,collapse=TRUE)
+disc.pmod3$result
+```
+When we increase the search length to 6, the correct discretisation is inferred. 
+```{r}
+disc.pmod4<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=6,restrict=TRUE,collapse=TRUE)
+disc.pmod4$result
+```
+We believe the counterintutive results for the search length of 5, where it somehow produces more categories than both 3 and 6, is due to the interaction between a search length and the AHC algorithm itself. The AHC algorithm is unable to separate stages once they are merged, as it is a greedy search algorithm. Different search lengths lead to different mergings early in the process, which mean that later in the process, the stage structures are not the same and so the score may not increase when certain stages are merged. This highlights that a sensitivity analysis should be done on this search length, as it is essentially a tuning parameter, and the results of one single search length should not be considered infallible.   
 
 
 
