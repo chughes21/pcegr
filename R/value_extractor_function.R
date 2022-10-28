@@ -117,13 +117,13 @@ value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,var
 
 #' The Total Expected Value Extractor
 #'
-#' This function prints the expected values of parameters based on the data set and a chosen PCEG model for each level.
+#' This function prints the expected values of parameters based on the data set and a chosen PCEG model for each variable.
 #'
 #' This function is the [value_extractor()] function repeated at each level.
 #'
 #' @param data A data set, where the observed response vector and time vector (if applicable and variable) are the last two columns
 #' @param ceg A ceg model fit to the data set, as produced by pceg().
-#' @param level_rel_final A non-positive integer indicating where the desired variable is relative to the response variable.
+#' @param level_exclude A non-positive integer integer indicating which variables (if any) should be excluded from the output, is relative to the response variable.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param posterior A logical value indicating whether the estimates of the posterior (TRUE) or sample (FALSE) expected value should be calculated.
@@ -134,12 +134,18 @@ value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,var
 #' @export
 #'
 #' @examples
-total_value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA){
+total_value_extractor<-function(data,ceg,level_exclude = NA,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA){
   n<-dim(data)[2]-1*variable_time
 
-  for(i in 1:n){
-    print(paste0("Level ",i,"- ",colnames(data)[i]))
-    print(value_extractor(data,ceg,level_rel_final = n-i,poisson_response,variable_time,posterior,zip,dec_place))
+  ind<-c(-(n-1):0)
+
+  if(!(is.na(level_exclude))){
+    ind<-ind[-which(ind %in% level_exclude)]
+  }
+
+  for(i in ind){
+    print(paste0("Level ",n+i,"- ",colnames(data)[i]))
+    print(value_extractor(data,ceg,level_rel_final = i,poisson_response,variable_time,posterior,zip,dec_place))
   }
 }
 
