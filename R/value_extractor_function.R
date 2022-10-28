@@ -144,7 +144,7 @@ total_value_extractor<-function(data,ceg,level_exclude = NA,poisson_response=TRU
   }
 
   for(i in ind){
-    print(paste0("Level ",n+i,"- ",colnames(data)[i]))
+    print(paste0("Level ",n+i,"- ",colnames(data)[n+i]))
     print(value_extractor(data,ceg,level_rel_final = i,poisson_response,variable_time,posterior,zip,dec_place))
   }
 }

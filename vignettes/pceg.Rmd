@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The *pcegr* package can be used to fit Poisson Chain Event Graphs (PCEGs) and Zero-Inflated Poisson Chain Event Graphs (ZIPCEGs) to data. We will demonstrate the functionality of the package using a simulated example based around knee pain. 
+The *pcegr* package can be used to fit Poisson Chain Event Graphs (PCEGs) and zero-inflated Poisson Chain Event Graphs (ZIPCEGs) to data. We will demonstrate the functionality of the package using a simulated example based around knee pain. 
 
 Suppose a study is carried out on the instances of knee pain in a population. For each individual, their age, weight and whether they have injured their legs before are recorded, along with the amount of instances of knee pain they suffered over a certain period of time, in years. This period of time is variable between individuals, and varies uniformly between 1 day and 2 years.
 
@@ -23,7 +23,7 @@ Each of the three covariates are binary, with categories and associated binary v
 * (Over)weight (W): Yes (0) or No (1)
 * History (H): Yes (0) or No (1)
 
-while the response variable of Knee Pain (K) is assumed to come from a Zero-Inflated Poisson process where the risk probability and intensity is dependent on these three covariates. For each individual, they are assumed to have a latent risk state (S), either At Risk (0) or Risk Free (1), where those who are At Risk have a nonzero probability of suffering an instance of knee pain. 
+while the response variable of Knee Pain (K) is assumed to come from a zero-inflated Poisson process where the risk probability and intensity is dependent on these three covariates. For each individual, they are assumed to have a latent risk state (S), either At Risk (0) or Risk Free (1), where those who are At Risk have a nonzero probability of suffering an instance of knee pain. 
 
 For an individual with risk probability $\pi$ and Poisson intensity $\lambda$, the expected number of event counts $Y$ observed over time $t$ is $E[Y] = \pi \lambda t$. Assume instead that a Poisson process with rate $\mu$ was used to model the counts, with rate estimated as $\hat{\mu}$. We would expect (for a large sample size) that \[\hat{\mu} \simeq \pi \lambda.\] Now, if we assume for two populations with different covariates that having the same rate $\lambda$ means they have the same risk probability $\pi$, a significant simplification, then we can fit either a PCEG model or ZIPCEG model to the data set, and the estimated rates and risk probabilities should be in line with the relationship above.
 
@@ -31,7 +31,7 @@ As these models are based on staged trees, we will use leaf to refer to a specif
 
 Generally, we would not assume that $\lambda_i = \lambda_j \Rightarrow \pi_i = \pi_j$, but for the purposes of simulating the data in this package we have. This is a simplification, but means that when a PCEG is fit instead of a ZIPCEG, the merging for the leaves will be the same, with the PCEG having lower posterior expected values, as outlined above. We have chosen this simplifying assumption in order to easily compare the PCEG and ZIPCEG models and their performance in relation to the data and each other.  
 
-We have thus simulated $N=10,000$ observations for the knee pain data set from a Zero-Inflated Poisson distribution with uniformly distributed observation times. The data has been simulated under the following conditional independence statements:
+We have thus simulated $N=10,000$ observations for the knee pain data set from a zero-inflated Poisson distribution with uniformly distributed observation times. The data has been simulated under the following conditional independence statements:
 * Weight is independent of Age: W $\perp$ A;
 * History is independent of Weight given Age: H $\perp$ W $\vert$ A;
 * Knee Pain (and thus State) is independent of Age given History and the individual is Overweight: K, S $\perp$ A $\vert$ H, W = "Over"
@@ -90,20 +90,22 @@ Similarly to the staged tree, any uncoloured node in the PCEG is a singleton *po
 
 We now can estimate the posterior expected values of the transition probabilities for the covariates, and the rates for the response. The transition probabilities can be compared to *cov_probs*, while we have included what the PCEG estimate should be for $\lambda$, based on the product of the true $\pi$ and $\lambda$.
 ```{r}
-for(i in 0:2){
-  print(colnames(knee_pain_obs)[i+1])
-  print(value_extractor(knee_pain_obs,pmod,level_rel_final = i-3,zip=FALSE,dec_place=2))
-}
+total_value_extractor(knee_pain_obs,pmod,level_exclude = 0, zip=FALSE,dec_place=2)
 value_extractor(knee_pain_obs,pmod,level_rel_final = 0,true_value = pceg_lambda, zip=FALSE,dec_place=2)
 ```
-As can be seen, while the model is misspecified, it correctly identifies the transition probabilities, and the estimates of the rates are close to what we would expect.
+We have used the [total_value_extractor()] function for the covariates, but excluded the level for the response in order to compare that to the true value (using the [value_extractor()] function). We can also access the posterior estimates using the S4 class itself, although without as much detail.
+
+```{r}
+ptree@posterior.distribution
+```
+As can be seen, even though the model is misspecified, it correctly identifies the transition probabilities, and the estimates of the rates are close to what we would expect.
 
 We can also find 95% highest density intervals for these parameters. For example, the 95% HDIs for the rates and risk probabilities:
 ```{r}
 hdi_gamma_extractor(knee_pain_obs,pmod,zip=FALSE)
 hdi_beta_extractor(knee_pain_obs,pmod,level_rel_final = -1, zip=FALSE)
 ```
-For a Poisson response, we use the Gamma function, but for the transition probabilities we use the Gamma function.
+For a Poisson response, we use the Gamma function, but for the transition probabilities we use the Beta function. The intervals are quite tight, which should be expected given the sample sizes. 
 
 We can also check the log marginal likelihood and Chi-square calculation for the model, to assess the fit. 
 
@@ -123,7 +125,7 @@ a<-rep(c(0,0.25),8)
 b<-a/2.5
 ```
 
-For the Gibbs sampler, we must also specify the hyperparameters of the Beta($c,d$) prior for the risk probability. We will assume each risk probability has the same prior. This prior should be cohesive with the prior in the tree itself, and thus we should have $c = d = \tfrac{2}{16} = 0.125$ for each risk probability.
+For the Gibbs sampler, we must also specify the hyperparameters of the Beta($c,d$) prior for the risk probabilities. We will assume each risk probability has the same prior. This prior should be cohesive with the prior in the tree itself, and thus we should have $c = d = \tfrac{2}{16} = 0.125$ for each risk probability.
 ```{r}
 c<-0.125
 d<-0.125
@@ -191,7 +193,6 @@ plot(maptree)
 mapmod$lik
 mapmod$lik-zipmod2$lik
 expected_count_calculator(knee_pain_obs,mapmod,zip=TRUE)$chi_sq-expected_count_calculator(knee_pain_obs,zipmod1,zip=TRUE)$chi_sq
-
 ```
 As we would expect, the MAP model outperforms both models in terms of Bayes Factor and Chi-square, although only barely in this case.
 
