@@ -26,6 +26,10 @@ value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,var
     stop("Zero Inflated Poisson Requires Poisson Response")
   }
 
+  if(!poisson_response & variable_time){
+    stop("Variable Time Requires Poisson Response")
+  }
+
   n<-dim(data)[2] - 1 - 1*variable_time#if there are variable times, they will be an extra column
   data_levels<-sapply(data[,1:n],nlevels)
   if(zip){
@@ -110,3 +114,33 @@ value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,var
 
   return(out.mat)
 }
+
+#' The Total Expected Value Extractor
+#'
+#' This function prints the expected values of parameters based on the data set and a chosen PCEG model for each level.
+#'
+#' This function is the [value_extractor()] function repeated at each level.
+#'
+#' @param data A data set, where the observed response vector and time vector (if applicable and variable) are the last two columns
+#' @param ceg A ceg model fit to the data set, as produced by pceg().
+#' @param level_rel_final A non-positive integer indicating where the desired variable is relative to the response variable.
+#' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
+#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
+#' @param posterior A logical value indicating whether the estimates of the posterior (TRUE) or sample (FALSE) expected value should be calculated.
+#' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
+#' @param dec_place An integer value detailing how many decimal places the outputs should be rounded to. If NA, no rounding will occur.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+total_value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA){
+  n<-dim(data)[2]-1*variable_time
+
+  for(i in 1:n){
+    print(paste0("Level ",i,"- ",colnames(data)[i]))
+    print(value_extractor(data,ceg,level_rel_final = n-i,poisson_response,variable_time,posterior,zip,dec_place))
+  }
+}
+
+
