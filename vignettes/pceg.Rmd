@@ -14,29 +14,37 @@ knitr::opts_chunk$set(
 )
 ```
 
-The *pcegr* package can be used to fit Poisson Chain Event Graphs (PCEGs) and zero-inflated Poisson Chain Event Graphs (ZIPCEGs) to data. We will demonstrate the functionality of the package using a simulated example based around knee pain. 
+The *pcegr* package can be used to fit Poisson Chain Event Graphs (PCEGs) and zero-inflated Poisson Chain Event Graphs (ZIPCEGs) to data. We will demonstrate the the package using a simulated example on knee pain. 
+
+## Simulation Example
+
+### Introduction
 
 Suppose a study is carried out on the instances of knee pain in a population. For each individual, their age, weight and whether they have injured their legs before are recorded, along with the amount of instances of knee pain they suffered over a certain period of time, in years. This period of time is variable between individuals, and varies uniformly between 1 day and 2 years.
 
-Each of the three covariates are binary, with categories and associated binary values:
-* Age (A): Old (0) or Young (1)
-* (Over)weight (W): Yes (0) or No (1)
-* History (H): Yes (0) or No (1)
+Each of the three covariates are binary, with categories and associated binary values:    
+Age (A): Old (0) or Young (1)       
+(Over)weight (W): Yes (0) or No (1)    
+History (H): Yes (0) or No (1)    
 
 while the response variable of Knee Pain (K) is assumed to come from a zero-inflated Poisson process where the risk probability and intensity is dependent on these three covariates. For each individual, they are assumed to have a latent risk state (S), either At Risk (0) or Risk Free (1), where those who are At Risk have a nonzero probability of suffering an instance of knee pain. 
 
-For an individual with risk probability $\pi$ and Poisson intensity $\lambda$, the expected number of event counts $Y$ observed over time $t$ is $E[Y] = \pi \lambda t$. Assume instead that a Poisson process with rate $\mu$ was used to model the counts, with rate estimated as $\hat{\mu}$. We would expect (for a large sample size) that \[\hat{\mu} \simeq \pi \lambda.\] Now, if we assume for two populations with different covariates that having the same rate $\lambda$ means they have the same risk probability $\pi$, a significant simplification, then we can fit either a PCEG model or ZIPCEG model to the data set, and the estimated rates and risk probabilities should be in line with the relationship above.
+### Relationship Between Poisson and Zero-Inflated Poisson
 
-As these models are based on staged trees, we will use leaf to refer to a specific covariate combination, and also the individuals with that specific covariate combination. We use the notation $l_i$ for the $i^{\text{th}}$ leaf in the tree, and assume it has rate $\lambda_i$ and associated risk probability $\pi_i$. A leaf stage $u$ contains leaves that are assumed to have the same rate. That is: $l_i, l_j \in u \Rightarrow \lambda_i = \lambda_j$.
+For an individual with risk probability $\pi$ and Poisson intensity $\lambda$, the expected number of event counts $Y$ observed over time $t$ is $E[Y] = \pi \lambda t$. Assume instead that a Poisson process with rate $\mu$ was used to model the counts, with rate estimated as $\hat{\mu}$. We would expect (for a large sample size) that \[\hat{\mu} \simeq \pi \lambda.\] Now, if we assume for two subpopulations with different covariates that having the same rate $\lambda$ means they have the same risk probability $\pi$, a significant simplification, then we can fit either a PCEG model or ZIPCEG model to the data set, and the estimated rates and risk probabilities should be in line with the relationship above.
 
-Generally, we would not assume that $\lambda_i = \lambda_j \Rightarrow \pi_i = \pi_j$, but for the purposes of simulating the data in this package we have. This is a simplification, but means that when a PCEG is fit instead of a ZIPCEG, the merging for the leaves will be the same, with the PCEG having lower posterior expected values, as outlined above. We have chosen this simplifying assumption in order to easily compare the PCEG and ZIPCEG models and their performance in relation to the data and each other.  
+As these models are based on staged trees, we will use leaf to refer to a specific covariate combination, and also the individuals with that specific covariate combination. We use the notation $l_i$ for the $i^{\text{th}}$ leaf in the tree, and assume it has rate $\lambda_i$ and risk probability $\pi_i$. A leaf stage $u$ contains leaves that are assumed to have the same rate. That is: $l_i, l_j \in u \Rightarrow \lambda_i = \lambda_j$.
 
-We have thus simulated $N=10,000$ observations for the knee pain data set from a zero-inflated Poisson distribution with uniformly distributed observation times. The data has been simulated under the following conditional independence statements:
-* Weight is independent of Age: W $\perp$ A;
-* History is independent of Weight given Age: H $\perp$ W $\vert$ A;
-* Knee Pain (and thus State) is independent of Age given History and the individual is Overweight: K, S $\perp$ A $\vert$ H, W = "Over"
+Generally, we would not assume that $\lambda_i = \lambda_j \Rightarrow \pi_i = \pi_j$, but for the purposes of simulating this data we have. This simplification means that when a PCEG is fit instead of a ZIPCEG, the merging for the leaves will be the same, with the PCEG having lower posterior expected values, as outlined above. We have chosen this assumption in order to easily compare the PCEG and ZIPCEG models and their performance in relation to the data and each other. In general, we would not expect this relationship to be true and the final stage structure from a PCEG should not necessarily be in line with a ZIPCEG.  
 
-In the following table, we can see each conditional transition probability, informed by the conditional independence statements above. Each probability has its definition alongside its associated stage and situations. We load the *pcegr* package, but also the *ceg* package, as we will use its classes and methods for plotting. Some of the functions in *pcegr* are slightly modified from *ceg*, while others are direct ports, but we have relabeled them so as to not confuse the two. 
+### Details
+
+We have thus simulated $N=10,000$ observations for the knee pain data set from a zero-inflated Poisson distribution with uniformly distributed observation times. The data has been simulated under the following conditional independence statements:    
+Weight is independent of Age: W $\perp$ A;    
+History is independent of Weight given Age: H $\perp$ W $\vert$ A;    
+Knee Pain (and thus State) is independent of Age given History and the individual is Overweight: K, S $\perp$ A $\vert$ H, W = "Over"    
+
+In the following table, we can see each conditional transition probability, informed by the conditional independence statements above. Each probability has its definition alongside its associated stage and situations. 
 ```{r}
 library(pcegr)
 cov_probs
@@ -47,7 +55,7 @@ For each leaf stage, we have the definition of the stage and its constituent lea
 leaf_params
 ```
 
-The covariate values being conditioned on uniquely define the stage. For example, when all covariates take a value of 1, this is $l_1$. We can see that incorporating some form of conditional independence essentially merges leaves like $l_3$ and $l_7$, as they are both specified by the shortened covariate combination ($l_3$ has A = 1, $l_7$ has A = 0). 
+The covariate values being conditioned on uniquely define the stage. For example, when all covariates take a value of 1, this is $l_1$. We can see that incorporating some form of conditional independence merges leaves like $l_3$ and $l_7$, as they are both specified by the shortened covariate combination ($l_3$ has A = 1, $l_7$ has A = 0). 
 
 We can thus isolate the true values for $\pi$ and $\lambda$, along with what should be the PCEG estimate.
 ```{r}
@@ -56,7 +64,6 @@ true_p<-leaf_params$Risk_Prob
 pceg_lambda<-true_lambda*true_p;pceg_lambda
 ```
 Due to the simplification, when we fit a PCEG model, we would ideally get correct merging with the above scaled rates. 
-
 We create two data sets. The first, *knee_pain*, is the simulated data set, containing the true risk state for each individual. The second, *knee_pain_obs*, is the observed data set, which is simply *knee_pain* with the risk states removed. We can investigate these:
 ```{r}
 head(knee_pain)
@@ -65,27 +72,37 @@ summary(knee_pain_obs)
 ```
 We can see that the data sets are identical, except for the State variable. In order to greater approximate real world applications, we will generally be using the Observed data set.
 
-First, we will fit a PCEG model to this data set. This requires specifying an effective sample size, the amount of confidence in the prior. The default choice for CEGs is usually the greatest number of categories a single variable takes, in this case 2, and this is true for PCEGs also. A sensitivity analysis can be carried out on the effects of this choice, but we will not delve into that. 
+We can view the event tree for this observed data set. 
+
+```{r}
+plot(event.tree.creator(knee_pain_obs))
+```
+
+We see that the nodes corresponding to the Poisson response, $s_7 - s_{14}$ have one outgoing edge, labelled $y$. This is in order to be compatible with the plotting function. If this was drawn manually, we would have these as leaves $l_1 - l_8$ with no outgoing edge.
+
+## Poisson CEG
+
+First, we will fit a PCEG model to this data set. We specify the effective sample size, the amount of confidence in the prior, to be the greatest number of categories a single variable takes, in this case 2.
 
 This effective sample size is propagated through the tree, and at each level is distributed evenly amongst the nodes and their outgoing edges. As there are $2^3 = 8$ leaves, we will assume each has a prior weight of $a = \tfrac{2}{8} = 0.25$. In order to enforce a prior mean for the rate of 2.5, the simple average for the data set, we choose $b = \tfrac{0.25}{2.5}=0.1$. If we were to desire more bespoke priors for each leaf, they can be input as vectors rather than scalars (which we will see later).
+
+We use the *pceg()* function to fit the model. The outputs from this function include the final stage structure through the *result* component. The outputs from *pceg()* will generally be used for analysis, but in order to plot the resultant Poisson staged tree, the output must be converted into a *Stratified.staged.tree* S4 class from the *ceg* package. Once converted, this can then be plotted.
 ```{r}
 pmod<-pceg(knee_pain_obs,2,TRUE,TRUE, gamma_alpha = 0.25,gamma_beta = 0.1)
 ptree<-staged.tree.creator(knee_pain_obs,pmod)
 plot(ptree)
 ```
-First, we point out that the nodes corresponding to the Poisson response variable have one outgoing edge labelled $y$. This is because the plotting function for this class requires at least one outgoing edge. In reality, we would not draw the Poisson staged tree with these edges, instead stopping at the leaves. Thus, the situations labeled $s_7$ to $s_{14}$ would instead be the leaves $l_1$ to $l_8$. We also note that that any node that is uncoloured is a singleton stage.
+First, we note that that any node that is uncoloured is a singleton stage. We can see that the model has correctly identified that the individuals of either Age who are Overweight with a History of injury are in the same stage ($s_{10} / l_4$ and $s_{14}/l_8$), and likewise for those with No History ($s_{9}/l_3$ and $s_{13}/l_7$). The model has also correctly identified that History is independent of Weight given Age ($s_{3}$ and $s_{4}$ versus $s_{5}$ and $s_{6}$). 
 
-We can see that the model has correctly identified that the individuals of either Age who are Overweight with a History of injury are in the same stage ($s_{10} / l_4$ and $s_{14}/l_8$), and likewise for those with No History ($s_{9}/l_3$ and $s_{13}/l_7$). The model has also correctly identified that History is independent of Weight given Age ($s_{3}$ and $s_{4}$ versus $s_{5}$ and $s_{6}$). 
-
-We can also see this staged tree in PCEG form:
+We can also converted the *Stratified.staged.tree* object into a corresponding *Stratified.ceg.model* S4 object from *ceg*, and plot this.
 
 ```{r}
 pceg1<-sceg(ptree)
 plot(pceg1)
 ```
-There are two graphs plotted, but only the final PCEG on the right hand side should be considered. On the left hand side is an intermediate plot used for propagation analysis, and while not particularly useful, is a legacy of the plotting method for the class.
+There are two graphs plotted, but only the final PCEG on the right hand side should be considered. On the left hand side is an intermediate plot used for propagation analysis, and while not particularly useful, is a legacy of the plotting method for the S4 class.
 
-Similarly to the staged tree, any uncoloured node in the PCEG is a singleton *position*. This is once again a function of the plotting method used, and if the PCEG was drawn by hand, the positions with non-singleton stages ($w_9$ and $w_{10}$) would be coloured with the same colour in the associated Poisson staged tree. 
+Similarly to the staged tree, any uncoloured node in the PCEG is a singleton *position*. This is once again a function of the plotting method used, and if the PCEG was drawn manually, the positions with non-singleton stages ($w_9$ and $w_{10}$) would be coloured with the corresponding stage colour in the associated Poisson staged tree. 
 
 We now can estimate the posterior expected values of the transition probabilities for the covariates, and the rates for the response. The transition probabilities can be compared to *cov_probs*, while we have included what the PCEG estimate should be for $\lambda$, based on the product of the true $\pi$ and $\lambda$.
 ```{r}
@@ -97,14 +114,17 @@ We have used the [total_value_extractor()] function for the covariates, but excl
 ```{r}
 ptree@posterior.distribution
 ```
-As can be seen, even though the model is misspecified, it correctly identifies the transition probabilities, and the estimates of the rates are close to what we would expect.
+As can be seen, even though the model is misspecified, it correctly identifies the covariate transition probabilities, and the estimates of the rates are close to what we would expect.
 
 We can also find 95% highest density intervals for these parameters. For example, the 95% HDIs for the rates and risk probabilities:
 ```{r}
+print("Poisson Rate Estimates")
 hdi_gamma_extractor(knee_pain_obs,pmod,zip=FALSE)
+print("")
+print("History of Injury Transition Probability Estimates")
 hdi_beta_extractor(knee_pain_obs,pmod,level_rel_final = -1, zip=FALSE)
 ```
-For a Poisson response, we use the Gamma function, but for the transition probabilities we use the Beta function. The intervals are quite tight, which should be expected given the sample sizes. 
+For a Poisson response, we use the Gamma function, but for the transition probabilities we use the Beta function. The intervals can be quite tight, which should be expected given the sample sizes. 
 
 We can also check the log marginal likelihood and Chi-square calculation for the model, to assess the fit. 
 
@@ -112,9 +132,11 @@ We can also check the log marginal likelihood and Chi-square calculation for the
 pmod$lik
 chi_sq_calculator(knee_pain_obs,pmod,zip=FALSE,dec_place=2)
 ```
-In the Chi-square contribution matrix, we can see some large values. In particular, for the leaves with low rates, like the first row, we can see large contributions for the higher event counts. This is because there are a much higher number of observed counts greater than 3 than we would expect based on the small rate. In contrast, for the leaves with higher rates, such as 4, 6 and 8, we can see that the contributions for the zero counts are much higher. This is because there are much more observed zero counts than would be expected with such a high rate. 
+In the Chi-square contribution matrix, we can see some large values. In particular, for the leaves with low rates, like $l_1$, we can see large contributions for the higher event counts. This is because there are a much higher number of observed counts than we would expect based on the small rate. In contrast, for the leaves with higher rates, such as 4, 6 and 8, we can see that the contributions for the zero counts are much higher. This is because there are much more observed zero counts than would be expected with such a high rate. 
 
-These results are all indicative of the true underlying model instead being a zero-inflated Poisson distribution. We thus fit a ZIPCEG model to the data. 
+## Zero-Inflated Poisson CEG 
+
+These Chi-square results are all indicative of the true underlying model instead being a zero-inflated Poisson distribution. We thus fit a ZIPCEG model to the data. 
 
 To fit a ZIPCEG model, we must first choose the method of parameter estimation. As time is variable, we cannot use the MLE or method of moments estimators. Thus, the choices are Gibbs sampling ("Gibbs"), numerical likelihood optimisation ("nlm") or the Expectation-Maximisation algorithm ("EM"). We will perform model selection using the first two choices.
 
@@ -129,7 +151,7 @@ For the Gibbs sampler, we must also specify the hyperparameters of the Beta($c,d
 c<-0.125
 d<-0.125
 ```
-We will also run the Gibbs sampler for $N=10000$ iterations. When the parameters are estimated using the Gibbs sampler, we will impute the states stochastically. Due to this randomness, and to make sure the results are replicable, we will also set the seed.
+We will also run the Gibbs sampler for $N=10,000$ iterations. When the parameters are estimated using the Gibbs sampler, we will impute the states stochastically. Due to this randomness, and to make sure the results are replicable, we will also set the seed. As before, we will convert the outputs from *zipceg()* into a *Stratified.staged.tree* object and subsequently into a *Stratified.ceg.model* object, and plot the two.
 ```{r}
 set.seed(13579)
 zipmod1<-zipceg(knee_pain_obs,"Gibbs",iter=10000,variable_time = TRUE, stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b, beta_c = c, beta_d = d)
@@ -138,7 +160,7 @@ zipceg1<-sceg(ziptree1)
 plot(ziptree1)
 plot(zipceg1)
 ```
-We can see that the model correctly merges the risk states ($s_{9}$ and $s_{13}$, $s_{10}$ and $s_{14}$). We can also see that all of the risk free leaves are in the same stage. Additionally, the rates for the risk leaves are in their expected stages ($s_{20}$ and $s_{28}$ and $s_{22}$ and $s_{30}$). The covariate relationships have also been preserved from the PCEG. 
+First, we see that, by design, all of the risk free leaves are in the same stage. We can also see that the model correctly merges the risk states ($s_{9}$ and $s_{13}$, $s_{10}$ and $s_{14}$). Additionally, the rates for the risk leaves are in their expected stages ($s_{20}$ and $s_{28}$ and $s_{22}$ and $s_{30}$). The covariate relationships have also been preserved from the PCEG. 
 
 We now compare the goodness of fit to the PCEG. First, we calculate the log marginal likelihood and the Chi-square calculation. 
 ```{r}
@@ -153,7 +175,13 @@ data.risk<-state_imputer(knee_pain_obs,all_risk=TRUE)
 pmod.bf<-pceg(data.risk,2,TRUE,TRUE,TRUE,gamma_alpha=a,gamma_beta=b)
 pmod.bf$lik
 ```
-This is the exact same model as the regular PCEG, except we can see that the log marginal likelihood has decreased. This log marginal likelihood is comparable to the ZIPCEG.
+This is the exact same model as the regular PCEG, except we can see that the log marginal likelihood has decreased.
+
+```{r}
+pmod.bf$lik-pmod$lik
+```
+
+This log marginal likelihood is now comparable to the ZIPCEG.
 ```{r}
 zipmod1$lik-pmod.bf$lik
 ```
@@ -172,9 +200,12 @@ The staged tree matches the result from using the Gibbs sampler. Comparing the t
 zipmod1$lik-zipmod2$lik
 chi_sq_calculator(knee_pain_obs,zipmod1)$chi_sq-chi_sq_calculator(knee_pain_obs,zipmod2)$chi_sq
 ```
+
+## ZIPCEG Stability Analysis
+
 However, both of these models are the result of one iteration, and the ZIPCEG model selection process is not deterministic. We can thus carry out the model selection a number of times, for example 100, and compare the risk probabilities and rates for each leaf, as well as select the MAP model from those iterations. Comparing the probabilities and rates for each leaf gives an idea of how the leaves merge with each other, as those who have similar plots will merge regularly. This is useful for data that is not simulated, as there may be significant variability from iteration to iteration. 
 
-we will use violin plots to visualise, but there are options to use histograms, scatter plots, or line plots. We will use the *nlm* method, due to its lower computational cost per iteration. 
+we will use violin plots to visualise, but there are options to use histograms, scatter plots, or line plots. We will use the *nlm* method at each iteration, due to its lower computational cost. 
 ```{r}
 set.seed(1098765)
 mapmod<-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time = TRUE,gamma_alpha=a,gamma_beta=b)$mod
@@ -191,40 +222,33 @@ maptree<-staged.tree.creator(knee_pain_obs,mapmod,zip=TRUE)
 plot(maptree)
 mapmod$lik
 mapmod$lik-zipmod2$lik
-chi_sq_calculator(knee_pain_obs,mapmod,zip=TRUE)$chi_sq-chi_sq_calculator(knee_pain_obs,zipmod1,zip=TRUE)$chi_sq
+chi_sq_calculator(knee_pain_obs,mapmod,zip=TRUE)$chi_sq-chi_sq_calculator(knee_pain_obs,zipmod2,zip=TRUE)$chi_sq
 ```
-As we would expect, the MAP model outperforms both models in terms of Bayes Factor and Chi-square, although only barely in this case.
+As we would expect, the MAP model outperforms both models in terms of the log Bayes Factor, but has a slightly higher Chi-square value.  
 
-We will once again fit a PCEG model, except this time to the true data. 
-```{r}
-truemod<-pceg(knee_pain,2,TRUE,TRUE,gamma_alpha=a,gamma_beta=b,zip=TRUE)
-truemod$lik
-truetree<-staged.tree.creator(knee_pain,truemod,TRUE,TRUE,zip=FALSE)
-plot(truetree)
-value_extractor(knee_pain,truemod,true_value=c(0,true_lambda),zip=FALSE)
-value_extractor(knee_pain,truemod,level_rel_final=-1,true_value=true_p,zip=FALSE)
-```
-Interestingly, when the model is fit to the true data, it incorrectly merges $s_8$ and $s_{11}$, the risk probabilities for leaves 2 and 5, while all of the models fit to the observed data, the "observed" models, after using the parameter estimation methods, correctly identified the risk states. *This is because the observed models are assuming a zero-inflated model, and importantly accounting for the counts, times and the interplay between the rates and the risk probabilities - Not exactly sure that's true, it could be because leaf 5 has a small edge count and imputing the states makes the estimate worse*. For example, when we look at the observed proportion for at risk individuals for those two leaves:
-```{r}
-summary(dplyr::filter(knee_pain,age=="Young",weight=="Normal",history=="Yes"))
-summary(dplyr::filter(knee_pain,age=="Old",weight=="Normal",history=="No"))
-v2<-c(285,402);v2/sum(v2)
-v5<-c(54,45);v5/sum(v5)
-value_extractor(knee_pain_obs,mapmod,level_rel_final = -1,true_value=true_p,dec_place=2)[c(2,5),]
-```
-We can see that the states have been imputed almost perfectly for leaf 2, but not for the smaller leaf 5. 
+## Variable Discretisation
 
 We can also use the *pceg* function to carry out variable discretisation. To demonstrate this, we will use two new data sets. The first, *knee_pain_age* is the same data set as *knee_pain*, except the Age covariate is no longer categorical. Any individual who was Young previously now has an integer value uniformly distributed between 10 and 40, while an Old individual has an integer between 41 and 70. The *knee_pain_age_obs* data set is the observed *knee_pain_age* data set, and so has the State covariate removed, as before. 
 
-The *pceg* function has several inputs related to variable discretisation. They are:
-+var_disc: The place in the order of the variable to discretise. Generally, we will want this variable of interest to be the last covariate and immediately precede the response.
-+disc_length: The length over which to search for stages to merge. For example, if this is 1, it will only merge stages that are immediate neighbours when ordered. This is particularly useful when dealing with sparse edge counts, as it enables the user to adjust their search length where necessary.  
-+restrict: Whether or not stages can only be merged when they have the same covariate values for everything else. This will generally be assumed to be true, as the goal is to discretise the variable, which requires the rest of the process to be kept fixed for each possible evolution. 
-+mirror: If TRUE, this will have the same discretisation for each set of covariates. If the goal is to find one single discretisation (i.e. anything over 40 is old), this should be TRUE. However, if this is FALSE, it allows the flexibility for each unfolding of the process to have its own discretisation (i.e. 40 could be old for men, but still young for women). 
-+cat_limit: The minimum number of categories the variable can be discretised to. 
-+collapse: It's difficult to display the variable discretisation through trees, due to their size, so often we will look at the outputs from the *pceg* function directly. In order to decrease the size of the outputs, when restrict is also TRUE, we can collapse each stage into one compact statement i.e. instead of ages 10, 11, .., 40 being separate elements, there is one element labelled "10-40".
+The *pceg* function has several inputs related to variable discretisation. They are:   
 
-We will demonstrate the variable discretisation functionality of the *pceg* function in two ways. First, we will fit a Vanilla CEG, then we will fit a PCEG model, in both cases discretising the Age variable. In order to fit a Vanilla CEG, we must first create a suitable data set where the response variable is categorical. The response variable we will choose is simply whether an event occurred or not, so binary. Furthermore, any data set we will analyse is required to have Age as the last covariate, so it must be reordered. Finally, while the Age values in the data set are integers, they must be converted to factors and assumed as categorical in order for the functions to work.
+**var_disc**: The place in the order of the variable to discretise. Generally, we will want this variable of interest to be the last covariate and immediately precede the response.    
+
+**disc_length**: The length over which to search for stages to merge. For example, if this is 1, it will only merge stages that are immediate neighbours when ordered. This is particularly useful when dealing with sparse edge counts, as it enables the user to adjust their search length where necessary.   
+
+**restrict**: Whether or not stages can only be merged when they have the same covariate values for everything else. This will generally be assumed to be true, as the goal is to discretise the variable, which requires the rest of the process to be kept fixed for each possible evolution.      
+
+**mirror**: If TRUE, this will have the same discretisation for each set of covariates. If the goal is to find one single discretisation (i.e. anything over 40 is old), this should be TRUE. However, if this is FALSE, it allows the flexibility for each unfolding of the process to have its own discretisation (i.e. 40 could be old for men, but still young for women).    
+
+**cat_limit**: The minimum number of categories the variable can be discretised to.      
+
+**collapse**: It's difficult to display the variable discretisation through trees, due to their size, so often we will look at the outputs from the *pceg()* function directly. In order to decrease the size of the outputs, when restrict is also TRUE, we can collapse each stage into one compact statement i.e. instead of ages 10, 11, .., 40 being separate elements, there is one element labelled "10-40".     
+
+We will demonstrate the variable discretisation functionality of the *pceg* function in two ways. First, we will fit a Vanilla CEG, then we will fit a PCEG model, in both cases discretising the Age variable. 
+
+### Data Cleanup
+
+In order to fit a Vanilla CEG, we must first create a suitable data set where the response variable is categorical. The response variable we will choose is simply whether an event occurred or not, so binary. Furthermore, we require Age as the last covariate, so it must be reordered. Finally, while the Age values in the data set are integers, they must be converted to factors and assumed as categorical in order for the functions to work.
 
 ```{r}
 df<-knee_pain_age_obs[,c(2,3,1,4,5)]
@@ -236,15 +260,18 @@ df.bin<-data.frame(df[1:3],Pain = resp)
 summary(df)
 summary(df.bin)
 ```
-We have now created two data sets: *df* for the PCEG and *df.bin* for the Vanilla CEG. We start with the Vanilla CEG. 
-We first begin by performing the variable discretisation without any of the inputs described above. We also note that for the purposes of the equivalent sample size, Age is not assumed to be categorical and thus it is still 2. 
+We have now created two data sets: *df* for the PCEG and *df.bin* for the Vanilla CEG. 
+
+### Vanilla CEG Variable Discretisation
+
+We start with the Vanilla CEG. We first begin by performing the variable discretisation without any of the inputs described above. We also note that for the purposes of the equivalent sample size, Age is not assumed to be categorical and thus it is still 2. 
 
 As discussed, the plot function does not deal well with the size of the trees that are produced, and so we will only be showing the outputs from the functions themselves. As we are not restricting merging, we can not collapse the results just yet.
 ```{r}
 disc.mod0<-pceg(df.bin,2,var_disc=3)
 disc.mod0$result
 ```
-We can see that for the Overweight, Yes History group, it has almost correctly identified the Age break-point of 40. However, the ages before 40 have merged with all of the ages from Over, No and Normal, Yes, while the Normal, No group has only one stage. Hence, because there was no restriction on search length or discretisation between covariate combinations, the result is rather nonsensical for the purposes of discretisation. 
+We can see that for the Overweight, Yes History group, it has almost identified the Age break-point of 40. However, the ages before 40 have merged with all of the ages from Over, No and Normal, Yes, while the Normal, No group has only one stage. Hence, because there was no restriction on search length or discretisation between covariate combinations, the result is rather nonsensical for the purposes of discretisation. 
 
 We thus choose to restrict between combinations now. We also shorten the search length to be 1, so it just looks at neighbours. Short search lengths avoid spurious mergings between stages that are far from each other, which leads to all intermediate stages being merged, even if they are quite different. Search lengths also lower the computational cost.
 
@@ -263,7 +290,7 @@ We can see that increasing the search length has lead to both of the Overweight 
 disc.mod3<-pceg(df.bin,2,var_disc=3,disc_length=2,restrict=TRUE,cat_limit=2,collapse=TRUE)
 disc.mod3$result
 ```
-We can see that now Over, Yes has 3 categories, rather than the expected 2. This is because the model is unable to join the 10-25 stage and 28-70 stage as it desires, as that would lead to just one stage, breaking the minimum category rule. Meanwhile, the 26-27 stage leads to a decrease in the log marginal likelihood so will not merge. This is an example of how variable discretisation can identify nonlinearity in the covariate effects, while also being able to discover possibly ideal values. Of course, there is no such nonlinearity in this case, and we investigate why this happens.
+We can see that now Over, Yes has 3 categories, rather than the expected 2. This is because the model is unable to join the 10-25 stage and 28-70 stage as it desires, because that would lead to just one stage, breaking the minimum category rule. Meanwhile, the 26-27 stage leads to a decrease in the log marginal likelihood if merged with either other stage so remains separate. This is an example of how variable discretisation can identify nonlinearity in the covariate effects, while also being able to discover possibly ideal values. Of course, there is no such nonlinearity in this case, and we investigate why this happens.
 
 ```{r}
 summary(dplyr::filter(df.bin,weight=="Over",history=="Yes",age %in% c(26,27)))
@@ -281,7 +308,9 @@ We now instead mirror the mergings across each covariate combination.
 disc.mod4<-pceg(df.bin,2,var_disc=3,disc_length=2,restrict=TRUE,mirror=TRUE,cat_limit=2,collapse=TRUE)
 disc.mod4$result
 ```
-We can see that once the mergings are equivalent across all four covariate combinations, the model discovers the correct discretisation. Considering the fact that this model is misspecified in the first place, this is an excellent result. We also note that the model was generated assuming the same categorisation across covariate combinations, hence why mirroring performs best. 
+We can see that once the mergings are equivalent across all four covariate combinations, the model discovers the correct discretisation. We note that the model was generated assuming the same categorisation across covariate combinations, hence why mirroring performs best. 
+
+### Poisson CEG Variable Discretisation
 
 We now see if this discretisation works as well when the model is a PCEG instead. We will begin by restricting to covariate combinations while also searching over an interval of 2.
 
@@ -308,7 +337,7 @@ disc.pmod3$result
 ```
 When we increase the search length to 6, the correct discretisation is inferred. 
 ```{r}
-disc.pmod4<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=6,restrict=TRUE,collapse=TRUE)
+disc.pmod4<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=6,restrict=TRUE,mirror=TRUE,collapse=TRUE)
 disc.pmod4$result
 ```
 We believe the counter-intutive results for the search length of 5, where it somehow produces more categories than both 3 and 6, is due to the interaction between a search length and the AHC algorithm itself. The AHC algorithm is unable to separate stages once they are merged, as it is a greedy search algorithm. Different search lengths lead to different mergings early in the process, which mean that later in the process, the stage structures are not the same and so the score may not increase when certain stages are merged. This highlights that a sensitivity analysis should be done on this search length, as it is essentially a tuning parameter, and the results of one single search length should not be considered infallible.   

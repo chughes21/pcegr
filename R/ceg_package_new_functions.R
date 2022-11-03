@@ -112,7 +112,7 @@ stage_structure<-function(mod,score=0,zip=FALSE){
 #'
 #' A function to transform the list of prior and data outputs into the S4 class versions of the prior and posterior.
 #'
-#' @param mod A list from the output of the [pcegr()] function.
+#' @param mod A list from the output of the [pceg()] function.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #'
 #' @return A list for the prior distribution and a list for the posterior distribution.
