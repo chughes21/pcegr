@@ -15,7 +15,7 @@ LabelStage1(k, num.variable, num.situation, label.category, num.category)
 
 \item{label.category}{A string detailing the label of the category}
 
-\item{num.category}{}
+\item{num.category}{An integer value}
 }
 \description{
 The function \code{\link[ceg:LabelStage]{ceg::LabelStage()}}

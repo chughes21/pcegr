@@ -98,8 +98,8 @@ state_imputer<-function(data,lambda=1,prob=0.5,variable_time=TRUE,stoch=TRUE,all
 #' @param stoch_imputation A logical value indicating whether stochastic (TRUE) or deterministic (FALSE) imputation should be used.
 #' @param gamma_alpha A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.
 #' @param gamma_beta A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.
-#' @param c A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.
-#' @param d A numeric value for the beta hyperparameter of the Beta prior for the risk probability.
+#' @param beta_c A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.
+#' @param beta_d A numeric value for the beta hyperparameter of the Beta prior for the risk probability.
 #' @param p_0 A numeric initial value for the risk probability.
 #' @param l_0 A numeric initial value for the rate.
 #' @param tol A numeric which represents the minimum change in the complete data log likelihood needed to continue the Expectation-Maximisation algorithm.
@@ -178,7 +178,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @param plot_rates A logical value indicating whether the stage rates should be plotted (TRUE) or not (FALSE).
 #' @param plot_probs A logical value indicating whether the risk probabilities should be plotted (TRUE) or not (FALSE).
 #' @param hist A logical value indicating whether the plot should be in the form of a histogram (TRUE) or not (FALSE).
-#' @param violin A logical value indicating whether the plot should be in the form of a line plot (TRUE) or not (FALSE).
+#' @param line A logical value indicating whether the plot should be in the form of a line plot (TRUE) or not (FALSE).
 #' @param scatter A logical value indicating whether the plot should be in the form of a scatter plot (TRUE) or not (FALSE).
 #' @param equivsize A numeric value specifying the equivalent sample size for the prior, a measure of confidence in the prior.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
@@ -188,8 +188,8 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @param print_output A logical value indicating whether the output for each iteration should be printed (TRUE) or not (FALSE).
 #' @param gamma_alpha A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.
 #' @param gamma_beta A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.
-#' @param c A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.
-#' @param d A numeric value for the beta hyperparameter of the Beta prior for the risk probability.
+#' @param beta_c A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.
+#' @param beta_d A numeric value for the beta hyperparameter of the Beta prior for the risk probability.
 #' @param p_0 A numeric initial value for the risk probability.
 #' @param l_0 A numeric initial value for the rate.
 #' @param tol A numeric which represents the minimum change in the complete data log likelihood needed to continue the Expectation-Maximisation algorithm.
@@ -207,7 +207,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, plot_rates = TRUE,
                            plot_probs = FALSE, hist = FALSE, line = FALSE, scatter = FALSE, equivsize=2,
                            poisson_response = TRUE, variable_time = FALSE,stoch_imputation=TRUE, posterior = TRUE,
-                           print_output = FALSE, gamma_alpha = 1, gamma_beta = 2, beta_c = 1, beta_d = 1,p0=NA,l0=NA,
+                           print_output = FALSE, gamma_alpha = 1, gamma_beta = 2, beta_c = 1, beta_d = 1,p_0=NA,l_0=NA,
                            tol=1e-10, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
   if(sum(hist,scatter,line)>1 ){
     stop("Only 1 display option possible between histogram, line and scatter") #default is lines
@@ -264,7 +264,7 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, p
     ceg.temp<-zipceg(data,method=method,iter = iter_f, equivsize=equivsize, poisson_response = poisson_response,
                           variable_time = variable_time , stoch_imputation = stoch_imputation,
                           gamma_alpha =gamma_alpha, gamma_beta = gamma_beta, beta_c = beta_c, beta_d = beta_d,
-                          p_0 = p0, l_0 = l_0, tol=tol, var_disc = var_disc, disc_length = disc_length, restrict = restrict, mirror = mirror)
+                          p_0 = p_0, l_0 = l_0, tol=tol, var_disc = var_disc, disc_length = disc_length, restrict = restrict, mirror = mirror)
 
     ind<-ceg.temp$stages
     ind_probs<-ind[ind>=start_probs & ind<=end_probs]

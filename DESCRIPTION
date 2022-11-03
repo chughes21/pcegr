@@ -24,9 +24,11 @@ Imports:
     ggplot2,
     ggpubr,
     ggrepel,
+    lamW,
     methods,
     prodlim,
     reshape2,
+    stats,
     tidyr
 Suggests: 
     rmarkdown,

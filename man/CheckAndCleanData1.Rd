@@ -15,6 +15,3 @@ A cleaned data set
 \description{
 The function \link[ceg:CheckAndCleanData]{ceg::CheckAndCleanData}
 }
-\examples{
-CheckAndCleanData1(knee_pain_obs)
-}

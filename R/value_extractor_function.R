@@ -130,7 +130,7 @@ value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,var
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #' @param dec_place An integer value detailing how many decimal places the outputs should be rounded to. If NA, no rounding will occur.
 #'
-#' @return
+#' @return A series of matrices displaying the observed data, the prior values, and the expected values of the parameters for each level of the tree desired.
 #' @export
 #'
 #' @examples

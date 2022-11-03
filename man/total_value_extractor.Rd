@@ -33,7 +33,7 @@ total_value_extractor(
 \item{dec_place}{An integer value detailing how many decimal places the outputs should be rounded to. If NA, no rounding will occur.}
 }
 \value{
-
+A series of matrices displaying the observed data, the prior values, and the expected values of the parameters for each level of the tree desired.
 }
 \description{
 This function prints the expected values of parameters based on the data set and a chosen PCEG model for each variable.

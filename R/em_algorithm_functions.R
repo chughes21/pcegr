@@ -8,11 +8,6 @@
 #'
 #' @return A list containing the likelihood value and a vector of weights for the em algorithm
 #'
-#' @examples
-#' y<-c(1,0,2,0)
-#' t<-c(0.5,0.7,0.8,0.3)
-#' params<-c(0.5,1.5)
-#' cdll(params,y,t)
 cdll<-function(params,y,t){
   # p <-glogitinv(params[1]) #for constraints, so pi is a prop
   #  lambda<-exp(params[-1])
@@ -38,6 +33,7 @@ cdll<-function(params,y,t){
 #' @param tol A numeric value which represents the minimum change in the complete data log likelihood needed to continue the algorithm.
 #'
 #' @return A list containing the estimates of the risk probability and the rate, and the number of iterations necessary
+#' @export
 #'
 #' @examples
 #' y<-c(1,0,2,0)

@@ -45,6 +45,10 @@ zipceg(
 
 \item{gamma_beta}{A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.}
 
+\item{beta_c}{A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.}
+
+\item{beta_d}{A numeric value for the beta hyperparameter of the Beta prior for the risk probability.}
+
 \item{p_0}{A numeric initial value for the risk probability.}
 
 \item{l_0}{A numeric initial value for the rate.}
@@ -60,10 +64,6 @@ zipceg(
 \item{mirror}{A logical value indicating whether variable discretisation should be equivalent across each unfolding of the process (TRUE) or not (FALSE).}
 
 \item{cat_limit}{An integer value specifying the minimum number of categories to the variable can be discretised to. If 0, there is no minimum number of categories.}
-
-\item{c}{A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.}
-
-\item{d}{A numeric value for the beta hyperparameter of the Beta prior for the risk probability.}
 }
 \value{
 A list specifying a ZIPCEG model. The list contains: the prior for the final model, the data for the final model, the stage numbers for the final model,

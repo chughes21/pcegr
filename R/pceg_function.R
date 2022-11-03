@@ -54,10 +54,6 @@ poisson_score<-function(data_sample, gamma_prior){
 #'
 #' @return A numeric value specifying the change in log marginal likelihood after the two stages are merged.
 #'
-#' @examples
-#' data<-list(t(c(10,100)),t(c(5,100)))
-#' prior<-list(t(c(1,1)),t(c(1,1)))
-#' bayes_factor(data,prior,1,2)
 bayes_factor<-function(sample_sum, prior, stage1, stage2){
   prior_a_1<-prior[[stage1]][1]
   prior_b_1<-prior[[stage1]][2]

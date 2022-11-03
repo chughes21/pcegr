@@ -7,8 +7,6 @@
 #'
 #' @return A logical value indicating whether the data set is clean, along with a message if it isn't
 #'
-#' @examples
-#' CheckForCleanData1(knee_pain_obs)
 CheckForCleanData1<-function(data.frame){
   out <- TRUE
   data.frame <- as.data.frame(apply(data.frame, 2, function(x) gsub("^\\s*$",
@@ -28,8 +26,6 @@ CheckForCleanData1<-function(data.frame){
 #'
 #' @return A cleaned data set
 #'
-#' @examples
-#' CheckAndCleanData1(knee_pain_obs)
 CheckAndCleanData1<-function(data.frame){
   if (!methods::is(data.frame, "data.frame")) {
     message("Input is not a data frame, please check it")
@@ -54,7 +50,7 @@ CheckAndCleanData1<-function(data.frame){
 #' @param num.variable An integer value
 #' @param num.situation An integer value
 #' @param label.category A string detailing the label of the category
-#' @param num.category
+#' @param num.category An integer value
 #'
 LabelStage1<-function(k, num.variable, num.situation, label.category, num.category){
   if (k > num.variable) {
@@ -81,9 +77,9 @@ LabelStage1<-function(k, num.variable, num.situation, label.category, num.catego
 #' @param var An integer value
 #' @param num.category An integer value
 #' @param num.situation An integer value
-#' @param label.category
+#' @param label.category A string detailing the label of the category
 #'
-#' @return
+#' @return A vector
 #'
 TruncatedPath1<-function (ref, k, var, num.category, num.situation, label.category)
 {
@@ -99,14 +95,13 @@ TruncatedPath1<-function (ref, k, var, num.category, num.situation, label.catego
 #' This is a slightly modified version of the [ceg::Stratified.event.tree()] constructor method.
 #'
 #' @param x A data frame
-#' @param ...
 #'
 #' @return A Statified.event.tree object
 #' @export
 #'
 #' @examples
 #' set(knee_pain_obs[,1:3])
-set<-function(x = "data.frame", ...)
+set<-function(x = "data.frame")
 {
   .local <- function (x = "data.frame")
   {
@@ -130,7 +125,7 @@ set<-function(x = "data.frame", ...)
                num.category, label.category, num.situation, num.slice,
                mergedlist, hyper.stage))
   }
-  .local(x, ...)
+  .local(x)
 }
 
 #' The StratifiedCEGPosition1 Function

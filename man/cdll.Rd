@@ -19,9 +19,3 @@ A list containing the likelihood value and a vector of weights for the em algori
 \description{
 This function calculates the complete data log likelihood for a count vector and time vector, given values of the parameters of a zero-inflated Poisson distribution.
 }
-\examples{
-y<-c(1,0,2,0)
-t<-c(0.5,0.7,0.8,0.3)
-params<-c(0.5,1.5)
-cdll(params,y,t)
-}

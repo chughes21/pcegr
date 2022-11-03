@@ -4,12 +4,10 @@
 \alias{set}
 \title{The Stratified Event Tree Function}
 \usage{
-set(x = "data.frame", ...)
+set(x = "data.frame")
 }
 \arguments{
 \item{x}{A data frame}
-
-\item{...}{}
 }
 \value{
 A Statified.event.tree object

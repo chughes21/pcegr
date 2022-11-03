@@ -24,8 +24,8 @@ zipceg.iter(
   gamma_beta = 2,
   beta_c = 1,
   beta_d = 1,
-  p0 = NA,
-  l0 = NA,
+  p_0 = NA,
+  l_0 = NA,
   tol = 1e-10,
   var_disc = 0,
   disc_length = 0,
@@ -49,6 +49,8 @@ zipceg.iter(
 
 \item{hist}{A logical value indicating whether the plot should be in the form of a histogram (TRUE) or not (FALSE).}
 
+\item{line}{A logical value indicating whether the plot should be in the form of a line plot (TRUE) or not (FALSE).}
+
 \item{scatter}{A logical value indicating whether the plot should be in the form of a scatter plot (TRUE) or not (FALSE).}
 
 \item{equivsize}{A numeric value specifying the equivalent sample size for the prior, a measure of confidence in the prior.}
@@ -67,6 +69,14 @@ zipceg.iter(
 
 \item{gamma_beta}{A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.}
 
+\item{beta_c}{A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.}
+
+\item{beta_d}{A numeric value for the beta hyperparameter of the Beta prior for the risk probability.}
+
+\item{p_0}{A numeric initial value for the risk probability.}
+
+\item{l_0}{A numeric initial value for the rate.}
+
 \item{tol}{A numeric which represents the minimum change in the complete data log likelihood needed to continue the Expectation-Maximisation algorithm.}
 
 \item{var_disc}{An integer value specifying which variable to discretise. If 0, no discretisation is necessary.}
@@ -78,16 +88,6 @@ zipceg.iter(
 \item{mirror}{A logical value indicating whether variable discretisation should be equivalent across each unfolding of the process (TRUE) or not (FALSE).}
 
 \item{cat_limit}{An integer value specifying the minimum number of categories to the variable can be discretised to. If 0, there is no minimum number of categories.}
-
-\item{violin}{A logical value indicating whether the plot should be in the form of a line plot (TRUE) or not (FALSE).}
-
-\item{c}{A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.}
-
-\item{d}{A numeric value for the beta hyperparameter of the Beta prior for the risk probability.}
-
-\item{p_0}{A numeric initial value for the risk probability.}
-
-\item{l_0}{A numeric initial value for the rate.}
 }
 \value{
 A list containing: a matrix of the estimated rates or risk probabilities for each leaf across iterations, a numeric value of the log marginal likelihood for the MAP model, and the MAP model itself.

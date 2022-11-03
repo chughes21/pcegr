@@ -115,6 +115,7 @@ stage_structure<-function(mod,score=0,zip=FALSE){
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #'
 #' @return A list for the prior distribution and a list for the posterior distribution.
+#' @export
 #'
 #' @examples
 #' pmod<-pceg(knee_pain_obs,2,TRUE,TRUE)

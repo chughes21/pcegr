@@ -21,8 +21,3 @@ A numeric value specifying the change in log marginal likelihood after the two s
 \description{
 This function calculates the change in log marginal likelihood of a model when two stages are merged into one.
 }
-\examples{
-data<-list(t(c(10,100)),t(c(5,100)))
-prior<-list(t(c(1,1)),t(c(1,1)))
-bayes_factor(data,prior,1,2)
-}

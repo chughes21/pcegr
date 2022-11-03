@@ -15,6 +15,3 @@ A logical value indicating whether the data set is clean, along with a message i
 \description{
 The hidden function CheckForCleanData() from the ceg package.
 }
-\examples{
-CheckForCleanData1(knee_pain_obs)
-}

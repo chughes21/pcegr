@@ -17,10 +17,10 @@ TruncatedPath1(ref, k, var, num.category, num.situation, label.category)
 
 \item{num.situation}{An integer value}
 
-\item{label.category}{}
+\item{label.category}{A string detailing the label of the category}
 }
 \value{
-
+A vector
 }
 \description{
 The function \code{\link[ceg:TruncatedPath]{ceg::TruncatedPath()}}
