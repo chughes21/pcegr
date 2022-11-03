@@ -28,10 +28,7 @@ glogitinv = function(p){ exp(p)/(1+sum(exp(p)))}
 #' @param t A positive numeric value for the observation time.
 #'
 #' @return A numeric value specifying the likelihood.
-#' @export
 #'
-#' @examples
-#' f(0.5,1,1,1)
 f<-function(p, lambda, y, t){
   return(p*(dpois(y,lambda*t))+(1-p)*(y==0))
 }

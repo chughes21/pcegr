@@ -21,6 +21,3 @@ A numeric value specifying the likelihood.
 \description{
 This function calculates the likelihood for a single observation assuming a zero-inflated Poisson distribution
 }
-\examples{
-f(0.5,1,1,1)
-}

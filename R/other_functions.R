@@ -32,7 +32,6 @@ time_minimiser<-function(data,t_min){
 #'
 #' @return An integer value specifying how how many elements of the vector are zero.
 #'
-#' @examples zero_checker(c(0,2,0,1,1))
 zero_checker<-function(v){
   return(sum(v==0))
 }
