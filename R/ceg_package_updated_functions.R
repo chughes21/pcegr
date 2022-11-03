@@ -274,7 +274,7 @@ PairwisePosition1<-function (pair.situation, num.category, pos.next.level)
 #'
 #' @examples
 #' mod1<-pceg(knee_pain_obs,2,TRUE,TRUE)
-#'  staged.tree<-staged.tree.creator(mod1)
+#'  staged.tree<-staged.tree.creator(knee_pain_obs,mod1)
 #'  mod2<-sceg(staged.tree)
 #'  plot(mod2)
 sceg<-function (stratified.staged.tree)

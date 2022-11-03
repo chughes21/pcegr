@@ -17,7 +17,7 @@ This is the \code{\link[ceg:Stratified.event.tree]{ceg::Stratified.event.tree()}
 }
 \examples{
 mod1<-pceg(knee_pain_obs,2,TRUE,TRUE)
- staged.tree<-staged.tree.creator(mod1)
+ staged.tree<-staged.tree.creator(knee_pain_obs,mod1)
  mod2<-sceg(staged.tree)
  plot(mod2)
 }
