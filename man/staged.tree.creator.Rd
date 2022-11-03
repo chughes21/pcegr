@@ -34,6 +34,6 @@ An object of the class "Stratified.staged.tree"
 }
 \examples{
  mod1<-pceg(knee_pain_obs,2,TRUE,TRUE)
- staged.tree<-staged.tree.creator(mod1)
+ staged.tree<-staged.tree.creator(knee_pain_obs,mod1)
  plot(staged.tree)
 }

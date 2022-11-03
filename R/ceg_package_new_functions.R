@@ -212,7 +212,7 @@ event.tree.creator<-function(data,poisson_response=TRUE,variable_time=TRUE){
 #'
 #' @examples
 #'  mod1<-pceg(knee_pain_obs,2,TRUE,TRUE)
-#'  staged.tree<-staged.tree.creator(mod1)
+#'  staged.tree<-staged.tree.creator(knee_pain_obs,mod1)
 #'  plot(staged.tree)
 staged.tree.creator<-function(data,mod,poisson_response=TRUE,variable_time=TRUE,zip=FALSE,score=0){
 
