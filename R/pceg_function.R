@@ -340,7 +340,7 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
         result2 = bayes_factor(data, prior,comparisonset1[1], no_risk_ind[i]) #note just regular data and prior, due to what the stages are
 
         replace_len<-length(prior[[cluster_index [1]]])
-        replace_NA<-cbind(rep(NA,replace_len))
+        replace_NA<-matrix(rep(NA,replace_len),nrow=1)
 
         prior[[comparisonset1[1]]]<-prior[[comparisonset1[1]]]+ prior[[no_risk_ind[i]]] #combine priors
         prior[[ no_risk_ind[i]]] <-replace_NA #overwrite priors
@@ -541,7 +541,7 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
                     ) )
               }
               replace_len<-length(prior[[cluster_index [1]]])
-              replace_NA<-cbind(rep(NA,replace_len))
+              replace_NA<-matrix(rep(NA,replace_len),nrow=1)
               prior[[cluster_index[1]]]<-prior[[cluster_index [1]]]+ prior[[cluster_index [i]]]
               prior[[ cluster_index [i]]] <-replace_NA
               data[[cluster_index[1]]]<-data[[cluster_index[1]]]+data[[cluster_index[i]]]
