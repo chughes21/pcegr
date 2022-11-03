@@ -20,5 +20,5 @@ A list containing a matrix with the desired outputs for each evolution of the pr
 This function can estimate the risk proportions and rates for counts with uniform time, using either a maximum likelihood or methods of moments estimator.
 }
 \examples{
-nlm_zip(knee_pain_obs[,1:4])
+uniform_time_zip(knee_pain_obs[,1:4])
 }

@@ -10,7 +10,7 @@
 #' @export
 #'
 #' @examples
-#' nlm_zip(knee_pain_obs[,1:4])
+#' uniform_time_zip(knee_pain_obs[,1:4])
 uniform_time_zip<-function(data,method = "mle",time_input = FALSE){
   n<-dim(data)[2] - 1 - 1*time_input #if there are times, they will be the last column.
 
