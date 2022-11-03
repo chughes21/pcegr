@@ -7,7 +7,7 @@
 output_list_converter(mod, poisson_response = TRUE)
 }
 \arguments{
-\item{mod}{A list from the output of the \code{\link[=pcegr]{pcegr()}} function.}
+\item{mod}{A list from the output of the \code{\link[=pceg]{pceg()}} function.}
 
 \item{poisson_response}{A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).}
 }
