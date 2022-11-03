@@ -5,7 +5,7 @@ This package contains the functionality to fit both Poisson Chain Event Graphs (
 
 This package contains a data set, knee_pain_obs, which can be used to fit a PCEG and ZIPCEG model. To fit a PCEG model, run the following code:
 
-library(pcegr)
+library(pcegr)  
 pmod<-pceg(knee_pain_obs,2,TRUE,TRUE, gamma_alpha = 0.25,gamma_beta = 0.1)
 
 This will fit a Poisson staged tree model to the data set. The outputs can be seen as a whole by calling pmod, or simply the stage structure through:
