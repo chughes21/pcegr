@@ -203,7 +203,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @return A list containing: a matrix of the estimated rates or risk probabilities for each leaf across iterations, a numeric value of the log marginal likelihood for the MAP model, and the MAP model itself.
 #' @export
 #'
-#' @examples zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=FALSE,violin=TRUE)
+#' @examples zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time=TRUE)
 zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, plot_rates = TRUE,
                            plot_probs = FALSE, hist = FALSE, line = FALSE, scatter = FALSE, equivsize=2,
                            poisson_response = TRUE, variable_time = FALSE,stoch_imputation=TRUE, posterior = TRUE,

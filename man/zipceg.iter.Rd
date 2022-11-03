@@ -99,5 +99,5 @@ This function performs the ZIPCEG model selection a specified number of times an
 This function takes the same inputs as the \code{\link[=zipceg]{zipceg()}} function, except carries out the model selection process a specified number of times. Using the results of each iteration, different types of plots can be used to display either the estimated risk probabilities or estimated rates. The default plot is a violin plot. The function will also select the \emph{maximum} \emph{a} \emph{posteriori} (MAP) model from these iterations.
 }
 \examples{
-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,plot_ranks=FALSE,violin=TRUE)
+zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time=TRUE)
 }
