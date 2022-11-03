@@ -73,9 +73,9 @@ vec_in<-function(x,v){
   return(check)
 }
 
-#' The expected count function.
+#' The Chi Square calculator function.
 #'
-#' This function tests the goodness of fit of a pceg model to a data set.
+#' This function tests the goodness of fit of a pceg model to a data set using a Chi squared calculation.
 #'
 #' For each leaf stage in a pceg model created by [pceg()], this function calculates the observed event counts up to some integer limit, and then calculates
 #' the expected event counts for that leaf based on the model estimates of the parameters for the Poisson distribution. Then, for each leaf $i$ and each event count $j$,
@@ -95,11 +95,11 @@ vec_in<-function(x,v){
 #'
 #' @examples
 #' mod1<-pceg(knee_pain_obs,2,TRUE,TRUE)
-#' expected_count_calculator(knee_pain_obs,mod1,zip=FALSE)
+#' chi_sq_calculator(knee_pain_obs,mod1,zip=FALSE)
 #'
 #' mod2<-zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
-#' expected_count_calculator(knee_pain_obs,mod2)
-expected_count_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA){
+#' chi_sq_calculator(knee_pain_obs,mod2)
+chi_sq_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA){
 
   if(!poisson_response & variable_time){
     stop("Variable Time Requires Poisson Response")

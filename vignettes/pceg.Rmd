@@ -111,7 +111,7 @@ We can also check the log marginal likelihood and Chi-square calculation for the
 
 ```{r}
 pmod$lik
-expected_count_calculator(knee_pain_obs,pmod,zip=FALSE,dec_place=2)
+chi_sq_calculator(knee_pain_obs,pmod,zip=FALSE,dec_place=2)
 ```
 In the Chi-square contribution matrix, we can see some large values. In particular, for the leaves with low rates, like the first row, we can see large contributions for the higher event counts. This is because there are a much higher number of observed counts greater than 3 than we would expect based on the small rate. In contrast, for the leaves with higher rates, such as 4, 6 and 8, we can see that the contributions for the zero counts are much higher. This is because there are much more observed zero counts than would be expected with such a high rate. 
 
@@ -144,7 +144,7 @@ We can see that the model correctly merges the risk states ($s_{9}$ and $s_{13}$
 We now compare the goodness of fit to the PCEG. First, we calculate the log marginal likelihood and the Chi-square calculation. 
 ```{r}
 zipmod1$lik
-expected_count_calculator(knee_pain_obs,zipmod1,zip=TRUE,dec_place=2)
+chi_sq_calculator(knee_pain_obs,zipmod1,zip=TRUE,dec_place=2)
 ```
 We can see that the Chi-square value is significantly lower for the ZIPCEG model, which is to be expected as the model was simulated assuming a zero-inflated Poisson distribution.
 
@@ -171,7 +171,7 @@ plot(ziptree2)
 The staged tree matches the result from using the Gibbs sampler. Comparing the two ZIPCEG models fitted, the Bayes Factor appears to favour the *nlm* method while the Chi square barely favours the Gibbs sampler.
 ```{r}
 zipmod1$lik-zipmod2$lik
-expected_count_calculator(knee_pain_obs,zipmod1)$chi_sq-expected_count_calculator(knee_pain_obs,zipmod2)$chi_sq
+chi_sq_calculator(knee_pain_obs,zipmod1)$chi_sq-chi_sq_calculator(knee_pain_obs,zipmod2)$chi_sq
 ```
 However, both of these models are the result of one iteration, and the ZIPCEG model selection process is not deterministic. We can thus carry out the model selection a number of times, for example 100, and compare the risk probabilities and rates for each leaf, as well as select the MAP model from those iterations. Comparing the probabilities and rates for each leaf gives an idea of how the leaves merge with each other, as those who have similar plots will merge regularly. This is useful for data that is not simulated, as there may be significant variability from iteration to iteration. 
 
@@ -192,7 +192,7 @@ maptree<-staged.tree.creator(knee_pain_obs,mapmod,zip=TRUE)
 plot(maptree)
 mapmod$lik
 mapmod$lik-zipmod2$lik
-expected_count_calculator(knee_pain_obs,mapmod,zip=TRUE)$chi_sq-expected_count_calculator(knee_pain_obs,zipmod1,zip=TRUE)$chi_sq
+chi_sq_calculator(knee_pain_obs,mapmod,zip=TRUE)$chi_sq-chi_sq_calculator(knee_pain_obs,zipmod1,zip=TRUE)$chi_sq
 ```
 As we would expect, the MAP model outperforms both models in terms of Bayes Factor and Chi-square, although only barely in this case.
 
