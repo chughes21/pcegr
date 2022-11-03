@@ -39,7 +39,6 @@ We have thus simulated $N=10,000$ observations for the knee pain data set from a
 In the following table, we can see each conditional transition probability, informed by the conditional independence statements above. Each probability has its definition alongside its associated stage and situations. We load the *pcegr* package, but also the *ceg* package, as we will use its classes and methods for plotting. Some of the functions in *pcegr* are slightly modified from *ceg*, while others are direct ports, but we have relabeled them so as to not confuse the two. 
 ```{r}
 library(pcegr)
-library(ceg)
 cov_probs
 ```
 
