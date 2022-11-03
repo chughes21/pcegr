@@ -339,15 +339,18 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
 
         result2 = bayes_factor(data, prior,comparisonset1[1], no_risk_ind[i]) #note just regular data and prior, due to what the stages are
 
+        replace_len<-length(prior[[cluster_index [1]]])
+        replace_NA<-cbind(rep(NA,replace_len))
+
         prior[[comparisonset1[1]]]<-prior[[comparisonset1[1]]]+ prior[[no_risk_ind[i]]] #combine priors
-        prior[[ no_risk_ind[i]]] <-cbind(NA ,NA) #overwrite priors
+        prior[[ no_risk_ind[i]]] <-replace_NA #overwrite priors
         data[[comparisonset1[1]]]<-data[[comparisonset1[1]]]+data[[no_risk_ind[i]]] #combine data
-        data[[ no_risk_ind[i]]] <-cbind(NA,NA) #overwrite data
+        data[[ no_risk_ind[i]]] <-replace_NA #overwrite data
         comparisonset[[k]]<-comparisonset[[k]][-(which(comparisonset
                                                        [[k]]== no_risk_ind[i]))]
         comparisonset1<-comparisonset1[-which(comparisonset1==no_risk_ind[i])]
         mergedlist[[comparisonset1[1]]]<-cbind(mergedlist[[comparisonset1[1]]],mergedlist[[no_risk_ind[i]]])
-        mergedlist [[ no_risk_ind[i]]] <-cbind(NA ,NA)
+        mergedlist [[ no_risk_ind[i]]] <-replace_NA
         lik<-lik+result2
         score<-c(score ,lik)
         merged2<-c(comparisonset1[1] ,no_risk_ind[i] ,k)
@@ -537,10 +540,12 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
                     sum(lgamma(prior[[cluster_index[i]]]+data[[cluster_index[i]]]))-sum(lgamma(prior[[cluster_index[i]]])
                     ) )
               }
+              replace_len<-length(prior[[cluster_index [1]]])
+              replace_NA<-cbind(rep(NA,replace_len))
               prior[[cluster_index[1]]]<-prior[[cluster_index [1]]]+ prior[[cluster_index [i]]]
-              prior[[ cluster_index [i]]] <-cbind(NA ,NA)
+              prior[[ cluster_index [i]]] <-replace_NA
               data[[cluster_index[1]]]<-data[[cluster_index[1]]]+data[[cluster_index[i]]]
-              data[[ cluster_index[i]]] <-cbind(NA,NA)
+              data[[ cluster_index[i]]] <-replace_NA
               comparisonset[[k]]<-comparisonset[[k]][-(which(comparisonset
                                                              [[k]]== cluster_index[i]))]
               if(l==1){ #not sure if necessary but i think it is
@@ -548,7 +553,7 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
               }
               mergedlist[[cluster_index[1]]]<-cbind(mergedlist[[cluster_index[1]]],mergedlist[[cluster_index
                                                                                                [i]]])
-              mergedlist [[ cluster_index[i]]] <-cbind(NA ,NA)
+              mergedlist [[ cluster_index[i]]] <-replace_NA
               lik<-lik+result2
               score<-c(score ,lik)
               merged2<-c(cluster_index[1] ,cluster_index[i] ,k)
