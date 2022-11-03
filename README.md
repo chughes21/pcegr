@@ -1,7 +1,7 @@
 # pcegr
 Poisson Chain Event Graphs and Zero Inflated Poisson Chain Event Graphs.
 
-This package contains the functionality to fit both Poisson Chain Event Graphs (PCEGs) and Zero-Inflated Poisson Chain Event Graphs (ZIPCEGs) using the [pcegr()] function. The package can also convert the outputs of this function to the S4 classes of Stratified.staged.tree and Stratified.ceg.model from the ceg package, which enables plotting. 
+This package contains the functionality to fit both Poisson Chain Event Graphs (PCEGs) and Zero-Inflated Poisson Chain Event Graphs (ZIPCEGs) using the [pceg()] function. The package can also convert the outputs of this function to the S4 classes of Stratified.staged.tree and Stratified.ceg.model from the ceg package, which enables plotting. 
 
 This package contains a data set, knee_pain_obs, which can be used to fit a PCEG and ZIPCEG model. To fit a PCEG model, run the following code:
 
