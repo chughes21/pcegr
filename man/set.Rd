@@ -15,7 +15,7 @@ set(x = "data.frame", ...)
 A Statified.event.tree object
 }
 \description{
-This is a slightly modified version of the \code{\link[ceg:stratified.event.tree]{ceg::stratified.event.tree()}} constructor method.
+This is a slightly modified version of the \code{\link[ceg:Stratified.event.tree]{ceg::Stratified.event.tree()}} constructor method.
 }
 \examples{
 set(knee_pain_obs[,1:3])

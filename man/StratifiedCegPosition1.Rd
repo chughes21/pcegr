@@ -17,5 +17,5 @@ StratifiedCegPosition1(stage, num.category, num.situation)
 A list detailing the position structure at each level.
 }
 \description{
-The function \code{\link[ceg:StratifiedCEGPosition]{ceg::StratifiedCEGPosition()}}
+The hidden function StratifiedCegPosition() from the ceg package.
 }

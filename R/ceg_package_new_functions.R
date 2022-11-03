@@ -7,7 +7,6 @@
 #'
 #' @return An object of class "OAHC" with a stage structure and score from a level of the tree
 #'
-#' @examples
 oahc_definer<-function(cluster,score=0){
   return(new("OAHC",score=score,cluster=cluster))
 }

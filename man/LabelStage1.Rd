@@ -18,5 +18,5 @@ LabelStage1(k, num.variable, num.situation, label.category, num.category)
 \item{num.category}{}
 }
 \description{
-The function \link[ceg:LabelStage]{ceg::LabelStage}
+The function \code{\link[ceg:LabelStage]{ceg::LabelStage()}}
 }

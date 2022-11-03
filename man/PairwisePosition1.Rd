@@ -17,5 +17,5 @@ PairwisePosition1(pair.situation, num.category, pos.next.level)
 A logical value indicating whether two situations are in the same position.
 }
 \description{
-The function \code{\link[ceg:PairWisePosition]{ceg::PairWisePosition()}}
+The hidden function PairwisePosition() from the ceg package.
 }

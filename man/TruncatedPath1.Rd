@@ -23,5 +23,5 @@ TruncatedPath1(ref, k, var, num.category, num.situation, label.category)
 
 }
 \description{
-The function \link[ceg:TruncatedPath]{ceg::TruncatedPath}
+The function \code{\link[ceg:TruncatedPath]{ceg::TruncatedPath()}}
 }

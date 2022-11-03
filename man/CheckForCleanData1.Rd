@@ -13,7 +13,7 @@ CheckForCleanData1(data.frame)
 A logical value indicating whether the data set is clean, along with a message if it isn't
 }
 \description{
-The function \link[ceg:CheckForCleanData]{ceg::CheckForCleanData}
+The hidden function CheckForCleanData() from the ceg package.
 }
 \examples{
 CheckForCleanData1(knee_pain_obs)

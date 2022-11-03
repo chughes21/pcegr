@@ -1,7 +1,7 @@
 
 #' The Check For Clean Data Function
 #'
-#' The function [ceg::CheckForCleanData]
+#' The hidden function CheckForCleanData() from the ceg package.
 #'
 #' @param data.frame A data set
 #'
@@ -48,8 +48,7 @@ CheckAndCleanData1<-function(data.frame){
 
 #' The Label Stage Function
 #'
-#' The function [ceg::LabelStage]
-#'
+#' The function [ceg::LabelStage()]
 #'
 #' @param k An integer value
 #' @param num.variable An integer value
@@ -57,7 +56,6 @@ CheckAndCleanData1<-function(data.frame){
 #' @param label.category A string detailing the label of the category
 #' @param num.category
 #'
-#' @examples
 LabelStage1<-function(k, num.variable, num.situation, label.category, num.category){
   if (k > num.variable) {
     var <- k - num.variable
@@ -76,7 +74,7 @@ LabelStage1<-function(k, num.variable, num.situation, label.category, num.catego
 
 #' The Truncated Path Function
 #'
-#' The function [ceg::TruncatedPath]
+#' The function [ceg::TruncatedPath()]
 #'
 #' @param ref An integer value
 #' @param k An integer value
@@ -87,7 +85,6 @@ LabelStage1<-function(k, num.variable, num.situation, label.category, num.catego
 #'
 #' @return
 #'
-#' @examples
 TruncatedPath1<-function (ref, k, var, num.category, num.situation, label.category)
 {
   if (ref < k + 2)
@@ -99,7 +96,7 @@ TruncatedPath1<-function (ref, k, var, num.category, num.situation, label.catego
 
 #' The Stratified Event Tree Function
 #'
-#' This is a slightly modified version of the [ceg::stratified.event.tree()] constructor method.
+#' This is a slightly modified version of the [ceg::Stratified.event.tree()] constructor method.
 #'
 #' @param x A data frame
 #' @param ...
@@ -138,7 +135,7 @@ set<-function(x = "data.frame", ...)
 
 #' The StratifiedCEGPosition1 Function
 #'
-#'The function [ceg::StratifiedCEGPosition()]
+#' The hidden function StratifiedCegPosition() from the ceg package.
 #'
 #' @param stage A list detailing the stage structure of a Stratified.staged.tree model at each level.
 #' @param num.category An integer vector detailing the number of categories for each variable.
@@ -146,7 +143,6 @@ set<-function(x = "data.frame", ...)
 #'
 #' @return A list detailing the position structure at each level.
 #'
-#' @examples
 StratifiedCegPosition1<-function (stage, num.category, num.situation)
 {
   num.level <- length(num.category)
@@ -173,7 +169,6 @@ StratifiedCegPosition1<-function (stage, num.category, num.situation)
 #'
 #' @return A list detailing the position structure for a single level.
 #'
-#' @examples
 PositionLevel1<-function(stage.list, num.category, num.situation.next, pos.next.level = list())
 {
   aux <- which(!is.na(stage.list))
@@ -198,7 +193,6 @@ PositionLevel1<-function(stage.list, num.category, num.situation.next, pos.next.
 #'
 #' @return An integer vector detailing the position structure for a single level.
 #'
-#' @examples
 PositionVector1<-function (num.situation, pos.list)
 {
   num.situation <- length(pos.list)
@@ -215,13 +209,14 @@ PositionVector1<-function (num.situation, pos.list)
 
 #' The Position Stage Function
 #'
+#' The function [ceg::PositionStage()]
+#'
 #' @param stage.vector An integer vector detailing the stages merged at a single level.
 #' @param num.category An integer value for the number of categories for the associated variable.
 #' @param pos.next.level An integer vector detailing the position structure for a single level.
 #'
 #' @return A list
 #'
-#' @examples
 PositionStage1<-function (stage.vector, num.category, pos.next.level)
 {
   stage.vector <- sort(stage.vector)
@@ -251,7 +246,7 @@ PositionStage1<-function (stage.vector, num.category, pos.next.level)
 
 #' The Pairwise Position Function
 #'
-#' The function [ceg::PairWisePosition()]
+#' The hidden function PairwisePosition() from the ceg package.
 #'
 #' @param pair.situation An integer vector
 #' @param num.category An integer value
@@ -259,7 +254,6 @@ PositionStage1<-function (stage.vector, num.category, pos.next.level)
 #'
 #' @return A logical value indicating whether two situations are in the same position.
 #'
-#' @examples
 PairwisePosition1<-function (pair.situation, num.category, pos.next.level)
 {
   situation.1 <- (pair.situation[1] - 1) * num.category + 1:num.category
@@ -274,7 +268,7 @@ PairwisePosition1<-function (pair.situation, num.category, pos.next.level)
 
 #' The Stratified CEG Function
 #'
-#' This is the [ceg::stratified.event.tree()] constructor method.
+#' This is the [ceg::Stratified.event.tree()] constructor method.
 #'
 #' @param stratified.staged.tree An object of class "Stratified.staged.tree"
 #'

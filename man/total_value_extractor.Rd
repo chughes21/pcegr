@@ -41,3 +41,7 @@ This function prints the expected values of parameters based on the data set and
 \details{
 This function is the \code{\link[=value_extractor]{value_extractor()}} function repeated at each level.
 }
+\examples{
+mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+total_value_extractor(knee_pain_obs,mod,zip=FALSE)
+}

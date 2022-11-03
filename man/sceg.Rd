@@ -13,7 +13,7 @@ sceg(stratified.staged.tree)
 An object of class "Stratified.ceg.model"
 }
 \description{
-This is the \code{\link[ceg:stratified.event.tree]{ceg::stratified.event.tree()}} constructor method.
+This is the \code{\link[ceg:Stratified.event.tree]{ceg::Stratified.event.tree()}} constructor method.
 }
 \examples{
 mod1<-pceg(knee_pain_obs,2,TRUE,TRUE)

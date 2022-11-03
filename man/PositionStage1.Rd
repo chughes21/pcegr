@@ -17,5 +17,5 @@ PositionStage1(stage.vector, num.category, pos.next.level)
 A list
 }
 \description{
-The Position Stage Function
+The function \code{\link[ceg:PositionStage]{ceg::PositionStage()}}
 }
