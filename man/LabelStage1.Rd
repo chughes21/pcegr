@@ -17,6 +17,9 @@ LabelStage1(k, num.variable, num.situation, label.category, num.category)
 
 \item{num.category}{An integer value}
 }
+\value{
+A vector of labels
+}
 \description{
 The function \code{\link[ceg:LabelStage]{ceg::LabelStage()}}
 }

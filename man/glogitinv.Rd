@@ -15,6 +15,3 @@ A numeric value between 0 and 1.
 \description{
 This function maps a value on the real line to a value between 0 and 1. It is the inverse of the \code{\link[=glogit]{glogit()}} function.
 }
-\examples{
-glogitinv(-0.4054651)
-}

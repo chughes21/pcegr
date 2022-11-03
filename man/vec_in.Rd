@@ -17,7 +17,3 @@ A logical value indicating whether the given value was in the vector (TRUE) or n
 \description{
 This function checks whether a given value is in a vector.
 }
-\examples{
-vec_in(7,c(1:9))
-vec_in(10,c(1:9))
-}

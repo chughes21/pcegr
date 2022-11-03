@@ -8,19 +8,7 @@
 #'
 #' @return A data set where the categorical covariates have been refactor to start at 0 and end at the number of levels - 1.
 #'
-#' @examples
-#' N<-100
-#' h<-sample(c("Short","Average","Tall"),size=N,replace=TRUE)
-#' h<-factor(h,levels=c("Short","Average","Tall"))
-#' w<-sample(c("Normal","Over"),size=N,replace=TRUE)
-#' w<-factor(w,levels=c("Normal","Over"))
-#' y<-rpois(N,lambda=2)
-#' data<-data.frame(height=h,weight=w,y=y)
-#' summary(data)
-#' n<-2
-#' data_levels<-sapply(data[,1:n],nlevels)
-#' data.refactor<-path_refactor(data,n=2,data_levels)
-#' summary(data.refactor)
+#'
 path_refactor<-function(data,n,data_levels){
   data_out<-data
   for(i in 1:n){

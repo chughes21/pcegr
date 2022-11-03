@@ -15,6 +15,3 @@ A vector of integers from $x-1$ to 0.
 \description{
 A function to create a descending vector of natural numbers
 }
-\examples{
-vec_from(7)
-}

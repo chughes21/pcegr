@@ -6,8 +6,6 @@
 #'
 #' @return A numeric value on the real line.
 #'
-#' @examples
-#' glogit(0.4)
 glogit = function (p){ log(p/(1-sum(p)))}
 
 #' The logistic function
@@ -18,8 +16,6 @@ glogit = function (p){ log(p/(1-sum(p)))}
 #'
 #' @return A numeric value between 0 and 1.
 #'
-#' @examples
-#' glogitinv(-0.4054651)
 glogitinv = function(p){ exp(p)/(1+sum(exp(p)))}
 
 #' The zero-inflated Poisson likelihood for a single observation.

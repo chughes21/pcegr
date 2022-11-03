@@ -15,6 +15,3 @@ A numeric value on the real line.
 \description{
 This function maps a probability to a value on the real line, for the purposes of the \code{\link[=nlm_zip]{nlm_zip()}} function.
 }
-\examples{
-glogit(0.4)
-}

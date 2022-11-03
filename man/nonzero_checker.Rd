@@ -15,6 +15,3 @@ An integer value specifying how how many elements of the vector are zero.
 \description{
 A function that checks how many elements of a given vector are nonzero.
 }
-\examples{
-nonzero_checker(c(0,2,0,1,1))
-}

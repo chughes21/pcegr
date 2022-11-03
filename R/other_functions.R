@@ -45,8 +45,6 @@ zero_checker<-function(v){
 #'
 #' @return An integer value specifying how how many elements of the vector are zero.
 #'
-#' @examples
-#' nonzero_checker(c(0,2,0,1,1))
 nonzero_checker<-function(v){
   return(sum(abs(v)>0))
 }
@@ -60,8 +58,6 @@ nonzero_checker<-function(v){
 #'
 #' @return A vector of the same length where values equal to n are 1, and values different to n are 0
 #'
-#' @examples
-#' keeper(c(0,2,0,1,1),1)
 keeper<-function(v,n){
   output<-v
   m<-length(output)
@@ -78,8 +74,6 @@ keeper<-function(v,n){
 #'
 #' @return A vector of integers from $x-1$ to 0.
 #'
-#' @examples
-#' vec_from(7)
 vec_from<-function(x){
   return(c((x-1):0))
 }
@@ -92,8 +86,6 @@ vec_from<-function(x){
 #'
 #' @return A vector of integers from 0 to $x-1$.
 #'
-#' @examples
-#' vec_to(7)
 vec_to<-function(x){
   return(c(0:(x-1)))
 }

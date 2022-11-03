@@ -17,6 +17,3 @@ A list containing the refactored data, the number of levels in the tree, the num
 \description{
 A function to refactor the data and create a refactored matrix that matches the covariates in the tree.
 }
-\examples{
-refactored_tree_matrix(knee_pain_obs,TRUE)
-}

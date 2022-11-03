@@ -7,10 +7,6 @@
 #'
 #' @return An integer vector detailing the stages that have merged with the unique stage given
 #'
-#' @examples
-#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-#' merged<-mod$merged
-#' merged_stage_finder(11,merged)
 merged_stage_finder<-function(unique_stage,M){
   M_unique<-as.matrix(M[,which(M[1,]==unique_stage)])
   stages_merged<-c(unique_stage,M_unique[2,])
@@ -26,10 +22,6 @@ merged_stage_finder<-function(unique_stage,M){
 #'
 #' @return A list of integer vectors detailing the stages which have merged.
 #'
-#' @examples
-#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-#' merged<-mod$merged
-#' merged_list_extractor(merged)
 merged_list_extractor<-function(merged){
   level<-max(merged[3,])
   merged_stages<-as.matrix(merged[,which(merged[3,]==level)])
@@ -66,8 +58,6 @@ merged_list_extractor<-function(merged){
 #'
 #' @return A logical value indicating whether the given value was in the vector (TRUE) or not (FALSE)
 #'
-#' @examples vec_in(7,c(1:9))
-#' vec_in(10,c(1:9))
 vec_in<-function(x,v){
   check<-x %in% v
   return(check)

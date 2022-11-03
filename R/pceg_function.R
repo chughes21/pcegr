@@ -7,10 +7,6 @@
 #'
 #' @return A numeric value of the log marginal likelihood for the data.
 #'
-#' @examples
-#' data<-list(t(c(10,100)),t(c(5,100)))
-#' prior<-list(t(c(1,1)),t(c(1,1)))
-#' poisson_score(data,prior)
 poisson_score<-function(data_sample, gamma_prior){
   p<-length(data_sample)
   post_a<-0

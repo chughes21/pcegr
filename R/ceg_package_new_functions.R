@@ -20,6 +20,7 @@ oahc_definer<-function(cluster,score=0){
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #'
 #' @return A list specifying the stage structure from the output of [pceg()] in a way that is compatible with the "Stratified.staged.tree" S4 class.
+#' @export
 #'
 #' @examples
 #' mod1<-pceg(knee_pain_obs,2,TRUE,TRUE)

@@ -52,6 +52,8 @@ CheckAndCleanData1<-function(data.frame){
 #' @param label.category A string detailing the label of the category
 #' @param num.category An integer value
 #'
+#' @return A vector of labels
+#'
 LabelStage1<-function(k, num.variable, num.situation, label.category, num.category){
   if (k > num.variable) {
     var <- k - num.variable

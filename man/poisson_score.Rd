@@ -17,8 +17,3 @@ A numeric value of the log marginal likelihood for the data.
 \description{
 This function calculates the marginal likelihood for Poisson responses.
 }
-\examples{
-data<-list(t(c(10,100)),t(c(5,100)))
-prior<-list(t(c(1,1)),t(c(1,1)))
-poisson_score(data,prior)
-}

@@ -17,6 +17,3 @@ A vector of the same length where values equal to n are 1, and values different 
 \description{
 A function that, when given a specific value, keeps all values in a vector that are equal as 1, and any value that is different as 0.
 }
-\examples{
-keeper(c(0,2,0,1,1),1)
-}

@@ -1,3 +1,16 @@
+#' The Uniform Time ZIP Estimator
+#'
+#' This function can estimate the risk proportions and rates for counts with uniform time, using either a maximum likelihood or methods of moments estimator.
+#'
+#' @param data A data set, where the observed count vector and time vector (if included) are the last two columns.
+#' @param method A character string indicating the method for parameter estimation. The character string can be an element of c("mle","mm").
+#' @param time_input A logical value indicating whether the time has been included in the data set (TRUE) or not (FALSE). As time is uniform, if it is included, then all times should be equal to 1.
+#'
+#' @return A list containing a matrix with the desired outputs for each evolution of the process, as well as vectors of the estimates for the rates and risk probabilities.
+#' @export
+#'
+#' @examples
+#' nlm_zip(knee_pain_obs[,1:4])
 uniform_time_zip<-function(data,method = "mle",time_input = FALSE){
   n<-dim(data)[2] - 1 - 1*time_input #if there are times, they will be the last column.
 

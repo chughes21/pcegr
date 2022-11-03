@@ -15,8 +15,3 @@ A list of integer vectors detailing the stages which have merged.
 \description{
 This function finds a list of the stages which have merged given the merging details of a CEG.
 }
-\examples{
-mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-merged<-mod$merged
-merged_list_extractor(merged)
-}
