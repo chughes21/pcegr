@@ -36,8 +36,8 @@ merged_list_extractor<-function(merged){
 
   for(i in 1:num_ref){
 
-    col_ref_top<-which(merged_stages[1,]==stage_ref[i])
-    col_ref_bottom<-which(merged_stages[2,]==stage_ref[i])
+    col_ref_top<-which(merged_stages_adj[1,]==stage_ref[i])
+    col_ref_bottom<-which(merged_stages_adj[2,]==stage_ref[i])
     new_top_stage<-merged_stages[1,col_ref_bottom]
     merged_stages_adj[1,col_ref_top]<-new_top_stage
 
