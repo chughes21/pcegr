@@ -137,7 +137,7 @@ value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,var
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' total_value_extractor(knee_pain_obs,mod,zip=FALSE)
 total_value_extractor<-function(data,ceg,level_exclude = NA,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA){
-  n<-dim(data)[2]-1*variable_time
+  n<-dim(data)[2]-1*variable_time + 1*zip
 
   ind<-c(-(n-1):0)
 
