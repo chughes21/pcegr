@@ -123,7 +123,6 @@ plot.StagedTree<-function(x){
 }
 
 plot.ChainEventGraph<-function(x){
-  {
     ceg.graph.simple <- CegGraphSimple1(x$staged.tree$event.tree,
                                        x$position)
     g <- new("graphNEL", nodes = ceg.graph.simple$node$nodes,
@@ -159,7 +158,6 @@ plot.ChainEventGraph<-function(x){
     Rgraphviz::plot(g, main = "Chain Event Graph",
                     nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
     grDevices::dev.off()
-  }
 
 }
 
