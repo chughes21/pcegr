@@ -2,3 +2,4 @@
 ^\.Rproj\.user$
 ^data-raw$
 workflow.R
+class_definitions_S4
