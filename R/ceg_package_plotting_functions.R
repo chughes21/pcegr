@@ -104,12 +104,11 @@ NodeColor1<-function (num.variable, num.situation, num.category, stage.structure
   }
   for (i in 2:num.variable) {
     for (j in 1:num.situation[i]) {
-      if (!is.na(stage.structure[[i]][j][1])) {
-        if (length(stage.structure[[i]][j]) ==
-            1)
+      if (!is.na(stage.structure[[i]][[j]][1])) {
+        if (length(stage.structure[[i]][[j]]) == 1)
           result[j + total.node[i - 1]] <- "white"
         else {
-          result[stage.structure[[i]][j] +
+          result[stage.structure[[i]][[j]] +
                    total.node[i - 1]] <- color[count]
           count <- count + 1
         }
