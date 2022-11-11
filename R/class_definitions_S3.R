@@ -27,7 +27,7 @@ EventTree<-function(data,poisson_response = TRUE, variable_time=TRUE){
           }
 
 
-StagedTree<-function(data,prior,posterior,stage.struc,score,poisson_response = TRUE, variable_time = TRUE,zip=FALSE,lik = 0){
+StagedTree<-function(data,prior,posterior,stage.struc,poisson_response = TRUE, variable_time = TRUE,zip=FALSE,lik = 0){
   if(!poisson_response & variable_time){
     stop("Variable time requires a Poisson response")
   }

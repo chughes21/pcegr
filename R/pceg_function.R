@@ -606,5 +606,11 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
   result<-mergedlist[stages]
   newlist <-list(prior=prior ,data=data ,numb=numb_out,stages=stages ,result=result ,score=score ,
                  merged=merged_out ,comparisonset=comparisonset ,lik=lik)
-  return(newlist)
+
+  ol<-output_list_converter(newlist,poisson_response)
+  ss<-stage_structure(newlist,zip)
+
+  mod<-StagedTree(exampledata,ol$prior,ol$posterior,ss,poisson_response,variable_time,zip,lik)
+
+  return(mod)
 }
