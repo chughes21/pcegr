@@ -152,10 +152,10 @@ plot.ChainEventGraph<-function(x){
     #grDevices::dev.off()
     nAttrs$fillcolor <- ceg.graph.simple$node$color
     names(nAttrs$fillcolor) <- graph::nodes(g)
-    #Rgraphviz::plot(g, main = "Chain Event Graph",
-    #                nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
-    #grDevices::pdf("./figure02ceg.pdf", width = 8,
-     #              height = 6, title = "Chain Event Graph")
+    Rgraphviz::plot(g, main = "Chain Event Graph",
+                    nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
+    grDevices::pdf("./figure02ceg.pdf", width = 8,
+                  height = 6, title = "Chain Event Graph")
     Rgraphviz::plot(g, main = "Chain Event Graph",
                     nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
     grDevices::dev.off()
