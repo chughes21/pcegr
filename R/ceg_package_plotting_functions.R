@@ -138,6 +138,19 @@ ListToVector1<-function (x, n)
   return(c(ListToVector1(x, n - 1), x[[n]]))
 }
 
+MergeLabels1<-function (edge.list, edge, level)
+{
+  aux.merge <- which(edge.list == edge)
+  aux <- length(aux.merge)
+  aux.label <- level[aux.merge[1]]
+  if (aux > 1) {
+    for (i in 2:aux) {
+      aux.label <- paste0(aux.label, "-", level[aux.merge[i]])
+    }
+  }
+  return(aux.label)
+}
+
 CegGraphSimple1<-function (event.tree, position, range.color = 1)
 {
   node.vector <- c()
@@ -190,7 +203,7 @@ CegGraphSimple1<-function (event.tree, position, range.color = 1)
       aux.edge.var.list <- unique(edge.var.list[, pos -
                                                   start.pos + 1])
       edge.label <- c(edge.label, sapply(1:length(aux.edge.var.list),
-                                         function(x) MergeLabels(edge.var.list[, pos -
+                                         function(x) MergeLabels1(edge.var.list[, pos -
                                                                                  start.pos + 1], aux.edge.var.list[x], event.tree$label.category[[var]])))
       edge.list[[pos + 2]]$edges <- paste0("w", aux.edge.var.list)
     }
