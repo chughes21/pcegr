@@ -145,10 +145,10 @@ StratifiedCegPosition1<-function (stage, num.category, num.situation)
   num.level <- length(num.category)
   result <- list()
   length(result) <- num.level
-  result[[num.level]] <- PositionLevel1(stage[[num.level]]@cluster,
+  result[[num.level]] <- PositionLevel1(stage[[num.level]],
                                         0, num.situation[num.level])
   for (level in (num.level - 1):2) {
-    result[[level]] <- PositionLevel1(stage[[level]]@cluster,
+    result[[level]] <- PositionLevel1(stage[[level]],
                                       num.category[level], num.situation[level + 1], result[[level + 1]])
   }
   result[[1]] <- list(list(1))
