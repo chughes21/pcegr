@@ -25,6 +25,8 @@ usethis::use_data_raw("knee_pain_age")
 usethis::use_data_raw("knee_pain_age_obs")
 usethis::use_r("ceg_package_updated_functions")
 usethis::use_r("ceg_package_new_functions")
+usethis::use_r("ceg_package_plotting_functions")
+usethis::use_r("class_definitions")
 
 devtools::load_all()
 devtools::check()

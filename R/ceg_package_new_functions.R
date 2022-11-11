@@ -25,7 +25,7 @@ oahc_definer<-function(cluster,score=0){
 #' @examples
 #' mod1<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' stage_structure(mod1)
-stage_structure<-function(mod,score=0,zip=FALSE){
+stage_structure_old<-function(mod,score=0,zip=FALSE){
   output<-list()
   M<-mod$merged
   comparisonset<-mod$comparisonset
@@ -53,7 +53,7 @@ stage_structure<-function(mod,score=0,zip=FALSE){
     m[1:2,]<-m[1:2,]-start
 
     if(length(m)>0){
-      check<-merged_list_extractor(m)
+      check<-pcegr:::merged_list_extractor(m)
     }else{
       check<-NA
     }
@@ -101,7 +101,68 @@ stage_structure<-function(mod,score=0,zip=FALSE){
     #    }
    #   }
     }
-    output[[i]]=oahc_definer(cluster,score=lik)
+    output[[i]]=pcegr:::oahc_definer(cluster,score=lik)
+  }
+
+  return(output)
+
+}
+
+stage_structure<-function(mod,zip=FALSE){
+  output<-list()
+  M<-mod$merged
+  comparisonset<-mod$comparisonset
+  numb<-mod$numb
+
+
+  for(i in 1:length(numb)){
+
+    cluster<-vector(mode="list",length=numb[i])
+    m<-as.matrix(M[,which(M[3,]==(i-1))])
+
+    if(i>1){
+      comp<-comparisonset[[i-1]]
+      start<-sum(numb[1:(i-1)])
+      comp<-comp-start
+    }else{
+      start<-1
+      comp<-1
+    }
+
+    m[1:2,]<-m[1:2,]-start
+
+    if(length(m)>0){
+      check<-pcegr:::merged_list_extractor(m)
+    }else{
+      check<-NA
+    }
+
+    zip_ind<-(i==length(numb))& zip
+
+    if(zip_ind){
+      no_risk_ind<-seq(from=1,to=numb[i]-1,by=2)
+    }else{no_risk_ind<-NA}
+
+    k<-1
+
+    for(j in 1:numb[[i]]){
+
+      if((j==1)&zip_ind ){
+        cluster[[j]]<-no_risk_ind
+      } else if((j %in% no_risk_ind[-1])&zip_ind){
+        cluster[[j]]<-NA
+      }else if(all(is.na(check))){
+        cluster[[j]]<-j
+      }else if(!(j %in% comp)){
+        cluster[[j]]<-NA
+      }else if(!(j%in%m[1:2,])){
+        cluster[[j]]<-j
+      }else{
+        cluster[[j]]<-as.vector(unlist(check[k]))
+        k<-k+1
+      }
+    }
+    output[[i]]=cluster
   }
 
   return(output)
