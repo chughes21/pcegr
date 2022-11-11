@@ -55,8 +55,8 @@ StagedTree<-function(data,prior,posterior,stage.struc,score,poisson_response = T
 ChainEventGraph<-function(staged.tree){
   position <- StratifiedCegPosition1(staged.tree$stage.structure,
                                      staged.tree$event.tree$num.category, staged.tree$event.tree$num.situation)
-  return(structure(list(StagedTree = staged.tree,
-             Position = position),class="ChainEventGraph"))
+  return(structure(list(staged.tree = staged.tree,
+             position = position),class="ChainEventGraph"))
 }
 
 plot.EventTree<-function(x){

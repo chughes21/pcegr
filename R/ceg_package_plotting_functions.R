@@ -162,8 +162,7 @@ CegGraphSimple1<-function (event.tree, position, range.color = 1)
     num.situation <- length(position[[var]])
     for (stage in 1:num.situation) {
       num.pos <- length(position[[var]][[stage]])
-      pos.next.var <- PositionVector1(event.tree$num.situation[var +
-                                                                           1], position[[var + 1]])
+      pos.next.var <- PositionVector1(event.tree$num.situation[var + 1], position[[var + 1]])
       for (pos in 1:num.pos) {
         count.pos <- count.pos + 1
         node.vector <- c(node.vector, paste0("w",
