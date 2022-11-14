@@ -28,8 +28,8 @@ hdi_gamma_extractor<-function(data,mod,ci=0.95,N=10000,variable_time=TRUE,zip=TR
   m=length(shapes)
   output<-list()
   for(i in 1:m){
-    posterior<-distribution_gamma(N,shape=shapes[i],scale=scales[i])
-    output[[i]]<-hdi(posterior,ci=ci)
+    marg_post<-distribution_gamma(N,shape=shapes[i],scale=scales[i])
+    output[[i]]<-hdi(marg_post,ci=ci)
   }
   return(output)
 }
@@ -77,8 +77,8 @@ hdi_beta_extractor<-function(data,mod,ci=0.95,N=10000,level_rel_final=-1,poisson
     m=sum(v)
     output[[i]]<-list()
     for(j in 1:p){
-      posterior<-distribution_beta(N,shape1=v[j],shape2=m-v[j])
-      output[[i]][[j]]<-hdi(posterior,ci=ci)
+      marg_post<-distribution_beta(N,shape1=v[j],shape2=m-v[j])
+      output[[i]][[j]]<-hdi(marg_post,ci=ci)
     }
   }
   return(output)
