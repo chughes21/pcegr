@@ -18,13 +18,16 @@
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' hdi_gamma_extractor(knee_pain_obs,mod,zip=FALSE)
 hdi_gamma_extractor<-function(data,mod,ci=0.95,N=10000,variable_time=TRUE,zip=TRUE){
-  posterior<-mod$prior.distribution + mod$data.summary
+
+  n<-dim(data)[2]-1*variable_time
+
+  posterior<-mod$prior.distribution[[n]] + mod$data.summary[[n]]
   posterior<-posterior[!is.na(which(posterior[,1])),]
   shapes<-posterior[,1]
   scales<-1/(posterior[,2])
-  n=length(shapes)
+  m=length(shapes)
   output<-list()
-  for(i in 1:n){
+  for(i in 1:m){
     posterior<-distribution_gamma(N,shape=shapes[i],scale=scales[i])
     output[[i]]<-hdi(posterior,ci=ci)
   }
@@ -61,18 +64,16 @@ hdi_beta_extractor<-function(data,mod,ci=0.95,N=10000,level_rel_final=-1,poisson
   n=dim(data)[2]-1*variable_time+level_rel_final
   p=nlevels(data[,n])
 
-  a = mod$prior.distribution
+  posterior<-mod$prior.distribution[[n]] + mod$data.summary[[n]]
+  posterior<-posterior[!is.na(which(posterior[,1])),]
 
-  counts = mod$data.summary
 
-  a_star<-a+prior
-
-  k<-length(a_star[,1])
+  k<-length(posterior[,1])
 
   output<-list()
 
   for(i in 1:k){
-    v<-as.numeric(a_star[i,])
+    v<-as.numeric(posterior[i,])
     m=sum(v)
     output[[i]]<-list()
     for(j in 1:p){

@@ -99,19 +99,12 @@ We can also converted the *Stratified.staged.tree* object into a corresponding *
 pceg1<-ChainEventGraph(ptree)
 plot(pceg1)
 ```
-There are two graphs plotted, but only the final PCEG on the right hand side should be considered. On the left hand side is an intermediate plot used for propagation analysis, and while not particularly useful, is a legacy of the plotting method for the S4 class.
-
 Similarly to the staged tree, any uncoloured node in the PCEG is a singleton *position*. This is once again a function of the plotting method used, and if the PCEG was drawn manually, the positions with non-singleton stages ($w_9$ and $w_{10}$) would be coloured with the corresponding stage colour in the associated Poisson staged tree. 
 
 We now can estimate the posterior expected values of the transition probabilities for the covariates, and the rates for the response. The transition probabilities can be compared to *cov_probs*, while we have included what the PCEG estimate should be for $\lambda$, based on the product of the true $\pi$ and $\lambda$.
-```{r}
-total_value_extractor(knee_pain_obs,ptree,level_exclude = 0, zip=FALSE,dec_place=2)
-value_extractor(knee_pain_obs,ptree,level_rel_final = 0,true_value = pceg_lambda, zip=FALSE,dec_place=2)
-```
-We have used the [total_value_extractor()] function for the covariates, but excluded the level for the response in order to compare that to the true value (using the [value_extractor()] function). We can also access the posterior estimates using the S4 class itself, although without as much detail.
 
 ```{r}
-ptree$posterior.distribution
+ptree$posterior.expectation
 ```
 As can be seen, even though the model is misspecified, it correctly identifies the covariate transition probabilities, and the estimates of the rates are close to what we would expect.
 
