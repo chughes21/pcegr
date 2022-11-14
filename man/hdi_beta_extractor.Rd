@@ -6,7 +6,7 @@
 \usage{
 hdi_beta_extractor(
   data,
-  ceg,
+  mod,
   ci = 0.95,
   N = 10000,
   level_rel_final = -1,
@@ -18,7 +18,7 @@ hdi_beta_extractor(
 \arguments{
 \item{data}{A data set, where the observed count vector and time vector (if variable) are the last two columns}
 
-\item{ceg}{A ceg model fit to the data set, as produced by CEG.AHC.POISS.}
+\item{mod}{A StagedTree model fit to the data set, as produced by \code{\link[=pceg]{pceg()}}.}
 
 \item{ci}{A numeric value between 0 and 1 specifying the perecentage confidence for the highest density interval.}
 
@@ -40,7 +40,7 @@ This function calculates the highest density interval for the parameters of a Di
 The Dirichlet posterior is present for the situations with a categorical response variable in any type of CEG.
 }
 \details{
-This function calculates the highest density interval for the estimated transition probabilities for the situation stages in a PCEG, ZIPCEG or CEG. The expected value itself can be found using \code{\link[=value_extractor]{value_extractor()}}.
+This function calculates the highest density interval for the estimated transition probabilities for the situation stages in a PCEG, ZIPCEG or CEG.
 }
 \examples{
 mod<-pceg(knee_pain_obs,2,TRUE,TRUE)

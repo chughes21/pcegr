@@ -6,7 +6,7 @@
 \usage{
 hdi_gamma_extractor(
   data,
-  ceg,
+  mod,
   ci = 0.95,
   N = 10000,
   variable_time = TRUE,
@@ -16,7 +16,7 @@ hdi_gamma_extractor(
 \arguments{
 \item{data}{A data set, where the observed count vector and time vector (if variable) are the last two columns}
 
-\item{ceg}{A ceg model fit to the data set, as produced by CEG.AHC.POISS.}
+\item{mod}{A StagedTree model fit to the data set, as produced by \code{\link[=pceg]{pceg()}}.}
 
 \item{ci}{A numeric value between 0 and 1 specifying the perecentage confidence for the highest density interval.}
 
@@ -33,7 +33,7 @@ A series of highest density intervals for each parameter.
 This function calculates the highest density interval for the parameters of a Gamma posterior, as with a Poisson response variable.
 }
 \details{
-This function calculates the highest density interval for the estimated rates of the leaf stages in a PCEG or ZIPCEG. The expected value itself can be found using \code{\link[=value_extractor]{value_extractor()}}.
+This function calculates the highest density interval for the estimated rates of the leaf stages in a PCEG or ZIPCEG.
 }
 \examples{
 mod<-pceg(knee_pain_obs,2,TRUE,TRUE)

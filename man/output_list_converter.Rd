@@ -7,7 +7,7 @@
 output_list_converter(mod, poisson_response = TRUE)
 }
 \arguments{
-\item{mod}{A list from the output of the \code{\link[=pceg]{pceg()}} function.}
+\item{mod}{A list created in \code{\link[=pceg]{pceg()}}.}
 
 \item{poisson_response}{A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).}
 }
@@ -15,9 +15,5 @@ output_list_converter(mod, poisson_response = TRUE)
 A list for the prior distribution and a list for the posterior distribution.
 }
 \description{
-A function to transform the list of prior and data outputs into the S4 class versions of the prior and posterior.
-}
-\examples{
-pmod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-output_list_converter(pmod,TRUE)
+A function to transform the list of prior and data outputs into the S3 class versions of the prior and posterior.
 }

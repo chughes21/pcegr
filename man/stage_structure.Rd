@@ -4,22 +4,16 @@
 \alias{stage_structure}
 \title{The Stage Structure Function}
 \usage{
-stage_structure(mod, score = 0, zip = FALSE)
+stage_structure(mod, zip = FALSE)
 }
 \arguments{
-\item{mod}{A list detailing the output from \code{\link[=pceg]{pceg()}}}
-
-\item{score}{A numeric vector detailing the change in score for each level of the tree}
+\item{mod}{A list created in \code{\link[=pceg]{pceg()}}.}
 
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
 }
 \value{
-A list specifying the stage structure from the output of \code{\link[=pceg]{pceg()}} in a way that is compatible with the "Stratified.staged.tree" S4 class.
+A list specifying the stage structure from the output of \code{\link[=pceg]{pceg()}} in a way that is compatible with the StagedTree S3 class.
 }
 \description{
-This function takes a pceg model and creates a stage structure that is compatible with the "Stratified.staged.tree" S4 class.
-}
-\examples{
-mod1<-pceg(knee_pain_obs,2,TRUE,TRUE)
-stage_structure(mod1)
+This function takes a list of inputs and creates a stage structure that is compatible with the StagedTree S3 class.
 }
