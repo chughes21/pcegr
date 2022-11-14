@@ -169,3 +169,21 @@ plot.ChainEventGraph<-function(x,y, ...){
   local(x,...)
 }
 
+summary.StagedTree<-function(object, ...){
+  local<-function(object){
+    print("Merged Stages")
+    print(object$result)
+    print("Posterior Expectations")
+    print(object$posterior.expectation)
+    print("Log Marginal Likelihood")
+    print(object$score)
+  }
+  local(object, ...)
+}
+
+summary.ChainEventGraph<-function(object, ...){
+  local<-function(object){
+    summary(object$staged.tree)
+  }
+  local(object, ...)
+}
