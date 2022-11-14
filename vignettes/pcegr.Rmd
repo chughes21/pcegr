@@ -190,8 +190,8 @@ plot(ziptree2)
 ```
 The staged tree matches the result from using the Gibbs sampler. Comparing the two ZIPCEG models fitted, the Bayes Factor appears to favour the *nlm* method while the Chi square barely favours the Gibbs sampler.
 ```{r}
-zipmod1$model.score-zipmod2$model.score
-chi_sq_calculator(knee_pain_obs,zipmod1)$chi_sq-chi_sq_calculator(knee_pain_obs,zipmod2)$chi_sq
+ziptree1$model.score-ziptree2$model.score
+chi_sq_calculator(knee_pain_obs,ziptree1)$chi_sq-chi_sq_calculator(knee_pain_obs,ziptree2)$chi_sq
 ```
 
 ## ZIPCEG Stability Analysis
