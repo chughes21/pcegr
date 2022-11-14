@@ -219,7 +219,7 @@ output_list_converter<-function(mod,poisson_response=TRUE){
       post_out[[i]]<-sum_out/rowSums(sum_out)
       }
     }
-  return(list(prior=prior_out,posterior=post_out))
+  return(list(prior=prior_out,data=data_out,posterior=post_out))
 }
 
 

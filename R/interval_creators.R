@@ -18,9 +18,10 @@
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' hdi_gamma_extractor(knee_pain_obs,mod,zip=FALSE)
 hdi_gamma_extractor<-function(data,mod,ci=0.95,N=10000,variable_time=TRUE,zip=TRUE){
-  summ<-value_extractor(data=data,ceg=mod,variable_time = variable_time,zip=zip)
-  shapes<-summ[,1]+summ[,3]
-  scales<-1/(summ[,2]+summ[,4])
+  posterior<-mod$prior.distribution + mod$data.summary
+  posterior<-posterior[!is.na(which(posterior[,1])),]
+  shapes<-posterior[,1]
+  scales<-1/(posterior[,2])
   n=length(shapes)
   output<-list()
   for(i in 1:n){
@@ -53,15 +54,16 @@ hdi_gamma_extractor<-function(data,mod,ci=0.95,N=10000,variable_time=TRUE,zip=TR
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' hdi_beta_extractor(knee_pain_obs,mod,zip=FALSE)
 hdi_beta_extractor<-function(data,mod,ci=0.95,N=10000,level_rel_final=-1,poisson_response=TRUE,variable_time = TRUE,zip=TRUE){
-  summ<-value_extractor(data=data,ceg=mod,level_rel_final = level_rel_final,poisson_response = poisson_response,variable_time = variable_time,zip=zip)
+
   if(level_rel_final == 0 & poisson_response){
     stop("Beta Distribution not for Poisson Response - Use Gamma")
   }
   n=dim(data)[2]-1*variable_time+level_rel_final
   p=nlevels(data[,n])
 
-  a<-summ[,1:p]
-  prior<-summ[,(p+1):(2*p)]
+  a = mod$prior.distribution
+
+  counts = mod$data.summary
 
   a_star<-a+prior
 

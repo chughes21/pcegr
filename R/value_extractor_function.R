@@ -5,7 +5,7 @@
 #' This function is capable of calculating the expected rate for the leaf stages in a PCEG or ZIPCEG, or the expected transition probabilities of the situation stages in any type of CEG.
 #'
 #' @param data A data set, where the observed response vector and time vector (if applicable and variable) are the last two columns
-#' @param ceg A ceg model fit to the data set, as produced by pceg().
+#' @param mod A StagedTree model fit to the data set, as produced by pceg().
 #' @param level_rel_final A non-positive integer indicating where the desired variable is relative to the response variable.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
@@ -20,7 +20,7 @@
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' value_extractor(knee_pain_obs,mod,zip=FALSE)
-value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA, true_value = NA){
+value_extractor<-function(data,mod,level_rel_final = 0,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA, true_value = NA){
 
   if(!poisson_response & zip){
     stop("Zero Inflated Poisson Requires Poisson Response")
@@ -49,12 +49,12 @@ value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,var
     start<-1
     end<-1
   }
-  ind<-ceg$stages
+  ind<-mod$stages
   ind<-ind[ind>=start & ind<=end]
 
   true_value_input<-!all(is.na(true_value)) #could also do any(!is.na)
 
-  p=length(ceg$data[[ind[1]]])
+  p=length(mod$data[[ind[1]]])
 
   k1<-3*p
   k2<- k1 +1*true_value_input
@@ -80,9 +80,9 @@ value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,var
   }
 
   for(i in seq_along(ind)){
-    out.mat[i,1:p]<-ceg$data[[ind[i]]]
+    out.mat[i,1:p]<-mod$data[[ind[i]]]
     if(posterior){
-      out.mat[i,(p+1):(2*p)]<-ceg$prior[[ind[i]]]
+      out.mat[i,(p+1):(2*p)]<-mod$prior[[ind[i]]]
     }else{
       out.mat[i,(p+1):(2*p)]<-0
     }
@@ -122,7 +122,7 @@ value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,var
 #' This function is the [value_extractor()] function repeated at each level.
 #'
 #' @param data A data set, where the observed response vector and time vector (if applicable and variable) are the last two columns
-#' @param ceg A ceg model fit to the data set, as produced by pceg().
+#' @param mod A mod model fit to the data set, as produced by pceg().
 #' @param level_exclude A non-positive integer integer indicating which variables (if any) should be excluded from the output, is relative to the response variable.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
@@ -136,7 +136,7 @@ value_extractor<-function(data,ceg,level_rel_final = 0,poisson_response=TRUE,var
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' total_value_extractor(knee_pain_obs,mod,zip=FALSE)
-total_value_extractor<-function(data,ceg,level_exclude = NA,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA){
+total_value_extractor<-function(data,mod,level_exclude = NA,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA){
   n<-dim(data)[2]-1*variable_time + 1*zip
 
   ind<-c(-(n-1):0)
@@ -147,7 +147,7 @@ total_value_extractor<-function(data,ceg,level_exclude = NA,poisson_response=TRU
 
   for(i in ind){
     print(paste0("Level ",n+i,"- ",colnames(data)[n+i]))
-    print(value_extractor(data,ceg,level_rel_final = i,poisson_response,variable_time,posterior,zip,dec_place))
+    print(value_extractor(data,mod,level_rel_final = i,poisson_response,variable_time,posterior,zip,dec_place))
   }
 }
 

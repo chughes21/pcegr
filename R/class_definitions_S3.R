@@ -23,11 +23,11 @@ EventTree<-function(data,poisson_response = TRUE, variable_time=TRUE){
             })
             return(structure( list(num.variable = num.variable,
                        num.category = num.category, label.category = label.category, num.situation = num.situation,
-                       num.slice = num.slice, mergedlist = mergedlist, poisson.response = poisson_response),class="EventTree"))
+                       num.slice = num.slice, situation.list = mergedlist, poisson.response = poisson_response),class="EventTree"))
           }
 
 
-StagedTree<-function(data,prior,posterior,stage.struc,stages,merged,result,poisson_response = TRUE, variable_time = TRUE,zip=FALSE,lik = 0){
+StagedTree<-function(data,prior,counts,posterior,stage.struc,stages,merged,result,poisson_response = TRUE, variable_time = TRUE,zip=FALSE,lik = 0){
   if(!poisson_response & variable_time){
     stop("Variable time requires a Poisson response")
   }
@@ -47,7 +47,7 @@ StagedTree<-function(data,prior,posterior,stage.struc,stages,merged,result,poiss
   event.tree<-EventTree(data.final,poisson_response,variable_time)
 
   return(structure(list(event.tree = event.tree,stages = stages, merged = merged, stage.structure = stage.struc,
-                   result = result,stage.probability = list(), prior.distribution=prior, posterior.distribution=posterior,
+                   result = result, prior.distribution=prior, data.summary = counts, posterior.expectation=posterior,
                    model.score=lik),class="StagedTree"))
 }
 
