@@ -115,11 +115,6 @@ ChainEventGraph<-function(staged.tree){
 #' @param x An object in the S3 class EventTree
 #'
 #' @return A plot of the EventTree
-#' @export
-#'
-#' @examples
-#' tree<-EventTree(knee_pain_obs,TRUE,TRUE)
-#' plot(tree)
 plot.EventTree<-function(x, ... ){
             event.tree.graph <- EventTreeGraph1(x)
             g <- new("graphNEL", nodes = event.tree.graph$node$nodes,
@@ -158,11 +153,6 @@ plot.EventTree<-function(x, ... ){
 #' @param x An object in the S3 class StagedTree
 #'
 #' @return A plot of the StagedTree
-#' @export
-#'
-#' @examples
-#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-#' plot(mod)
 plot.StagedTree<-function(x){
 
   staged.tree.graph <- TreeGraph1(x$event.tree, x$stage.structure)
@@ -200,12 +190,6 @@ plot.StagedTree<-function(x){
 #' @param x An object in the S3 class ChainEventGraph
 #'
 #' @return A plot of the ChainEventGraph
-#' @export
-#'
-#' @examples
-#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-#' ceg<-ChainEventGraph(mod)
-#' plot(ceg)
 plot.ChainEventGraph<-function(x){
     ceg.graph.simple <- CegGraphSimple1(x$staged.tree$event.tree,
                                        x$position)
@@ -250,11 +234,6 @@ plot.ChainEventGraph<-function(x){
 #' @param object An object in the S3 class StagedTree
 #'
 #' @return A summary of the StagedTree object, displaying the makeup of each stage, the posterior expectations, and the score.
-#' @export
-#'
-#' @examples
-#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-#' summary(mod)
 summary.StagedTree<-function(object){
     print("Merged Stages")
     print(object$result)
@@ -270,12 +249,6 @@ summary.StagedTree<-function(object){
 #' @param object An object in the S3 class ChainEventGraph
 #'
 #' @return A summary of the StagedTree object within the ChainEventGraph object, displaying the makeup of each stage, the posterior expectations, and the score.
-#' @export
-#'
-#' @examples
-#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-#' ceg<-ChainEventGraph(mod)
-#' summary(ceg)
 summary.ChainEventGraph<-function(object){
     summary(object$staged.tree)
 }

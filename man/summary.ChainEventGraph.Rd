@@ -15,8 +15,3 @@ A summary of the StagedTree object within the ChainEventGraph object, displaying
 \description{
 The \code{\link[=summary]{summary()}} method for the S3 Class ChainEventGraph
 }
-\examples{
-mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-ceg<-ChainEventGraph(mod)
-summary(ceg)
-}

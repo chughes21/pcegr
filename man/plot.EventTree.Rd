@@ -15,7 +15,3 @@ A plot of the EventTree
 \description{
 The \code{\link[=plot]{plot()}} method for the S3 Class EventTree
 }
-\examples{
-tree<-EventTree(knee_pain_obs,TRUE,TRUE)
-plot(tree)
-}

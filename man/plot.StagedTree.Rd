@@ -15,7 +15,3 @@ A plot of the StagedTree
 \description{
 The \code{\link[=plot]{plot()}} method for the S3 Class StagedTree
 }
-\examples{
-mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-plot(mod)
-}

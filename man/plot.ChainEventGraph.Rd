@@ -15,8 +15,3 @@ A plot of the ChainEventGraph
 \description{
 The \code{\link[=plot]{plot()}} method for the S3 Class ChainEventGraph
 }
-\examples{
-mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-ceg<-ChainEventGraph(mod)
-plot(ceg)
-}

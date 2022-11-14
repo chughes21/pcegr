@@ -15,7 +15,3 @@ A summary of the StagedTree object, displaying the makeup of each stage, the pos
 \description{
 The \code{\link[=summary]{summary()}} method for the S3 Class StagedTree
 }
-\examples{
-mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-summary(mod)
-}
