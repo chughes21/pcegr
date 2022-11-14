@@ -110,6 +110,18 @@ ChainEventGraph<-function(staged.tree){
              position = position),class="ChainEventGraph"))
 }
 
+#' The [plot()] method for the S3 Class EventTree
+#'
+#' @param x An object in the S3 class EventTree
+#' @param y An unused input
+#' @param ... Any  additional inputs to the [plot()] function
+#'
+#' @return A plot of the EventTree
+#' @export
+#'
+#' @examples
+#' tree<-EventTree(knee_pain_obs,TRUE,TRUE)
+#' plot(tree)
 plot.EventTree<-function(x,y, ... ){
   local<-function(x){
             event.tree.graph <- EventTreeGraph1(x)
@@ -146,6 +158,18 @@ plot.EventTree<-function(x,y, ... ){
   local(x , ... )
 }
 
+#' The [plot()] method for the S3 Class StagedTree
+#'
+#' @param x An object in the S3 class StagedTree
+#' @param y An unused input
+#' @param ... Any  additional inputs to the [plot()] function
+#'
+#' @return A plot of the StagedTree
+#' @export
+#'
+#' @examples
+#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+#' plot(mod)
 plot.StagedTree<-function(x,y, ... ){
 
   local<-function(x){
@@ -180,6 +204,19 @@ plot.StagedTree<-function(x,y, ... ){
   local(x,...)
 }
 
+#' The [plot()] method for the S3 Class ChainEventGraph
+#'
+#' @param x An object in the S3 class ChainEventGraph
+#' @param y An unused input
+#' @param ... Any  additional inputs to the [plot()] function
+#'
+#' @return A plot of the ChainEventGraph
+#' @export
+#'
+#' @examples
+#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+#' ceg<-ChainEventGraph(mod)
+#' plot(ceg)
 plot.ChainEventGraph<-function(x,y, ...){
   local<-function(x){
     ceg.graph.simple <- CegGraphSimple1(x$staged.tree$event.tree,
@@ -221,6 +258,17 @@ plot.ChainEventGraph<-function(x,y, ...){
   local(x,...)
 }
 
+#' The [summary()] method for the S3 Class StagedTree
+#'
+#' @param object An object in the S3 class StagedTree
+#' @param ... Any additional inputs to the [summary()] function
+#'
+#' @return A summary of the StagedTree object, displaying the makeup of each stage, the posterior expectations, and the score.
+#' @export
+#'
+#' @examples
+#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+#' summary(mod)
 summary.StagedTree<-function(object, ...){
   local<-function(object){
     print("Merged Stages")
@@ -233,6 +281,18 @@ summary.StagedTree<-function(object, ...){
   local(object, ...)
 }
 
+#' The [summary()] method for the S3 Class ChainEventGraph
+#'
+#' @param object An object in the S3 class ChainEventGraph
+#' @param ... Any additional inputs to the [summary()] function
+#'
+#' @return A summary of the StagedTree object within the ChainEventGraph object, displaying the makeup of each stage, the posterior expectations, and the score.
+#' @export
+#'
+#' @examples
+#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+#' ceg<-ChainEventGraph(mod)
+#' summary(ceg)
 summary.ChainEventGraph<-function(object, ...){
   local<-function(object){
     summary(object$staged.tree)
