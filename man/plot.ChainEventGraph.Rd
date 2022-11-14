@@ -4,14 +4,10 @@
 \alias{plot.ChainEventGraph}
 \title{The \code{\link[=plot]{plot()}} method for the S3 Class ChainEventGraph}
 \usage{
-plot.ChainEventGraph(x, y, ...)
+plot.ChainEventGraph(x)
 }
 \arguments{
 \item{x}{An object in the S3 class ChainEventGraph}
-
-\item{y}{An unused input}
-
-\item{...}{Any  additional inputs to the \code{\link[=plot]{plot()}} function}
 }
 \value{
 A plot of the ChainEventGraph

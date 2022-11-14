@@ -4,14 +4,10 @@
 \alias{plot.EventTree}
 \title{The \code{\link[=plot]{plot()}} method for the S3 Class EventTree}
 \usage{
-plot.EventTree(x, y, ...)
+plot.EventTree(x, ...)
 }
 \arguments{
 \item{x}{An object in the S3 class EventTree}
-
-\item{y}{An unused input}
-
-\item{...}{Any  additional inputs to the \code{\link[=plot]{plot()}} function}
 }
 \value{
 A plot of the EventTree

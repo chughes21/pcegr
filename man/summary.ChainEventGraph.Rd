@@ -4,12 +4,10 @@
 \alias{summary.ChainEventGraph}
 \title{The \code{\link[=summary]{summary()}} method for the S3 Class ChainEventGraph}
 \usage{
-\method{summary}{ChainEventGraph}(object, ...)
+\method{summary}{ChainEventGraph}(object)
 }
 \arguments{
 \item{object}{An object in the S3 class ChainEventGraph}
-
-\item{...}{Any additional inputs to the \code{\link[=summary]{summary()}} function}
 }
 \value{
 A summary of the StagedTree object within the ChainEventGraph object, displaying the makeup of each stage, the posterior expectations, and the score.

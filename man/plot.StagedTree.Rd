@@ -4,14 +4,10 @@
 \alias{plot.StagedTree}
 \title{The \code{\link[=plot]{plot()}} method for the S3 Class StagedTree}
 \usage{
-plot.StagedTree(x, y, ...)
+plot.StagedTree(x)
 }
 \arguments{
 \item{x}{An object in the S3 class StagedTree}
-
-\item{y}{An unused input}
-
-\item{...}{Any  additional inputs to the \code{\link[=plot]{plot()}} function}
 }
 \value{
 A plot of the StagedTree

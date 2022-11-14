@@ -113,8 +113,6 @@ ChainEventGraph<-function(staged.tree){
 #' The [plot()] method for the S3 Class EventTree
 #'
 #' @param x An object in the S3 class EventTree
-#' @param y An unused input
-#' @param ... Any  additional inputs to the [plot()] function
 #'
 #' @return A plot of the EventTree
 #' @export
@@ -122,8 +120,7 @@ ChainEventGraph<-function(staged.tree){
 #' @examples
 #' tree<-EventTree(knee_pain_obs,TRUE,TRUE)
 #' plot(tree)
-plot.EventTree<-function(x,y, ... ){
-  local<-function(x){
+plot.EventTree<-function(x, ... ){
             event.tree.graph <- EventTreeGraph1(x)
             g <- new("graphNEL", nodes = event.tree.graph$node$nodes,
                      edgeL = event.tree.graph$edge$edges, edgemode = "directed")
@@ -154,15 +151,11 @@ plot.EventTree<-function(x,y, ... ){
             Rgraphviz::plot(g, main = "Event Tree Graph",
                             nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
             grDevices::dev.off()
-  }
-  local(x , ... )
 }
 
 #' The [plot()] method for the S3 Class StagedTree
 #'
 #' @param x An object in the S3 class StagedTree
-#' @param y An unused input
-#' @param ... Any  additional inputs to the [plot()] function
 #'
 #' @return A plot of the StagedTree
 #' @export
@@ -170,9 +163,8 @@ plot.EventTree<-function(x,y, ... ){
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' plot(mod)
-plot.StagedTree<-function(x,y, ... ){
+plot.StagedTree<-function(x){
 
-  local<-function(x){
   staged.tree.graph <- TreeGraph1(x$event.tree, x$stage.structure)
   g <- new("graphNEL", nodes = staged.tree.graph$node$nodes,
            edgeL = staged.tree.graph$edge$edges, edgemode = "directed")
@@ -200,15 +192,12 @@ plot.StagedTree<-function(x,y, ... ){
   Rgraphviz::plot(g, main = "Staged Tree Graph",
                   nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
   grDevices::dev.off()
-  }
-  local(x,...)
+
 }
 
 #' The [plot()] method for the S3 Class ChainEventGraph
 #'
 #' @param x An object in the S3 class ChainEventGraph
-#' @param y An unused input
-#' @param ... Any  additional inputs to the [plot()] function
 #'
 #' @return A plot of the ChainEventGraph
 #' @export
@@ -217,8 +206,7 @@ plot.StagedTree<-function(x,y, ... ){
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' ceg<-ChainEventGraph(mod)
 #' plot(ceg)
-plot.ChainEventGraph<-function(x,y, ...){
-  local<-function(x){
+plot.ChainEventGraph<-function(x){
     ceg.graph.simple <- CegGraphSimple1(x$staged.tree$event.tree,
                                        x$position)
     g <- new("graphNEL", nodes = ceg.graph.simple$node$nodes,
@@ -254,14 +242,12 @@ plot.ChainEventGraph<-function(x,y, ...){
     Rgraphviz::plot(g, main = "Chain Event Graph",
                     nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
     grDevices::dev.off()
-  }
-  local(x,...)
+
 }
 
 #' The [summary()] method for the S3 Class StagedTree
 #'
 #' @param object An object in the S3 class StagedTree
-#' @param ... Any additional inputs to the [summary()] function
 #'
 #' @return A summary of the StagedTree object, displaying the makeup of each stage, the posterior expectations, and the score.
 #' @export
@@ -269,22 +255,19 @@ plot.ChainEventGraph<-function(x,y, ...){
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' summary(mod)
-summary.StagedTree<-function(object, ...){
-  local<-function(object){
+summary.StagedTree<-function(object){
     print("Merged Stages")
     print(object$result)
     print("Posterior Expectations")
     print(object$posterior.expectation)
     print("Log Marginal Likelihood")
     print(object$model.score)
-  }
-  local(object, ...)
+
 }
 
 #' The [summary()] method for the S3 Class ChainEventGraph
 #'
 #' @param object An object in the S3 class ChainEventGraph
-#' @param ... Any additional inputs to the [summary()] function
 #'
 #' @return A summary of the StagedTree object within the ChainEventGraph object, displaying the makeup of each stage, the posterior expectations, and the score.
 #' @export
@@ -293,9 +276,6 @@ summary.StagedTree<-function(object, ...){
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' ceg<-ChainEventGraph(mod)
 #' summary(ceg)
-summary.ChainEventGraph<-function(object, ...){
-  local<-function(object){
+summary.ChainEventGraph<-function(object){
     summary(object$staged.tree)
-  }
-  local(object, ...)
 }

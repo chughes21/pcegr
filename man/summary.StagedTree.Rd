@@ -4,12 +4,10 @@
 \alias{summary.StagedTree}
 \title{The \code{\link[=summary]{summary()}} method for the S3 Class StagedTree}
 \usage{
-\method{summary}{StagedTree}(object, ...)
+\method{summary}{StagedTree}(object)
 }
 \arguments{
 \item{object}{An object in the S3 class StagedTree}
-
-\item{...}{Any additional inputs to the \code{\link[=summary]{summary()}} function}
 }
 \value{
 A summary of the StagedTree object, displaying the makeup of each stage, the posterior expectations, and the score.
