@@ -148,6 +148,8 @@ chi_sq_calculator<-function(data,mod,limit=4,poisson_response=TRUE,variable_time
   seq_prob<-seq(start_probs,end_probs)
   if(zip){
     seq_rate<-seq(start_rates+1,end_rates,by=2)
+    seq_temp<-seq_rate-(start_rates-1)
+    rates<-rates[c(1,seq_temp)]
   }else{
     seq_rate<-seq(start_rates,end_rates)
   }

@@ -158,7 +158,7 @@ First, we see that, by design, all of the risk free leaves are in the same stage
 
 We now compare the goodness of fit to the PCEG. First, we calculate the log marginal likelihood and the Chi-square calculation. 
 ```{r}
-ziptree11$lik
+ziptree1$model.score
 chi_sq_calculator(knee_pain_obs,ziptree1,zip=TRUE,dec_place=2)
 ```
 We can see that the Chi-square value is significantly lower for the ZIPCEG model, which is to be expected as the model was simulated assuming a zero-inflated Poisson distribution.
