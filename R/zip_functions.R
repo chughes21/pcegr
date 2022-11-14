@@ -270,10 +270,9 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, p
     ind_probs<-ind[ind>=start_probs & ind<=end_probs]
     ind_rates<-ind[ind>=start_rates & ind<=end_rates]
 
-    rates.temp<-value_extractor(data,ceg.temp,level_rel_final=0,poisson_response=poisson_response,variable_time=variable_time,posterior=posterior,zip=TRUE)
-    probs.temp<-value_extractor(data,ceg.temp,level_rel_final=-1,poisson_response,variable_time,posterior=posterior,zip=TRUE) #if zip=FALSE, we'll ignore this anyway
+    rates.temp<-ceg.temp$posterior.expectation[[n_zip+1]]
+    probs.temp<-ceg.temp$posterior.expectation[[n_zip]]
 
-    rates.temp<-rates.temp[,dim(rates.temp)[2]] #if start inputting true values, this may be incorrect
     probs.temp<-probs.temp[,dim(probs.temp)[2]]
 
     seq_prob<-seq(start_probs,end_probs)
