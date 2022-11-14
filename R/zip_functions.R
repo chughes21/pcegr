@@ -362,11 +362,11 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, p
       probs[i,]<-probs.temp[tree$prob_stage]
     }
 
-    score[i]<-ceg.temp$lik
+    score[i]<-ceg.temp$model.score
 
     if(i==1){
       map_mod<-ceg.temp
-      map_score<-map_mod$lik
+      map_score<-map_mod$model.score
     }
     if(i>1){
       if(score[i]>map_score){
