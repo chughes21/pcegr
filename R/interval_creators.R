@@ -22,7 +22,7 @@ hdi_gamma_extractor<-function(data,mod,ci=0.95,N=10000,variable_time=TRUE,zip=TR
   n<-dim(data)[2]-1*variable_time
 
   posterior<-mod$prior.distribution[[n]] + mod$data.summary[[n]]
-  posterior<-posterior[!is.na(which(posterior[,1])),]
+  posterior<-posterior[which(!is.na(posterior[,1])),]
   shapes<-posterior[,1]
   scales<-1/(posterior[,2])
   m=length(shapes)
@@ -65,7 +65,7 @@ hdi_beta_extractor<-function(data,mod,ci=0.95,N=10000,level_rel_final=-1,poisson
   p=nlevels(data[,n])
 
   posterior<-mod$prior.distribution[[n]] + mod$data.summary[[n]]
-  posterior<-posterior[!is.na(which(posterior[,1])),]
+  posterior<-posterior[which(!is.na(posterior[,1])),]
 
 
   k<-length(posterior[,1])
