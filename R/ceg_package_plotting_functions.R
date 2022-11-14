@@ -95,13 +95,18 @@ NodeColor1<-function (num.variable, num.situation, num.category, stage.structure
   if (range.color == 1) {
     color <- palette()
     color[1] <- "white"
+    start_count<-2
   }
   else {
     if (range.color == 2) {
       color <- colors(1)
       color <- color[-21]
+      start_count<-1
     }
   }
+
+  max_count<-length(color)
+
   for (i in 2:num.variable) {
     for (j in 1:num.situation[i]) {
       if (!is.na(stage.structure[[i]][[j]][1])) {
@@ -111,6 +116,9 @@ NodeColor1<-function (num.variable, num.situation, num.category, stage.structure
           result[stage.structure[[i]][[j]] +
                    total.node[i - 1]] <- color[count]
           count <- count + 1
+          if(count > max_count){
+            count<-start_count
+          }
         }
       }
     }
