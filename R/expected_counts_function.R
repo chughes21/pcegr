@@ -154,7 +154,7 @@ chi_sq_calculator<-function(data,mod,limit=4,poisson_response=TRUE,variable_time
     seq_rate<-seq(start_rates,end_rates)
   }
 
-  if(zip==TRUE){
+  if(zip){
     tree<-cbind(tree,prob_stage=seq_prob,rate_stage=seq_rate)
   }else{
     tree<-cbind(tree,rate_stage=seq_rate)

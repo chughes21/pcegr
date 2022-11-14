@@ -284,6 +284,9 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, p
       tree$rate_stage<-seq_rate
     }
 
+    seq_temp<-seq_rate-(start_rates-1)
+    rates.temp<-rates.temp[c(1,seq_temp)]
+
     merged<-ceg.temp$merged
     m<-max(merged[3,])
     m_prob<-m-1
