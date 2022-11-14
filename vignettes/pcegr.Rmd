@@ -75,7 +75,7 @@ We can see that the data sets are identical, except for the State variable. In o
 We can view the event tree for this observed data set. 
 
 ```{r}
-plot(event.tree.creator(knee_pain_obs))
+plot(EventTree(knee_pain_obs))
 ```
 
 We see that the nodes corresponding to the Poisson response, $s_7 - s_{14}$ have one outgoing edge, labelled $y$. This is in order to be compatible with the plotting function. If this was drawn manually, we would have these as leaves $l_1 - l_8$ with no outgoing edge.
@@ -88,8 +88,7 @@ This effective sample size is propagated through the tree, and at each level is 
 
 We use the *pceg()* function to fit the model. The outputs from this function include the final stage structure through the *result* component. The outputs from *pceg()* will generally be used for analysis, but in order to plot the resultant Poisson staged tree, the output must be converted into a *Stratified.staged.tree* S4 class from the *ceg* package. Once converted, this can then be plotted.
 ```{r}
-pmod<-pceg(knee_pain_obs,2,TRUE,TRUE, gamma_alpha = 0.25,gamma_beta = 0.1)
-ptree<-staged.tree.creator(knee_pain_obs,pmod)
+ptree<-pceg(knee_pain_obs,2,TRUE,TRUE, gamma_alpha = 0.25,gamma_beta = 0.1)
 plot(ptree)
 ```
 First, we note that that any node that is uncoloured is a singleton stage. We can see that the model has correctly identified that the individuals of either Age who are Overweight with a History of injury are in the same stage ($s_{10} / l_4$ and $s_{14}/l_8$), and likewise for those with No History ($s_{9}/l_3$ and $s_{13}/l_7$). The model has also correctly identified that History is independent of Weight given Age ($s_{3}$ and $s_{4}$ versus $s_{5}$ and $s_{6}$). 
@@ -97,7 +96,7 @@ First, we note that that any node that is uncoloured is a singleton stage. We ca
 We can also converted the *Stratified.staged.tree* object into a corresponding *Stratified.ceg.model* S4 object from *ceg*, and plot this.
 
 ```{r}
-pceg1<-sceg(ptree)
+pceg1<-ChainEventGraph(ptree)
 plot(pceg1)
 ```
 There are two graphs plotted, but only the final PCEG on the right hand side should be considered. On the left hand side is an intermediate plot used for propagation analysis, and while not particularly useful, is a legacy of the plotting method for the S4 class.
@@ -106,31 +105,31 @@ Similarly to the staged tree, any uncoloured node in the PCEG is a singleton *po
 
 We now can estimate the posterior expected values of the transition probabilities for the covariates, and the rates for the response. The transition probabilities can be compared to *cov_probs*, while we have included what the PCEG estimate should be for $\lambda$, based on the product of the true $\pi$ and $\lambda$.
 ```{r}
-total_value_extractor(knee_pain_obs,pmod,level_exclude = 0, zip=FALSE,dec_place=2)
-value_extractor(knee_pain_obs,pmod,level_rel_final = 0,true_value = pceg_lambda, zip=FALSE,dec_place=2)
+total_value_extractor(knee_pain_obs,ptree,level_exclude = 0, zip=FALSE,dec_place=2)
+value_extractor(knee_pain_obs,ptree,level_rel_final = 0,true_value = pceg_lambda, zip=FALSE,dec_place=2)
 ```
 We have used the [total_value_extractor()] function for the covariates, but excluded the level for the response in order to compare that to the true value (using the [value_extractor()] function). We can also access the posterior estimates using the S4 class itself, although without as much detail.
 
 ```{r}
-ptree@posterior.distribution
+ptree$posterior.distribution
 ```
 As can be seen, even though the model is misspecified, it correctly identifies the covariate transition probabilities, and the estimates of the rates are close to what we would expect.
 
 We can also find 95% highest density intervals for these parameters. For example, the 95% HDIs for the rates and risk probabilities:
 ```{r}
 print("Poisson Rate Estimates")
-hdi_gamma_extractor(knee_pain_obs,pmod,zip=FALSE)
+hdi_gamma_extractor(knee_pain_obs,ptree,zip=FALSE)
 print("")
 print("History of Injury Transition Probability Estimates")
-hdi_beta_extractor(knee_pain_obs,pmod,level_rel_final = -1, zip=FALSE)
+hdi_beta_extractor(knee_pain_obs,ptree,level_rel_final = -1, zip=FALSE)
 ```
 For a Poisson response, we use the Gamma function, but for the transition probabilities we use the Beta function. The intervals can be quite tight, which should be expected given the sample sizes. 
 
 We can also check the log marginal likelihood and Chi-square calculation for the model, to assess the fit. 
 
 ```{r}
-pmod$lik
-chi_sq_calculator(knee_pain_obs,pmod,zip=FALSE,dec_place=2)
+ptree$lik
+chi_sq_calculator(knee_pain_obs,ptree,zip=FALSE,dec_place=2)
 ```
 In the Chi-square contribution matrix, we can see some large values. In particular, for the leaves with low rates, like $l_1$, we can see large contributions for the higher event counts. This is because there are a much higher number of observed counts than we would expect based on the small rate. In contrast, for the leaves with higher rates, such as 4, 6 and 8, we can see that the contributions for the zero counts are much higher. This is because there are much more observed zero counts than would be expected with such a high rate. 
 
@@ -172,18 +171,18 @@ We can see that the Chi-square value is significantly lower for the ZIPCEG model
 As for the log marginal likelihood, this is not directly comparable to the PCEG model, due to the extra covariate and different priors. The key here is to fit a ZIPCEG model to the data with the same prior as the regular ZIPCEG model, except every individual is assumed to be at risk. This can be done with the *pceg* function as follows:
 ```{r}
 data.risk<-state_imputer(knee_pain_obs,all_risk=TRUE)
-pmod.bf<-pceg(data.risk,2,TRUE,TRUE,TRUE,gamma_alpha=a,gamma_beta=b)
-pmod.bf$lik
+ptree.bf<-pceg(data.risk,2,TRUE,TRUE,TRUE,gamma_alpha=a,gamma_beta=b)
+ptree.bf$lik
 ```
 This is the exact same model as the regular PCEG, except we can see that the log marginal likelihood has decreased.
 
 ```{r}
-pmod.bf$lik-pmod$lik
+ptree.bf$lik-ptree$lik
 ```
 
 This log marginal likelihood is now comparable to the ZIPCEG.
 ```{r}
-zipmod1$lik-pmod.bf$lik
+zipmod1$lik-ptree.bf$lik
 ```
 Hence, the ZIPCEG is a significantly better fit to the data than the PCEG according to the log Bayes factor also. 
 

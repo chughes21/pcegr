@@ -27,7 +27,7 @@ EventTree<-function(data,poisson_response = TRUE, variable_time=TRUE){
           }
 
 
-StagedTree<-function(data,prior,posterior,stage.struc,merged,result,poisson_response = TRUE, variable_time = TRUE,zip=FALSE,lik = 0){
+StagedTree<-function(data,prior,posterior,stage.struc,stages,merged,result,poisson_response = TRUE, variable_time = TRUE,zip=FALSE,lik = 0){
   if(!poisson_response & variable_time){
     stop("Variable time requires a Poisson response")
   }
@@ -46,8 +46,7 @@ StagedTree<-function(data,prior,posterior,stage.struc,merged,result,poisson_resp
 
   event.tree<-EventTree(data.final,poisson_response,variable_time)
 
-  return(structure(list(event.tree = event.tree,
-                   situation = list(), contingency.table = list(), merged = merged, stage.structure = stage.struc,
+  return(structure(list(event.tree = event.tree,stages = stages, merged = merged, stage.structure = stage.struc,
                    result = result,stage.probability = list(), prior.distribution=prior, posterior.distribution=posterior,
                    model.score=lik),class="StagedTree"))
 }

@@ -605,12 +605,12 @@ pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FAL
 
   result<-mergedlist[stages]
   newlist <-list(prior=prior ,data=data ,numb=numb_out,stages=stages ,result=result ,score=score ,
-                 merged=merged_out ,comparisonset=comparisonset ,lik=lik)
+                 merged=merged_out ,comparisonset=comparisonset ,lik=lik) #old output
 
-  ol<-output_list_converter(newlist,poisson_response)
-  ss<-stage_structure(newlist,zip)
+  ol<-output_list_converter(newlist,poisson_response) #functions to convert old output to new
+  ss<-stage_structure(newlist,zip) #functions to convert old output to new
 
-  mod<-StagedTree(exampledata,ol$prior,ol$posterior,ss,merged_out,result,poisson_response,variable_time,zip,lik)
+  mod<-StagedTree(exampledata,ol$prior,ol$posterior,ss,stages,merged_out,result,poisson_response,variable_time,zip,lik)
 
   return(mod)
 }
