@@ -2,4 +2,5 @@
 ^\.Rproj\.user$
 ^data-raw$
 workflow.R
-class_definitions_S4
+class_definitions_S4.R
+deleted_function.R

@@ -15,11 +15,7 @@
 #' @param true_value A numeric vector specifying the true values of the parameters for comparison, if known. If unknown, this will be NA.
 #'
 #' @return A matrix displaying the observed data, the prior values, and the expected values of the parameters.
-#' @export
 #'
-#' @examples
-#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-#' value_extractor(knee_pain_obs,mod,zip=FALSE)
 value_extractor<-function(data,mod,level_rel_final = 0,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA, true_value = NA){
 
   if(!poisson_response & zip){
@@ -131,11 +127,6 @@ value_extractor<-function(data,mod,level_rel_final = 0,poisson_response=TRUE,var
 #' @param dec_place An integer value detailing how many decimal places the outputs should be rounded to. If NA, no rounding will occur.
 #'
 #' @return A series of matrices displaying the observed data, the prior values, and the expected values of the parameters for each level of the tree desired.
-#' @export
-#'
-#' @examples
-#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-#' total_value_extractor(knee_pain_obs,mod,zip=FALSE)
 total_value_extractor<-function(data,mod,level_exclude = NA,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA){
   n<-dim(data)[2]-1*variable_time + 1*zip
 
@@ -149,6 +140,92 @@ total_value_extractor<-function(data,mod,level_exclude = NA,poisson_response=TRU
     print(paste0("Level ",n+i,"- ",colnames(data)[n+i]))
     print(value_extractor(data,mod,level_rel_final = i,poisson_response,variable_time,posterior,zip,dec_place))
   }
+}
+
+#' The OAHC Definer
+#'
+#' This function creates an object of class "OAHC" from a pceg model.
+#'
+#' @param cluster A list detailing the stage structure for a level
+#' @param score A numeric value of the score contribution from this level
+#'
+#' @return An object of class "OAHC" with a stage structure and score from a level of the tree
+#'
+oahc_definer<-function(cluster,score=0){
+  return(new("OAHC",score=score,cluster=cluster))
+}
+
+
+
+
+#' The Event Tree Creator
+#'
+#' A function to create an object of the "Stratified.event.tree" S4 class that is compatible with Poisson response variables.
+#'
+#' @param data A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.
+#' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
+#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
+#'
+#' @return An object of the class "Stratified.event.tree"
+event.tree.creator<-function(data,poisson_response=TRUE,variable_time=TRUE){
+
+  if(!poisson_response & variable_time){
+    stop("Poisson response needed for variable time")
+  }
+
+  n<-dim(data)[2]-1*poisson_response - 1*variable_time
+
+  if(poisson_response){
+    empty.resp<-factor(rep("y",length(data[,1])),levels=c("y"))
+    data.final<-data.frame(data[,1:n],resp=empty.resp)
+  }else{
+    data.final<-data
+  }
+
+  tree<-set(data.final)
+  return(tree)
+}
+
+#' The Staged Tree Creator
+#'
+#'#' A function to create an object of the "Stratified.event.tree" S4 class that is compatible with the outputs of the [pceg()] function.
+#'
+#' @param data A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.
+#' @param mod A list from the output of the [pceg()] function.
+#' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
+#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
+#' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
+#' @param score A numeric vector of the score contributions from each level
+#'
+#' @return An object of the class "Stratified.staged.tree"
+staged.tree.creator<-function(data,mod,poisson_response=TRUE,variable_time=TRUE,zip=FALSE,score=0){
+
+  if(!poisson_response & variable_time){
+    stop("Variable time requires a Poisson response")
+  }
+
+  if(!poisson_response & zip){
+    stop("Zero Inflated Poisson requires Poisson response")
+  }
+
+  if(zip){
+    n<-dim(data)[2]-1*poisson_response -1*variable_time
+    state<-factor(rep("No Risk",length(data[,1])),levels<-c("No Risk", "Risk"))
+    data.final<-data.frame(data[,1:n], State = state, data[,-(1:n)])
+  }else{
+    data.final<-data
+  }
+
+  event.tree<-event.tree.creator(data.final,poisson_response,variable_time)
+  temp<-output_list_converter(mod,poisson_response)
+  prior.struc<-temp$prior
+  post.struc<-temp$posterior
+  stage.struc<-stage_structure(mod,score,zip=zip)
+  staged.tree<-new("Stratified.staged.tree", event.tree,
+                   situation = list(), contingency.table = list(), stage.structure = stage.struc,
+                   stage.probability = list(), prior.distribution=prior.struc, posterior.distribution=post.struc,
+                   model.score=mod$lik)
+  return(staged.tree)
 }
 
 
