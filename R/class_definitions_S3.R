@@ -110,11 +110,7 @@ ChainEventGraph<-function(staged.tree){
              position = position),class="ChainEventGraph"))
 }
 
-#' The [plot()] method for the S3 Class EventTree
-#'
-#' @param x An object in the S3 class EventTree
-#'
-#' @return A plot of the EventTree
+#' @export
 plot.EventTree<-function(x, ... ){
             event.tree.graph <- EventTreeGraph1(x)
             g <- new("graphNEL", nodes = event.tree.graph$node$nodes,
@@ -148,12 +144,9 @@ plot.EventTree<-function(x, ... ){
             grDevices::dev.off()
 }
 
-#' The [plot()] method for the S3 Class StagedTree
-#'
-#' @param x An object in the S3 class StagedTree
-#'
-#' @return A plot of the StagedTree
-plot.StagedTree<-function(x){
+
+#' @export
+plot.StagedTree<-function(x, ...){
 
   staged.tree.graph <- TreeGraph1(x$event.tree, x$stage.structure)
   g <- new("graphNEL", nodes = staged.tree.graph$node$nodes,
@@ -185,12 +178,8 @@ plot.StagedTree<-function(x){
 
 }
 
-#' The [plot()] method for the S3 Class ChainEventGraph
-#'
-#' @param x An object in the S3 class ChainEventGraph
-#'
-#' @return A plot of the ChainEventGraph
-plot.ChainEventGraph<-function(x){
+#' @export
+plot.ChainEventGraph<-function(x, ...){
     ceg.graph.simple <- CegGraphSimple1(x$staged.tree$event.tree,
                                        x$position)
     g <- new("graphNEL", nodes = ceg.graph.simple$node$nodes,
@@ -234,6 +223,7 @@ plot.ChainEventGraph<-function(x){
 #' @param object An object in the S3 class StagedTree
 #'
 #' @return A summary of the StagedTree object, displaying the makeup of each stage, the posterior expectations, and the score.
+#' @export
 summary.StagedTree<-function(object){
     print("Merged Stages")
     print(object$result)
@@ -249,6 +239,7 @@ summary.StagedTree<-function(object){
 #' @param object An object in the S3 class ChainEventGraph
 #'
 #' @return A summary of the StagedTree object within the ChainEventGraph object, displaying the makeup of each stage, the posterior expectations, and the score.
+#' @export
 summary.ChainEventGraph<-function(object){
     summary(object$staged.tree)
 }
