@@ -218,11 +218,6 @@ plot.ChainEventGraph<-function(x, ...){
 
 }
 
-#' The [summary()] method for the S3 Class StagedTree
-#'
-#' @param object An object in the S3 class StagedTree
-#'
-#' @return A summary of the StagedTree object, displaying the makeup of each stage, the posterior expectations, and the score.
 #' @export
 summary.StagedTree<-function(object){
     print("Merged Stages")
@@ -234,11 +229,7 @@ summary.StagedTree<-function(object){
 
 }
 
-#' The [summary()] method for the S3 Class ChainEventGraph
-#'
-#' @param object An object in the S3 class ChainEventGraph
-#'
-#' @return A summary of the StagedTree object within the ChainEventGraph object, displaying the makeup of each stage, the posterior expectations, and the score.
+
 #' @export
 summary.ChainEventGraph<-function(object){
     summary(object$staged.tree)
