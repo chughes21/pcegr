@@ -6,7 +6,7 @@
 \usage{
 chi_sq_calculator(
   data,
-  ceg,
+  mod,
   limit = 4,
   poisson_response = TRUE,
   variable_time = TRUE,
@@ -18,7 +18,7 @@ chi_sq_calculator(
 \arguments{
 \item{data}{A data set, where the observed count vector and time vector (if variable) are the last two columns}
 
-\item{ceg}{A ceg model fit to the data set, as produced by pceg().}
+\item{mod}{A StagedTree model fit to the data set, as produced by pceg().}
 
 \item{limit}{An integer where the number of event counts greater than or equal to this integer are grouped together.}
 

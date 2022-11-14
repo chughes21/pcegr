@@ -1,18 +1,46 @@
-EventTree<-function(data,poisson_response = TRUE, variable_time=TRUE){
+#' The EventTree constructor function
+#'
+#' Create an object in the StagedTree S3 class from a data set.
+#'
+#' @param data A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.
+#' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
+#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
+#' @param zip A logical value indicating whether the process is zero-inflated (TRUE) or not (FALSE). If the process is zero-inflated but this has already been accounted for in the data input, this should still be FALSE.
+#'
+#' @return An object of the S3 class EventTree
+#' @export
+#'
+#' @examples
+#' tree<-EventTree(knee_pain_obs,TRUE,TRUE)
+#' plot(tree)
+EventTree<-function(data,poisson_response = TRUE, variable_time=TRUE,zip = FALSE){
             if(!poisson_response & variable_time){
               stop("Poisson response needed for variable time")
             }
+
+             if(!poisson_response & zip){
+               stop("Zero Inflated Poisson requires Poisson response")
+            }
+
             n<-dim(data)[2]-1*poisson_response - 1*variable_time
 
             if(poisson_response){
               empty.resp<-factor(rep("y",length(data[,1])),levels=c("y"))
-              data.frame<-data.frame(data[,1:n],resp=empty.resp)
+              data.temp<-data.frame(data[,1:n],resp=empty.resp)
             }else{
-              data.frame<-data
+              data.temp<-data
             }
-            num.variable <- length(data.frame[1, ])
-            num.slice <- ncol(data.frame)/num.variable
-            label.category <- lapply(1:num.variable, function(x) levels(data.frame[, x])) #changed for better labels
+
+            if(zip){
+              state<-factor(rep("No Risk",length(data[,1])),levels<-c("No Risk", "Risk"))
+              data.final<-data.frame(data.temp[,1:n], State = state, data.temp[,-(1:n)])
+            }else{
+              data.final<-data.temp
+            }
+
+            num.variable <- length(data.final[1, ])
+            num.slice <- ncol(data.final)/num.variable
+            label.category <- lapply(1:num.variable, function(x) levels(data.final[, x])) #changed for better labels
             num.category <- c()
             num.category <- sapply(label.category, length)
             num.situation <- c(1, cumprod(num.category[1:(num.variable -  1)]))
@@ -27,6 +55,25 @@ EventTree<-function(data,poisson_response = TRUE, variable_time=TRUE){
           }
 
 
+#' The StagedTree constructor function
+#'
+#' Create an object in the StagedTree S3 class from certain inputs for a model. Some fo these inputs can be calculated directly in the [pceg()] function.
+#'
+#' @param data A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.
+#' @param prior A list detailing the prior distribution for the model.
+#' @param counts A list specifying the edge counts or event counts and times for the model.
+#' @param posterior A list specifying the posterior expectations for the model.
+#' @param stage.struc A list specifying the stage structure for the model.
+#' @param stages A numeric vector indicating which of the original situations are now stages.
+#' @param merged A matrix specifying which situations have been merged into stages.
+#' @param result A list detailing the covariate values in each stage.
+#' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
+#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
+#' @param zip A logical value indicating whether the process is zero-inflated (TRUE) or not (FALSE). If the process is zero-inflated but this has already been accounted for in the data input, this should still be FALSE.
+#' @param lik A numeric value specifying the log marginal likelihood for the model.
+#'
+#' @return An object of the S3 class StagedTree
+#'
 StagedTree<-function(data,prior,counts,posterior,stage.struc,stages,merged,result,poisson_response = TRUE, variable_time = TRUE,zip=FALSE,lik = 0){
   if(!poisson_response & variable_time){
     stop("Variable time requires a Poisson response")
@@ -36,21 +83,26 @@ StagedTree<-function(data,prior,counts,posterior,stage.struc,stages,merged,resul
     stop("Zero Inflated Poisson requires Poisson response")
   }
 
-  if(zip){
-    n<-dim(data)[2]-1*poisson_response -1*variable_time
-    state<-factor(rep("No Risk",length(data[,1])),levels<-c("No Risk", "Risk"))
-    data.final<-data.frame(data[,1:n], State = state, data[,-(1:n)])
-  }else{
-    data.final<-data
-  }
-
-  event.tree<-EventTree(data.final,poisson_response,variable_time)
+  event.tree<-EventTree(data,poisson_response,variable_time,zip)
 
   return(structure(list(event.tree = event.tree,stages = stages, merged = merged, stage.structure = stage.struc,
                    result = result, prior.distribution=prior, data.summary = counts, posterior.expectation=posterior,
                    model.score=lik),class="StagedTree"))
 }
 
+#' The ChainEventGraph constructor function.
+#'
+#' Create an object in the S3 class ChainEventGraph using an object in the S3 class StagedTree.
+#'
+#' @param staged.tree An object in the S3 class StagedTree
+#'
+#' @return An object in the S3 class ChainEventGraphs
+#' @export
+#'
+#' @examples
+#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+#' ceg<-ChainEventGraph(mod)
+#' plot(ceg)
 ChainEventGraph<-function(staged.tree){
   position <- StratifiedCegPosition1(staged.tree$stage.structure,
                                      staged.tree$event.tree$num.category, staged.tree$event.tree$num.situation)
