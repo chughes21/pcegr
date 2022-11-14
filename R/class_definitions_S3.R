@@ -92,10 +92,11 @@ plot.EventTree<-function(x,y, ... ){
                             nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
             grDevices::dev.off()
   }
-  local(x ,...)
+  local(x , ... )
 }
 
-plot.StagedTree<-function(x){
+plot.StagedTree<-function(x,y, ... ){
+
   local<-function(x){
   staged.tree.graph <- TreeGraph1(x$event.tree, x$stage.structure)
   g <- new("graphNEL", nodes = staged.tree.graph$node$nodes,
@@ -128,7 +129,7 @@ plot.StagedTree<-function(x){
   local(x,...)
 }
 
-plot.ChainEventGraph<-function(x){
+plot.ChainEventGraph<-function(x,y, ...){
   local<-function(x){
     ceg.graph.simple <- CegGraphSimple1(x$staged.tree$event.tree,
                                        x$position)
@@ -167,6 +168,5 @@ plot.ChainEventGraph<-function(x){
     grDevices::dev.off()
   }
   local(x,...)
-
 }
 
