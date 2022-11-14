@@ -72,7 +72,7 @@ vec_in<-function(x,v){
 #' a chi-square contribution is calculated using the formula \eqn{\frac{(O_{ij}-E_{ij})^2}{E_{ij}}} and output as a matrix.
 #'
 #' @param data A data set, where the observed count vector and time vector (if variable) are the last two columns
-#' @param ceg A ceg model fit to the data set, as produced by pceg().
+#' @param mod A StagedTree model fit to the data set, as produced by pceg().
 #' @param limit An integer where the number of event counts greater than or equal to this integer are grouped together.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
@@ -89,7 +89,7 @@ vec_in<-function(x,v){
 #'
 #' mod2<-zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
 #' chi_sq_calculator(knee_pain_obs,mod2)
-chi_sq_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA){
+chi_sq_calculator<-function(data,mod,limit=4,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA){
 
   if(!poisson_response & variable_time){
     stop("Variable Time Requires Poisson Response")
@@ -136,14 +136,13 @@ chi_sq_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,variable_time
     end_zip<-3 #this might not be right
 
   }
-  ind<-ceg$stages
+  ind<-mod$stages
   ind_probs<-ind[ind>=start_probs & ind<=end_probs]
   ind_rates<-ind[ind>=start_rates & ind<=end_rates]
 
-  rates<-value_extractor(data,ceg,level_rel_final=0,poisson_response=poisson_response,variable_time=variable_time,posterior=posterior,zip=zip)
-  probs<-value_extractor(data,ceg,level_rel_final=-1,poisson_response,variable_time,posterior=posterior,zip) #if zip=FALSE, we'll ignore this anyway
+  rates<-mod$posterior.expectation[[n_zip+1]]
+  probs<-mod$posterior.expectation[[n_zip]] #if zip=FALSE, we'll ignore this anyway
 
-  rates<-rates[,dim(rates)[2]] #if start inputting true values, this may be incorrect
   probs<-probs[,dim(probs)[2]]
 
   seq_prob<-seq(start_probs,end_probs)
@@ -159,7 +158,7 @@ chi_sq_calculator<-function(data,ceg,limit=4,poisson_response=TRUE,variable_time
     tree<-cbind(tree,rate_stage=seq_rate)
   }
 
-  merged<-ceg$merged
+  merged<-mod$merged
   m<-max(merged[3,])
   m_prob<-m-1
 
