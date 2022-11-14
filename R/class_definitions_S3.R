@@ -59,7 +59,8 @@ ChainEventGraph<-function(staged.tree){
              position = position),class="ChainEventGraph"))
 }
 
-plot.EventTree<-function(x){
+plot.EventTree<-function(x,y, ... ){
+  local<-function(x){
             event.tree.graph <- EventTreeGraph1(x)
             g <- new("graphNEL", nodes = event.tree.graph$node$nodes,
                      edgeL = event.tree.graph$edge$edges, edgemode = "directed")
@@ -90,9 +91,12 @@ plot.EventTree<-function(x){
             Rgraphviz::plot(g, main = "Event Tree Graph",
                             nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
             grDevices::dev.off()
+  }
+  local(x ,...)
 }
 
 plot.StagedTree<-function(x){
+  local<-function(x){
   staged.tree.graph <- TreeGraph1(x$event.tree, x$stage.structure)
   g <- new("graphNEL", nodes = staged.tree.graph$node$nodes,
            edgeL = staged.tree.graph$edge$edges, edgemode = "directed")
@@ -120,9 +124,12 @@ plot.StagedTree<-function(x){
   Rgraphviz::plot(g, main = "Staged Tree Graph",
                   nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
   grDevices::dev.off()
+  }
+  local(x,...)
 }
 
 plot.ChainEventGraph<-function(x){
+  local<-function(x){
     ceg.graph.simple <- CegGraphSimple1(x$staged.tree$event.tree,
                                        x$position)
     g <- new("graphNEL", nodes = ceg.graph.simple$node$nodes,
@@ -158,6 +165,8 @@ plot.ChainEventGraph<-function(x){
     Rgraphviz::plot(g, main = "Chain Event Graph",
                     nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
     grDevices::dev.off()
+  }
+  local(x,...)
 
 }
 
