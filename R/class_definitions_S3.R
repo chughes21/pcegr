@@ -176,7 +176,7 @@ summary.StagedTree<-function(object, ...){
     print("Posterior Expectations")
     print(object$posterior.expectation)
     print("Log Marginal Likelihood")
-    print(object$score)
+    print(object$model.score)
   }
   local(object, ...)
 }
