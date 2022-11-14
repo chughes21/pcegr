@@ -201,20 +201,18 @@ However, both of these models are the result of one iteration, and the ZIPCEG mo
 we will use violin plots to visualise, but there are options to use histograms, scatter plots, or line plots. We will use the *nlm* method at each iteration, due to its lower computational cost. 
 ```{r}
 set.seed(1098765)
-maptree<-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time = TRUE,gamma_alpha=a,gamma_beta=b)$mod
+maptree<-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time = TRUE,gamma_alpha=a,gamma_beta=b,print_output = FALSE)$mod
 set.seed(314159)
-maptree.alt<-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time = TRUE,plot_rates=FALSE,plot_probs=TRUE,gamma_alpha=a,gamma_beta=b)
+noprint.mod<-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time = TRUE,plot_rates=FALSE,plot_probs=TRUE,gamma_alpha=a,gamma_beta=b)
 ```
 We can see in the plot of the rates the merging that is present for leaves 3 and 7, and 4 and 8. The violin plots are identical, indicating that they always merge, and so we can be confident in the result from our initial model selection. In general, the violin plots are quite tight, which is a result of the large sample size and demarcation between the leaves. The risk probabilities also show these mergings, although not as consistently as for the rates. For example, the risk probability of leaf 4 occasionally merges with leaf 6 instead of 8. In both plots, leaf 5 is by far the most variable, and this is a result of it having the smallest sample size.
-
-We saved the second model as mapmod.alt simply to minimise the rest of the output alongside the graphs, as not saving the model will instead print the output from the model. It will not be used. 
 
 After looking at the plots above, we can be confident in the mergings produced by the single iteration of the model selection process. However, the way the states are imputed can still significantly affect the log marginal likelihood of the final model. We have selected a MAP model, and we can investigate its properties.
 ```{r}
 plot(maptree)
 maptree$model.score
 maptree$model.score-ziptree2$model.score
-chi_sq_calculator(knee_pain_obs,maptree,zip=TRUE)$chi_sq-chi_sq_calculator(knee_pain_obs,ziptre2,zip=TRUE)$chi_sq
+chi_sq_calculator(knee_pain_obs,maptree,zip=TRUE)$chi_sq-chi_sq_calculator(knee_pain_obs,ziptree2,zip=TRUE)$chi_sq
 ```
 As we would expect, the MAP model outperforms both models in terms of the log Bayes Factor, but has a slightly higher Chi-square value.  
 
