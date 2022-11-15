@@ -65,10 +65,15 @@ hdi_beta_extractor<-function(data,mod,ci=0.95,N=10000,level_rel_final=-1,poisson
   p=nlevels(data[,n])
 
   posterior<-mod$prior.distribution[[n]] + mod$data.summary[[n]]
-  posterior<-posterior[which(!is.na(posterior[,1])),]
 
+  ind<-which(!is.na(posterior[,1]))
+  k<-length(ind)
 
-  k<-length(posterior[,1])
+  if(k>1){
+    posterior<-posterior[ind,]
+  }else{
+    posterior<-matrix(posterior[ind,],nrow=1,byrow=TRUE)
+  }
 
   output<-list()
 
