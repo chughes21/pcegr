@@ -17,6 +17,8 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_r
   rates<-output$rates
   probs<-output$probs
 
+  max_y<-FALSE
+
   if(is.na(limit)){
     max_y<-TRUE
   }else if(length(limit)==1){
