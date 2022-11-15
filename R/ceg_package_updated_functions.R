@@ -1,47 +1,3 @@
-
-#' The Check For Clean Data Function
-#'
-#' The hidden function CheckForCleanData() from the ceg package.
-#'
-#' @param data.frame A data set
-#'
-#' @return A logical value indicating whether the data set is clean, along with a message if it isn't
-#'
-CheckForCleanData1<-function(data.frame){
-  out <- TRUE
-  data.frame <- as.data.frame(apply(data.frame, 2, function(x) gsub("^\\s*$",
-                                                                    NA, x)))
-  if (anyNA(data.frame)) {
-    message("Your data contains rows with <NA>, absent, or whitespace  values")
-    out <- FALSE
-  }
-  return(out)
-}
-
-#' The Check And Clean Data Function
-#'
-#' The function [ceg::CheckAndCleanData]
-#'
-#' @param data.frame A data set
-#'
-#' @return A cleaned data set
-#'
-CheckAndCleanData1<-function(data.frame){
-  if (!methods::is(data.frame, "data.frame")) {
-    message("Input is not a data frame, please check it")
-    return(NULL)
-  }
-  data.frame <- as.data.frame(apply(data.frame, 2, function(x) gsub("^\\s*$",
-                                                                    NA, x)))
-  if (anyNA(data.frame)) {
-    message("The data frame has rows with <NA> or absent values (\"\")")
-    message("All these rows were removed")
-  }
-  else message("Your data does not contain rows with <NA>, absent, or whitespace  values")
-  out <- data.frame[!(rowSums(is.na(data.frame))), ]
-  return(out)
-}
-
 #' The Label Stage Function
 #'
 #' The function [ceg::LabelStage()]
@@ -70,6 +26,7 @@ LabelStage1<-function(k, num.variable, num.situation, label.category, num.catego
   return(label)
 }
 
+
 #' The Truncated Path Function
 #'
 #' The function [ceg::TruncatedPath()]
@@ -92,43 +49,6 @@ TruncatedPath1<-function (ref, k, var, num.category, num.situation, label.catego
                                                                                                                 1], num.situation[k + 1]/num.category[var])))
 }
 
-#' The Stratified Event Tree Function
-#'
-#' This is a slightly modified version of the [ceg::Stratified.event.tree()] constructor method.
-#'
-#' @param x A data frame
-#'
-#' @return A Statified.event.tree object
-#' @export
-#'
-#' @examples
-#' set(knee_pain_obs[,1:3])
-set<-function(x = "data.frame")
-{
-  .local <- function (x = "data.frame")
-  {
-    data.frame <- x
-    if (!CheckForCleanData1(data.frame)) {
-      stop("Consider using CheckAndCleanData1() function")
-    }
-    num.variable <- length(data.frame[1, ])
-    num.slice <- ncol(data.frame)/num.variable
-    label.category <- lapply(1:num.variable, function(x) levels(data.frame[, x])) #changed for better labels
-    num.category <- c()
-    num.category <- sapply(label.category, length)
-    num.situation <- c(1, cumprod(num.category[1:(num.variable -  1)]))
-    begin.stage <- c(0, cumsum(num.situation[1:(num.variable -  1)]))
-    mergedlist <- sapply(1:(num.variable - 1), function(x) LabelStage1(x, num.variable, num.situation, label.category, num.category))
-    mergedlist <- lapply(1:(num.variable), function(x) {
-      lapply(seq_len(num.situation[x]), function(y) mergedlist[y + begin.stage[x], ])
-    })
-    hyper.stage <- list()
-    return(new("Stratified.event.tree", num.variable,
-               num.category, label.category, num.situation, num.slice,
-               mergedlist, hyper.stage))
-  }
-  .local(x)
-}
 
 #' The StratifiedCEGPosition1 Function
 #'
@@ -263,25 +183,4 @@ PairwisePosition1<-function (pair.situation, num.category, pos.next.level)
   else return(TRUE)
 }
 
-#' The Stratified CEG Function
-#'
-#' This is the [ceg::Stratified.event.tree()] constructor method.
-#'
-#' @param stratified.staged.tree An object of class "Stratified.staged.tree"
-#'
-#' @return An object of class "Stratified.ceg.model"
-#' @export
-#'
-#' @examples
-#' mod1<-pceg(knee_pain_obs,2,TRUE,TRUE)
-#'  staged.tree<-staged.tree.creator(knee_pain_obs,mod1)
-#'  mod2<-sceg(staged.tree)
-#'  plot(mod2)
-sceg<-function (stratified.staged.tree)
-{
-  position <- StratifiedCegPosition1(stratified.staged.tree@stage.structure,
-                                     stratified.staged.tree@event.tree@num.category, stratified.staged.tree@event.tree@num.situation)
-  return(new("Stratified.ceg.model", stratified.staged.tree,
-             position))
-}
 
