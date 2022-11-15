@@ -67,10 +67,11 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_r
       temp<-qpoibin(c(signif/2,1-signif/2,0.5),prob_vec)
       quant_vec[j+1,]<-temp[1:2]
       median_vec[j+1]<-temp[3]
-      if(shift){
-        count_vec<-count_vec-median_vec
-        quant_vec<-quant_vec-median_vec
-      }
+
+    }
+    if(shift){
+      count_vec<-count_vec-median_vec
+      quant_vec<-quant_vec-median_vec
     }
 
     x<-c(0:lim)
