@@ -80,7 +80,7 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_r
     }
 
     if(shift){
-    leaves[[i]]<-ggplot(data=data.temp)+
+    leaves[[k]]<-ggplot(data=data.temp)+
     geom_line(mapping = aes(x = left, y = x),col="green")+geom_point(mapping = aes(x = left, y = x),col="green")+
     geom_line(mapping = aes(x = right, y = x),col="green")+geom_point(mapping = aes(x = right, y = x),col="green")+
     geom_line(mapping = aes(x = count, y = x),col="red")+geom_point(mapping = aes(x = count, y = x),col="red")+
