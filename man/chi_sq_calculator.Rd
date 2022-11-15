@@ -10,7 +10,6 @@ chi_sq_calculator(
   limit = 4,
   poisson_response = TRUE,
   variable_time = TRUE,
-  posterior = TRUE,
   zip = TRUE,
   dec_place = NA
 )
@@ -25,8 +24,6 @@ chi_sq_calculator(
 \item{poisson_response}{A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).}
 
 \item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).}
-
-\item{posterior}{A logical value indicating whether the estimates of the parameters used should be the posterior estimate (TRUE) or sample estimate (FALSE).}
 
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
 
