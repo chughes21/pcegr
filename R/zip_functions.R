@@ -222,9 +222,6 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, p
   p<-path_details$p
   tree<-path_details$tree_matrix
   data_levels<-path_details$data_levels
-  data_levels_zip<-c(data_levels,risk=2)
-
-  n_zip<-n+1
 
   if(plot_rates){
   rates<-matrix(nrow=iter_total,ncol=p)
@@ -232,30 +229,6 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, p
 
   if(plot_probs){
   probs<-matrix(nrow=iter_total,ncol=p)
-  }
-
-  if(n>1){
-
-    start_probs<-sum(cumprod(data_levels)[1:(n-1)])+2 #1 for s0, 1 for next situation
-    end_probs<-sum(cumprod(data_levels)[1:n]) + 1 #+1 for s0
-
-    start_rates<-sum(cumprod(data_levels_zip)[1:(n_zip-1)])+2 #1 for s0, 1 for next situation
-    end_rates<-sum(cumprod(data_levels_zip)[1:n_zip]) + 1
-
-  }else if(n == 1){
-    start_probs<-2
-    end_probs<-1+data_levels[1]
-
-    start_rates<-end+1
-    end_rates<- 1+ sum(cumprod(data_levels_zip)[1:n_zip])
-
-  }else{
-    start<-1
-    end<-1
-
-    start_zip<-2
-    end_zip<-3 #this might not be right
-
   }
 
   score<-numeric(iter_total)
@@ -266,103 +239,21 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, p
                           gamma_alpha =gamma_alpha, gamma_beta = gamma_beta, beta_c = beta_c, beta_d = beta_d,
                           p_0 = p_0, l_0 = l_0, tol=tol, var_disc = var_disc, disc_length = disc_length, restrict = restrict, mirror = mirror)
 
-    ind<-ceg.temp$stages
-    ind_probs<-ind[ind>=start_probs & ind<=end_probs]
-    ind_rates<-ind[ind>=start_rates & ind<=end_rates]
-
-    rates.temp<-ceg.temp$posterior.expectation[[n_zip+1]]
-    probs.temp<-ceg.temp$posterior.expectation[[n_zip]]
-
-    probs.temp<-probs.temp[,dim(probs.temp)[2]]
-
-    seq_prob<-seq(start_probs,end_probs)
-    seq_rate<-seq(start_rates+1,end_rates,by=2)
-    if(i == 1){
-    tree<-cbind(tree,prob_stage=seq_prob,rate_stage=seq_rate)
-    }else{
-      tree$prob_stage<-seq_prob
-      tree$rate_stage<-seq_rate
-    }
-
-    seq_temp<-seq_rate-(start_rates-1)
-    rates.temp<-rates.temp[c(1,seq_temp)]
-
-    merged<-ceg.temp$merged
-    m<-max(merged[3,])
-    m_prob<-m-1
-
-    merged_rates<-merged[,which(merged[3,]==m)]
-    merged_probs<-merged[,which(merged[3,]==m_prob)]
-
-    merged_list_rates<-merged_list_extractor(merged_rates)
-    merged_list_prob<-merged_list_extractor(merged_probs)
+    output<-merge_separator(ceg.temp,n,p,tree,data_levels,zip=TRUE)
+    tree.out<-output$tree
+    rates.temp<-output$rates
+    probs.temp<-output$probs
 
     if(plot_rates){
 
-    k<-1
-
-    stage_count<-0
-
-    for(j in 1:length(ind_rates)){
-
-      if(k <= length(merged_list_rates)){
-        if(ind_rates[j]==merged_list_rates[[k]][1]){
-          stage_comp<-merged_list_rates[[k]]
-          replace<-which(tree$rate_stage %in% stage_comp)
-          tree$rate_stage[replace]<-j
-          k<-k+1
-          stage_count<-stage_count+length(replace)
-        }else{
-          replace<-which(tree$rate_stage == ind_rates[j])
-          tree$rate_stage[replace]<-j
-          stage_count<-stage_count+length(replace)
-        }
-      }else{
-        replace<-which(tree$rate_stage == ind_rates[j])
-        tree$rate_stage[replace]<-j
-        stage_count<-stage_count+length(replace)
-      }
-    }
-
-    if(stage_count != p){
-      stop("All stages not accounted for - fix")
-    }
-
-    rates[i,]<-rates.temp[tree$rate_stage]
+    rates[i,]<-rates.temp[tree.out$rate_stage]
 
     }
 
     if(plot_probs){
-      k<-1
 
-      stage_count<-0
+      probs[i,]<-probs.temp[tree.out$prob_stage]
 
-      for(j in 1:length(ind_probs)){
-
-        if(k <= length(merged_list_prob)){
-          if(ind_probs[j]==merged_list_prob[[k]][1]){
-            stage_comp<-merged_list_prob[[k]]
-            replace<-which(tree$prob_stage %in% stage_comp)
-            tree$prob_stage[replace]<-j
-            k<-k+1
-            stage_count<-stage_count+length(replace)
-          }else{
-            replace<-which(tree$prob_stage == ind_probs[j])
-            tree$prob_stage[replace]<-j
-            stage_count<-stage_count+length(replace)
-          }
-        }else{
-          replace<-which(tree$prob_stage == ind_probs[j])
-          tree$prob_stage[replace]<-j
-          stage_count<-stage_count+length(replace)
-        }
-      }
-
-      if(stage_count != p){
-        stop("All stages not accounted for - fix")
-      }
-
-      probs[i,]<-probs.temp[tree$prob_stage]
     }
 
     score[i]<-ceg.temp$model.score

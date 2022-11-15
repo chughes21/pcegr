@@ -63,48 +63,8 @@ vec_in<-function(x,v){
   return(check)
 }
 
-#' The Chi Square calculator function.
-#'
-#' This function tests the goodness of fit of a pceg model to a data set using a Chi squared calculation.
-#'
-#' For each leaf stage in a pceg model created by [pceg()], this function calculates the observed event counts up to some integer limit, and then calculates
-#' the expected event counts for that leaf based on the model estimates of the parameters for the Poisson distribution. Then, for each leaf $i$ and each event count $j$,
-#' a chi-square contribution is calculated using the formula \eqn{\frac{(O_{ij}-E_{ij})^2}{E_{ij}}} and output as a matrix.
-#'
-#' @param data A data set, where the observed count vector and time vector (if variable) are the last two columns
-#' @param mod A StagedTree model fit to the data set, as produced by pceg().
-#' @param limit An integer where the number of event counts greater than or equal to this integer are grouped together.
-#' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
-#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
-#' @param posterior A logical value indicating whether the estimates of the parameters used should be the posterior estimate (TRUE) or sample estimate (FALSE).
-#' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
-#' @param dec_place An integer value detailing how many decimal places the outputs should be rounded to. If NA, no rounding will occur.
-#'
-#' @return A list of three matrices and a numeric value. The first matrix is the observed count matrix, the second is the expected count matrix, and the third is the chi-squared contribution matrix.The numeric value is the sum of the chi square contributions.
-#' @export
-#'
-#' @examples
-#' mod1<-pceg(knee_pain_obs,2,TRUE,TRUE)
-#' chi_sq_calculator(knee_pain_obs,mod1,zip=FALSE)
-#'
-#' mod2<-zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
-#' chi_sq_calculator(knee_pain_obs,mod2)
-chi_sq_calculator<-function(data,mod,limit=4,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA){
+merge_separator<-function(mod,n,p, tree,data_levels, zip=FALSE){
 
-  if(!poisson_response & variable_time){
-    stop("Variable Time Requires Poisson Response")
-  }
-
-  if(!poisson_response & zip){
-    stop("Zero Inflated Poisson Requires Poisson Response")
-  }
-
-  path_details<-refactored_tree_matrix(data,variable_time)
-  data_use<-path_details$data_use
-  n<-path_details$num_var
-  p<-path_details$p
-  tree<-path_details$tree_matrix
-  data_levels<-path_details$data_levels
   if(zip){
     data_levels_zip<-c(data_levels,risk=2)
   }else{
@@ -231,6 +191,59 @@ chi_sq_calculator<-function(data,mod,limit=4,poisson_response=TRUE,variable_time
     }
 
   }
+
+  return(list(tree = tree, rates = rates, probs = probs))
+
+}
+
+
+#' The Chi Square calculator function.
+#'
+#' This function tests the goodness of fit of a pceg model to a data set using a Chi squared calculation.
+#'
+#' For each leaf stage in a pceg model created by [pceg()], this function calculates the observed event counts up to some integer limit, and then calculates
+#' the expected event counts for that leaf based on the model estimates of the parameters for the Poisson distribution. Then, for each leaf $i$ and each event count $j$,
+#' a chi-square contribution is calculated using the formula \eqn{\frac{(O_{ij}-E_{ij})^2}{E_{ij}}} and output as a matrix.
+#'
+#' @param data A data set, where the observed count vector and time vector (if variable) are the last two columns
+#' @param mod A StagedTree model fit to the data set, as produced by pceg().
+#' @param limit An integer where the number of event counts greater than or equal to this integer are grouped together.
+#' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
+#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
+#' @param posterior A logical value indicating whether the estimates of the parameters used should be the posterior estimate (TRUE) or sample estimate (FALSE).
+#' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
+#' @param dec_place An integer value detailing how many decimal places the outputs should be rounded to. If NA, no rounding will occur.
+#'
+#' @return A list of three matrices and a numeric value. The first matrix is the observed count matrix, the second is the expected count matrix, and the third is the chi-squared contribution matrix.The numeric value is the sum of the chi square contributions.
+#' @export
+#'
+#' @examples
+#' mod1<-pceg(knee_pain_obs,2,TRUE,TRUE)
+#' chi_sq_calculator(knee_pain_obs,mod1,zip=FALSE)
+#'
+#' mod2<-zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
+#' chi_sq_calculator(knee_pain_obs,mod2)
+chi_sq_calculator<-function(data,mod,limit=4,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA){
+
+  if(!poisson_response & variable_time){
+    stop("Variable Time Requires Poisson Response")
+  }
+
+  if(!poisson_response & zip){
+    stop("Zero Inflated Poisson Requires Poisson Response")
+  }
+
+  path_details<-refactored_tree_matrix(data,variable_time)
+  data_use<-path_details$data_use
+  n<-path_details$num_var
+  p<-path_details$p
+  tree<-path_details$tree_matrix
+  data_levels<-path_details$data_levels
+
+  output<-merge_separator(mod,n,p,tree,data_levels,zip)
+  tree<-output$tree
+  rates<-output$rates
+  probs<-output$probs
 
   obs.mat<-matrix(nrow=p,ncol=limit+1)
   exp.mat<-matrix(nrow=p,ncol=limit+1)
