@@ -28,6 +28,7 @@ usethis::use_r("ceg_package_new_functions")
 usethis::use_r("ceg_package_plotting_functions")
 usethis::use_r("class_definitions")
 usethis::use_r("deleted_function")
+usethis::use_r("christmas_tree_functions")
 
 devtools::load_all()
 devtools::check()

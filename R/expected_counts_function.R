@@ -220,7 +220,6 @@ merge_separator<-function(mod,n,p, tree,data_levels, zip=FALSE){
 #' @param limit An integer where the number of event counts greater than or equal to this integer are grouped together.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
-#' @param posterior A logical value indicating whether the estimates of the parameters used should be the posterior estimate (TRUE) or sample estimate (FALSE).
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #' @param dec_place An integer value detailing how many decimal places the outputs should be rounded to. If NA, no rounding will occur.
 #'
@@ -233,7 +232,7 @@ merge_separator<-function(mod,n,p, tree,data_levels, zip=FALSE){
 #'
 #' mod2<-zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
 #' chi_sq_calculator(knee_pain_obs,mod2)
-chi_sq_calculator<-function(data,mod,limit=4,poisson_response=TRUE,variable_time=TRUE,posterior = TRUE, zip=TRUE, dec_place = NA){
+chi_sq_calculator<-function(data,mod,limit=4,poisson_response=TRUE,variable_time=TRUE,zip=TRUE, dec_place = NA){
 
   if(!poisson_response & variable_time){
     stop("Variable Time Requires Poisson Response")
@@ -249,6 +248,8 @@ chi_sq_calculator<-function(data,mod,limit=4,poisson_response=TRUE,variable_time
   p<-path_details$p
   tree<-path_details$tree_matrix
   data_levels<-path_details$data_levels
+
+  #a lot of the below is copied into quantile_band - if this changes, so should that
 
   output<-merge_separator(mod,n,p,tree,data_levels,zip)
   tree<-output$tree
