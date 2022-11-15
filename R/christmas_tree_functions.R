@@ -29,10 +29,6 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_r
 
   for(k in 1:p){
 
-    count_vec<-numeric(length = limit[k]+1)
-    quant_vec<-matrix(nrow=limit[k]+1,ncol=2)
-    median_vec<-numeric(length = limit[k]+1)
-
     v<-tree[k,c(1:n)]
     ind<-which(row.match(data_use[,1:n],v)==1 )
     lambda_stage<-tree$rate_stage[k]
@@ -53,7 +49,17 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_r
       t<-rep(1,length(ind))
     }
 
-    for(j in 0:limit[k]){
+    if(max_y){
+      lim<-max(y)
+    }else{
+      lim<-limit[k]
+    }
+
+    count_vec<-numeric(length = lim+1)
+    quant_vec<-matrix(nrow=lim+1,ncol=2)
+    median_vec<-numeric(length = lim+1)
+
+    for(j in 0:lim){
       count_vec[j+1]<-length(which(y == j))
       prob_vec<-f(prop,lambda,j,t)
       temp<-qpoibin(c(signif/2,1-signif/2,0.5),prob_vec)
@@ -65,12 +71,12 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_r
       }
     }
 
-    x<-c(0:limit[[k]])
+    x<-c(0:lim)
 
     if(shift){
     data.temp<-data.frame(x,count = count_vec,left = quant_vec[,1],right = quant_vec[,2])
     }else{
-      data.temp<-data.frame(x,count = count_vec,left = quant_vec[,1],right = quant_vec[,2],median = median_vec)
+    data.temp<-data.frame(x,count = count_vec,left = quant_vec[,1],right = quant_vec[,2],median = median_vec)
     }
 
     if(shift){
