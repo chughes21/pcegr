@@ -66,7 +66,7 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_r
       prob_vec<-f(prop,lambda,j,t)
       temp<-qpoibin(c(signif/2,1-signif/2,0.5),prob_vec)
       quant_vec[j+1,]<-temp[1:2]
-      median_vec<-temp[3]
+      median_vec[j+1]<-temp[3]
       if(shift){
         count_vec<-count_vec-median_vec
         quant_vec<-quant_vec-median_vec
@@ -86,7 +86,7 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_r
     geom_line(mapping = aes(x = left, y = x),col="green")+geom_point(mapping = aes(x = left, y = x),col="green")+
     geom_line(mapping = aes(x = right, y = x),col="green")+geom_point(mapping = aes(x = right, y = x),col="green")+
     geom_line(mapping = aes(x = count, y = x),col="red")+geom_point(mapping = aes(x = count, y = x),col="red")+
-    xlab("Shifted Observed Counts")+ylab("Event counts")+ggtitle("Shifted QUantile Band Plot")
+    xlab("Shifted Observed Counts")+ylab("Event counts")+ggtitle("Shifted Quantile Band Plot")
     }else{
       leaves[[k]]<-ggplot(data=data.temp)+
         geom_line(mapping = aes(x = left, y = x),col="green")+geom_point(mapping = aes(x = left, y = x),col="green")+
