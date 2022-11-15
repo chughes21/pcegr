@@ -63,6 +63,16 @@ vec_in<-function(x,v){
   return(check)
 }
 
+#' The merge_Separator function
+#'
+#' @param mod An object of the S3 class StagedTree
+#' @param n An integer value
+#' @param p SAn integer value
+#' @param tree A matrix
+#' @param data_levels A numeric vector
+#' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
+#'
+#' @return A list containing a matrix and two vectors.
 merge_separator<-function(mod,n,p, tree,data_levels, zip=FALSE){
 
   if(zip){
