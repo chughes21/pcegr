@@ -106,15 +106,13 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #' @param cat_limit An integer value specifying the minimum number of categories to the variable can be discretised to. If 0, there is no minimum number of categories.
 #' @param collapse A logical value indicating whether, when a restricted discretisation occurs, the final output should be compact (TRUE) or not (FALSE).
 #'
-#' @return A list specifying a PCEG model. The list contains: the prior for the final model, the data for the final model, the number of nodes at each level of the tree, the stage numbers for the final model,
-#' the stage structure for the final model, the vector of likelihoods after each merging, the details of the stages merged at each step,
-#' the comparison set of stages left to be merged, and the log marginal likelihood of the final model.
+#' @return An object of the S3 class StagedTree.
 #' @export
 #'
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' mod$result
-pceg<-function(data ,equivsize=3,  poisson_response = FALSE, variable_time = FALSE, zip=FALSE,
+pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE, zip=FALSE,
                         gamma_alpha =1, gamma_beta = 2,structural_zero = FALSE, var_disc = 0, disc_length = 0,
                         restrict = FALSE, mirror = FALSE, cat_limit=0, collapse = FALSE){
 

@@ -10,7 +10,7 @@ zipceg(
   iter = 10000,
   equivsize = 2,
   poisson_response = TRUE,
-  variable_time = FALSE,
+  variable_time = TRUE,
   stoch_imputation = TRUE,
   gamma_alpha = 1,
   gamma_beta = 2,
@@ -66,9 +66,7 @@ zipceg(
 \item{cat_limit}{An integer value specifying the minimum number of categories to the variable can be discretised to. If 0, there is no minimum number of categories.}
 }
 \value{
-A list specifying a ZIPCEG model. The list contains: the prior for the final model, the data for the final model, the stage numbers for the final model,
-the stage structure for the final model, the vector of likelihoods after each merging, the details of the stages merged at each step,
-the comparison set of stages left to be merged, and the log marginal likelihood of the final model.
+An object of the S3 class StagedTree.
 }
 \description{
 This function fits a ZIPCEG model to the chosen data set, based on chosen methods of parameter estimation and state imputation.
@@ -77,5 +75,6 @@ This function fits a ZIPCEG model to the chosen data set, based on chosen method
 This function takes the same inputs as the \code{\link[=pceg]{pceg()}}, along with chosen methods of parameter estimation and state imputation, to fit a ZIPCEG model. As with \code{\link[=pceg]{pceg()}} it can perform variable discretisation methods, but is not to be used for vanilla CEGs.
 }
 \examples{
- zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
+mod<-zipceg(knee_pain_obs,"nlm")
+summary(mod)
 }

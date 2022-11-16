@@ -1,6 +1,29 @@
-quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_response=TRUE,variable_time=TRUE,zip=TRUE){
+#' The Quantile Band Function
+#'
+#' This function creates a quantile band plot, a diagnostic plot of the suitability of a model to count data.
+#'
+#' @param data A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.
+#' @param mod A StagedTree model fit to the data set, as produced by pceg() or zipceg()
+#' @param signif A numeric value specifying the significance level for the quantiles.
+#' @param limit An integer vector specifying the maximium number of possible counts to analyse. If it is a vector of length one, this value will be used for all leaves. If NA, this will be the maximum count recorded per leaf.
+#' @param shift A logical value indicating whether the raw observed counts and quantiles should be used (FALSE), or whether they should be shifted by the median (TRUE).
+#' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
+#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
+#' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
+#'
+#' @return A quantile-band plot for each leaf.
+#' @export
+#'
+#' @examples
+#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+#' quantile_band(knee_pain_obs,mod,limit=10,zip=FALSE)
+quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_response=TRUE,variable_time=TRUE,zip=FALSE){
   if(poisson_response == FALSE){
     stop("Quantile band plots only well-defined for count models.")
+  }
+
+  if(signif <= 0 || signif >= 1){
+    stop("Significance level should be greater than 0 and less than 1.")
   }
 
   #a lot of the below is copied from chi_square - if that changes, so should this

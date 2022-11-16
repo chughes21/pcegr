@@ -18,7 +18,6 @@ zipceg.iter(
   poisson_response = TRUE,
   variable_time = FALSE,
   stoch_imputation = TRUE,
-  posterior = TRUE,
   print_output = FALSE,
   gamma_alpha = 1,
   gamma_beta = 2,
@@ -61,8 +60,6 @@ zipceg.iter(
 
 \item{stoch_imputation}{A logical value indicating whether stochastic (TRUE) or deterministic (FALSE) imputation should be used.}
 
-\item{posterior}{A logical value indicating whether the posterior expected value (TRUE) or sample mean (FALSE) should be output.}
-
 \item{print_output}{A logical value indicating whether the output for each iteration should be printed (TRUE) or not (FALSE).}
 
 \item{gamma_alpha}{A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.}
@@ -90,7 +87,7 @@ zipceg.iter(
 \item{cat_limit}{An integer value specifying the minimum number of categories to the variable can be discretised to. If 0, there is no minimum number of categories.}
 }
 \value{
-A list containing: a matrix of the estimated rates or risk probabilities for each leaf across iterations, a numeric value of the log marginal likelihood for the MAP model, and the MAP model itself.
+A list containing: a matrix of the estimated rates or risk probabilities for each leaf across iterations, a numeric value of the log marginal likelihood for the MAP model, and the MAP StagedTree model itself.
 }
 \description{
 This function performs the ZIPCEG model selection a specified number of times and can produce plots and perform model selection.

@@ -6,9 +6,9 @@
 \usage{
 pceg(
   data,
-  equivsize = 3,
-  poisson_response = FALSE,
-  variable_time = FALSE,
+  equivsize = 2,
+  poisson_response = TRUE,
+  variable_time = TRUE,
   zip = FALSE,
   gamma_alpha = 1,
   gamma_beta = 2,
@@ -51,9 +51,7 @@ pceg(
 \item{collapse}{A logical value indicating whether, when a restricted discretisation occurs, the final output should be compact (TRUE) or not (FALSE).}
 }
 \value{
-A list specifying a PCEG model. The list contains: the prior for the final model, the data for the final model, the number of nodes at each level of the tree, the stage numbers for the final model,
-the stage structure for the final model, the vector of likelihoods after each merging, the details of the stages merged at each step,
-the comparison set of stages left to be merged, and the log marginal likelihood of the final model.
+An object of the S3 class StagedTree.
 }
 \description{
 This function fits a PCEG model to a data set.

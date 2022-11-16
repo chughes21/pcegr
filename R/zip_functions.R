@@ -109,14 +109,14 @@ state_imputer<-function(data,lambda=1,prob=0.5,variable_time=TRUE,stoch=TRUE,all
 #' @param mirror A logical value indicating whether variable discretisation should be equivalent across each unfolding of the process (TRUE) or not (FALSE).
 #' @param cat_limit An integer value specifying the minimum number of categories to the variable can be discretised to. If 0, there is no minimum number of categories.
 #'
-#' @return A list specifying a ZIPCEG model. The list contains: the prior for the final model, the data for the final model, the stage numbers for the final model,
-#' the stage structure for the final model, the vector of likelihoods after each merging, the details of the stages merged at each step,
-#' the comparison set of stages left to be merged, and the log marginal likelihood of the final model.
+#' @return An object of the S3 class StagedTree.
 #' @export
 #'
-#' @examples  zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
+#' @examples
+#' mod<-zipceg(knee_pain_obs,"nlm")
+#' summary(mod)
 zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response = TRUE,
-                      variable_time = FALSE, stoch_imputation = TRUE, gamma_alpha =1, gamma_beta = 2, beta_c = 1, beta_d = 1,
+                      variable_time = TRUE, stoch_imputation = TRUE, gamma_alpha =1, gamma_beta = 2, beta_c = 1, beta_d = 1,
                       p_0 = 0.5, l_0 = 1, tol=1e-10, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
 
   if(!(method %in% c("Gibbs","nlm","EM","mle","mm"))){
@@ -184,7 +184,6 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param stoch_imputation A logical value indicating whether stochastic (TRUE) or deterministic (FALSE) imputation should be used.
-#' @param posterior A logical value indicating whether the posterior expected value (TRUE) or sample mean (FALSE) should be output.
 #' @param print_output A logical value indicating whether the output for each iteration should be printed (TRUE) or not (FALSE).
 #' @param gamma_alpha A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.
 #' @param gamma_beta A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.
@@ -200,13 +199,13 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @param cat_limit An integer value specifying the minimum number of categories to the variable can be discretised to. If 0, there is no minimum number of categories.
 #'
 #'
-#' @return A list containing: a matrix of the estimated rates or risk probabilities for each leaf across iterations, a numeric value of the log marginal likelihood for the MAP model, and the MAP model itself.
+#' @return A list containing: a matrix of the estimated rates or risk probabilities for each leaf across iterations, a numeric value of the log marginal likelihood for the MAP model, and the MAP StagedTree model itself.
 #' @export
 #'
 #' @examples zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time=TRUE)
 zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, plot_rates = TRUE,
                            plot_probs = FALSE, hist = FALSE, line = FALSE, scatter = FALSE, equivsize=2,
-                           poisson_response = TRUE, variable_time = FALSE,stoch_imputation=TRUE, posterior = TRUE,
+                           poisson_response = TRUE, variable_time = FALSE,stoch_imputation=TRUE,
                            print_output = FALSE, gamma_alpha = 1, gamma_beta = 2, beta_c = 1, beta_d = 1,p_0=NA,l_0=NA,
                            tol=1e-10, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
   if(sum(hist,scatter,line)>1 ){
