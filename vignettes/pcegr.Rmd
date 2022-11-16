@@ -86,7 +86,7 @@ This effective sample size is propagated through the tree, and at each level is 
 
 We use the *pceg()* function to fit the model. The outputs from this function include the final stage structure through the *result* component. The outputs from *pceg()* will generally be used for analysis, but in order to plot the resultant Poisson staged tree, the output must be converted into a *Stratified.staged.tree* S4 class from the *ceg* package. Once converted, this can then be plotted.
 ```{r}
-ptree<-pceg(knee_pain_obs,2,TRUE,TRUE, gamma_alpha = 0.25,gamma_beta = 0.1)
+ptree<-pceg(knee_pain_obs,gamma_alpha = 0.25,gamma_beta = 0.1)
 summary(ptree)
 plot(ptree)
 ```
@@ -124,7 +124,14 @@ We can also check the log marginal likelihood and Chi-square calculation for the
 ptree$model.score
 chi_sq_calculator(knee_pain_obs,ptree,zip=FALSE,dec_place=2)
 ```
-In the Chi-square contribution matrix, we can see some large values. In particular, for the leaves with low rates, like $l_1$, we can see large contributions for the higher event counts. This is because there are a much higher number of observed counts than we would expect based on the small rate. In contrast, for the leaves with higher rates, such as 4, 6 and 8, we can see that the contributions for the zero counts are much higher. This is because there are much more observed zero counts than would be expected with such a high rate. 
+In the Chi-square contribution matrix, we can see some large values. In particular, for the leaves with low rates like $l_1$, we can see large contributions for the higher event counts. This is because there are a much higher number of observed counts than we would expect based on the small rate. In contrast, for the leaves with higher rates, such as 4, 6 and 8, we can see that the contributions for the zero counts are much higher. This is because there are much more observed zero counts than would be expected with such a high rate. 
+
+We can also examine the model using the quantile band plot. First, we will plot the raw counts with the default significance level of 5%, and the maximum observed count as the limit for each leaf.
+
+```{r}
+quantile_band(knee_pain_obs,ptree,shift=FALSE)
+```
+
 
 ## Zero-Inflated Poisson CEG 
 

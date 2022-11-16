@@ -27,6 +27,7 @@ Imports:
     grDevices,
     lamW,
     methods,
+    poibin,
     prodlim,
     reshape2,
     Rgraphviz,

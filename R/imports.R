@@ -8,6 +8,7 @@
 #' @importFrom graphics par
 #' @importFrom Rgraphviz plot
 #' @importFrom grDevices pdf
+#' @importFrom poibin qpoibin
 #' @import lamW
 #' @import ggplot2
 #' @import ggrepel
