@@ -59,9 +59,7 @@ The covariate values being conditioned on uniquely define the stage. For example
 
 We can thus isolate the true values for $\pi$ and $\lambda$, along with what should be the PCEG estimate.
 ```{r}
-true_lambda<-leaf_params$Rate
-true_p<-leaf_params$Risk_Prob
-pceg_lambda<-true_lambda*true_p;pceg_lambda
+pceg_lambda<-leaf_params$Rate*leaf_params$Risk_Prob;pceg_lambda
 ```
 Due to the simplification, when we fit a PCEG model, we would ideally get correct merging with the above scaled rates. 
 We create two data sets. The first, *knee_pain*, is the simulated data set, containing the true risk state for each individual. The second, *knee_pain_obs*, is the observed data set, which is simply *knee_pain* with the risk states removed. We can investigate these:

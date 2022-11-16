@@ -23,10 +23,13 @@ Imports:
     ggplot2,
     ggpubr,
     ggrepel,
+    graph,
+    grDevices,
     lamW,
     methods,
     prodlim,
     reshape2,
+    Rgraphviz,
     stats,
     tidyr
 Suggests: 

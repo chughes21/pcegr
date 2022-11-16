@@ -5,9 +5,13 @@
 #' @importFrom reshape2 melt
 #' @importFrom ggpubr ggarrange
 #' @importFrom stats dpois runif rgamma rbeta nlm ftable var
+#' @importFrom graphics par
+#' @importFrom Rgraphviz plot
+#' @importFrom grDevices pdf
 #' @import lamW
 #' @import ggplot2
 #' @import ggrepel
 #' @import methods
+#' @import graph
 
 NULL
