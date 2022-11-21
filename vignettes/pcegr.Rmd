@@ -180,7 +180,7 @@ We now also plot the shifted quantile band plots.
 ```{r}
 quantile_band(knee_pain_obs,ziptree1,zip=TRUE)
 ```
-The shifted counts lie within the quantile bands for each leaf, with the exception of some of the higher counts for leaf 4. 
+The shifted counts lie within the quantile bands for each leaf, with the exception of some of the higher counts for leaf 4. This indicates that the ZIPCEG is a suitable model for the data. 
 
 As for the log marginal likelihood, this is not directly comparable to the PCEG model, due to the extra covariate and different priors. The key here is to fit a ZIPCEG model to the data with the same prior as the regular ZIPCEG model, except every individual is assumed to be at risk. This can be done with the *pceg* function as follows:
 ```{r}
@@ -235,6 +235,12 @@ chi_sq_calculator(knee_pain_obs,maptree,zip=TRUE)$chi_sq-chi_sq_calculator(knee_
 ```
 As we would expect, the MAP model outperforms both models in terms of the log Bayes Factor, but has a slightly higher Chi-square value.  
 
+We can also compare the quantile band plots for the MAP model, and it once again validates the choice of the ZIPCEG.  
+
+```{r}
+quantile_band(knee_pain_obs,maptree,zip=TRUE)
+```
+
 ## Variable Discretisation
 
 We can also use the *pceg* function to carry out variable discretisation. To demonstrate this, we will use two new data sets. The first, *knee_pain_age* is the same data set as *knee_pain*, except the Age covariate is no longer categorical. Any individual who was Young previously now has an integer value uniformly distributed between 10 and 40, while an Old individual has an integer between 41 and 70. The *knee_pain_age_obs* data set is the observed *knee_pain_age* data set, and so has the State covariate removed, as before. 
@@ -277,7 +283,7 @@ We start with the Vanilla CEG. We first begin by performing the variable discret
 
 As discussed, the plot function does not deal well with the size of the trees that are produced, and so we will only be showing the outputs from the functions themselves. As we are not restricting merging, we can not collapse the results just yet.
 ```{r}
-disc.mod0<-pceg(df.bin,2,var_disc=3)
+disc.mod0<-pceg(df.bin,2,poisson_response = FALSE, variable_time = FALSE, var_disc=3)
 disc.mod0$result
 ```
 We can see that for the Overweight, Yes History group, it has almost identified the Age break-point of 40. However, the ages before 40 have merged with all of the ages from Over, No and Normal, Yes, while the Normal, No group has only one stage. Hence, because there was no restriction on search length or discretisation between covariate combinations, the result is rather nonsensical for the purposes of discretisation. 
@@ -285,18 +291,18 @@ We can see that for the Overweight, Yes History group, it has almost identified 
 We thus choose to restrict between combinations now. We also shorten the search length to be 1, so it just looks at neighbours. Short search lengths avoid spurious mergings between stages that are far from each other, which leads to all intermediate stages being merged, even if they are quite different. Search lengths also lower the computational cost.
 
 ```{r}
-disc.mod1<-pceg(df.bin,2,var_disc=3,disc_length=1,restrict=TRUE,collapse=TRUE)
+disc.mod1<-pceg(df.bin,2,FALSE, FALSE, var_disc=3,disc_length=1,restrict=TRUE,collapse=TRUE)
 disc.mod1$result
 ```
 We can see that the short search length tends to lead to small stages, which are not particularly useful for discretisation purposes. We thus increase the search length to 2. 
 
 ```{r}
-disc.mod2<-pceg(df.bin,2,var_disc=3,disc_length=2,restrict=TRUE,collapse=TRUE)
+disc.mod2<-pceg(df.bin,2,FALSE,FALSE,var_disc=3,disc_length=2,restrict=TRUE,collapse=TRUE)
 disc.mod2$result
 ```
 We can see that increasing the search length has lead to both of the Overweight covariate combinations having only one category. If we instead require a minimum of 2 categories:
 ```{r}
-disc.mod3<-pceg(df.bin,2,var_disc=3,disc_length=2,restrict=TRUE,cat_limit=2,collapse=TRUE)
+disc.mod3<-pceg(df.bin,2,FALSE, FALSE,var_disc=3,disc_length=2,restrict=TRUE,cat_limit=2,collapse=TRUE)
 disc.mod3$result
 ```
 We can see that now Over, Yes has 3 categories, rather than the expected 2. This is because the model is unable to join the 10-25 stage and 28-70 stage as it desires, because that would lead to just one stage, breaking the minimum category rule. Meanwhile, the 26-27 stage leads to a decrease in the log marginal likelihood if merged with either other stage so remains separate. This is an example of how variable discretisation can identify nonlinearity in the covariate effects, while also being able to discover possibly ideal values. Of course, there is no such nonlinearity in this case, and we investigate why this happens.
@@ -314,7 +320,7 @@ Currently, there is no functionality to add a maximum number of categories, whic
 We now instead mirror the mergings across each covariate combination. 
 
 ```{r}
-disc.mod4<-pceg(df.bin,2,var_disc=3,disc_length=2,restrict=TRUE,mirror=TRUE,cat_limit=2,collapse=TRUE)
+disc.mod4<-pceg(df.bin,2,FALSE, FALSE,var_disc=3,disc_length=2,restrict=TRUE,mirror=TRUE,cat_limit=2,collapse=TRUE)
 disc.mod4$result
 ```
 We can see that once the mergings are equivalent across all four covariate combinations, the model discovers the correct discretisation. We note that the model was generated assuming the same categorisation across covariate combinations, hence why mirroring performs best. 
@@ -324,32 +330,32 @@ We can see that once the mergings are equivalent across all four covariate combi
 We now see if this discretisation works as well when the model is a PCEG instead. We will begin by restricting to covariate combinations while also searching over an interval of 2.
 
 ```{r}
-disc.pmod0<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=2,restrict=TRUE,collapse=TRUE)
+disc.pmod0<-pceg(df,2,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=2,restrict=TRUE,collapse=TRUE)
 disc.pmod0$result
 ```
 We can see that the mergings are not particularly helpful due to their small size. We now once again mirror the results across covariate combinations.
 
 ```{r}
-disc.pmod1<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=2,restrict=TRUE,mirror=TRUE,collapse=TRUE)
+disc.pmod1<-pceg(df,2,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=2,restrict=TRUE,mirror=TRUE,collapse=TRUE)
 disc.pmod1$result
 ```
 We can see now that the model correctly identifies the breakpoint of 40 years of age, but with another breakpoint of 27 years of age. As the number of categories is 3, enforcing a minimum categorisation won't help, so we instead increase the search length. 
 
 ```{r}
-disc.pmod2<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=3,restrict=TRUE,mirror=TRUE,collapse=TRUE)
+disc.pmod2<-pceg(df,2,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=3,restrict=TRUE,mirror=TRUE,collapse=TRUE)
 disc.pmod2$result
 ```
 Increasing the search length to 3 leads to the same discretisation. However, a search length of 5 does not behave how we would expect.
 ```{r}
-disc.pmod3<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=5,restrict=TRUE,mirror=TRUE,collapse=TRUE)
+disc.pmod3<-pceg(df,2,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=5,restrict=TRUE,mirror=TRUE,collapse=TRUE)
 disc.pmod3$result
 ```
 When we increase the search length to 6, the correct discretisation is inferred. 
 ```{r}
-disc.pmod4<-pceg(df,2,poisson_response = TRUE, variable_time=TRUE,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=6,restrict=TRUE,mirror=TRUE,collapse=TRUE)
+disc.pmod4<-pceg(df,2,gamma_alpha=0.25,gamma_beta=0.1,var_disc=3,disc_length=6,restrict=TRUE,mirror=TRUE,collapse=TRUE)
 disc.pmod4$result
 ```
-We believe the counter-intutive results for the search length of 5, where it somehow produces more categories than both 3 and 6, is due to the interaction between a search length and the AHC algorithm itself. The AHC algorithm is unable to separate stages once they are merged, as it is a greedy search algorithm. Different search lengths lead to different mergings early in the process, which mean that later in the process, the stage structures are not the same and so the score may not increase when certain stages are merged. This highlights that a sensitivity analysis should be done on this search length, as it is essentially a tuning parameter, and the results of one single search length should not be considered infallible.   
+We believe the counter-intuitive results for the search length of 5, where it somehow produces more categories than both 3 and 6, is due to the interaction between a search length and the AHC algorithm itself. The AHC algorithm is unable to separate stages once they are merged, as it is a greedy search algorithm. Different search lengths lead to different mergings early in the process, which mean that later in the process, the stage structures are not the same and so the score may not increase when certain stages are merged. This highlights that a sensitivity analysis should be done on this search length, as it is essentially a tuning parameter, and the results of one single search length should not be considered infallible.   
 
 
 
