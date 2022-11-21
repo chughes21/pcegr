@@ -202,6 +202,9 @@ merge_separator<-function(mod,n,p, tree,data_levels, zip=FALSE){
 
   }
 
+  rates<-rates[!(is.na(rates))]
+  probs<-probs[!(is.na(probs))]
+
   return(list(tree = tree, rates = rates, probs = probs))
 
 }
