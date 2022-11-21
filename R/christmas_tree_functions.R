@@ -110,14 +110,14 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_r
     geom_path(mapping = aes(x = left, y = x),col="green")+geom_point(mapping = aes(x = left, y = x),col="green")+
     geom_path(mapping = aes(x = right, y = x),col="green")+geom_point(mapping = aes(x = right, y = x),col="green")+
     geom_path(mapping = aes(x = count, y = x),col="red")+geom_point(mapping = aes(x = count, y = x),col="red")+
-    xlab("Shifted Observed Counts")+ylab("Event counts")+ggtitle("Shifted Quantile Band Plot")
+    xlab("Shifted Observed Counts")+ylab("Event counts")+ggtitle(paste0("Shifted Quantile Band Plot - Leaf ",k))
     }else{
       leaves[[k]]<-ggplot(data=data.temp)+
         geom_path(mapping = aes(x = left, y = x),col="green")+geom_point(mapping = aes(x = left, y = x),col="green")+
         geom_path(mapping = aes(x = right, y = x),col="green")+geom_point(mapping = aes(x = right, y = x),col="green")+
         geom_path(mapping = aes(x = count, y = x),col="red")+geom_point(mapping = aes(x = count, y = x),col="red")+
         geom_path(mapping = aes(x = median, y = x),col="black")+
-        xlab("Raw Observed Counts")+ylab("Event counts")+ggtitle("Raw Quantile Band Plot")
+        xlab("Raw Observed Counts")+ylab("Event counts")+ggtitle(paste0("Raw Quantile Band Plot - Leaf ",k))
     }
 
   }
