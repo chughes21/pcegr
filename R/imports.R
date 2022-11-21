@@ -7,7 +7,7 @@
 #' @importFrom stats dpois runif rgamma rbeta nlm ftable var
 #' @importFrom graphics par
 #' @importFrom Rgraphviz plot
-#' @importFrom grDevices pdf
+#' @importFrom grDevices pdf colors palette
 #' @importFrom poibin qpoibin
 #' @import lamW
 #' @import ggplot2
