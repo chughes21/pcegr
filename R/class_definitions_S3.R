@@ -111,6 +111,7 @@ ChainEventGraph<-function(staged.tree){
 }
 
 #' @export
+#' @method plot EventTree
 plot.EventTree<-function(x, ... ){
             event.tree.graph <- EventTreeGraph1(x)
             g <- new("graphNEL", nodes = event.tree.graph$node$nodes,
@@ -146,6 +147,7 @@ plot.EventTree<-function(x, ... ){
 
 
 #' @export
+#' @method plot StagedTree
 plot.StagedTree<-function(x, ...){
 
   staged.tree.graph <- TreeGraph1(x$event.tree, x$stage.structure)
@@ -179,6 +181,7 @@ plot.StagedTree<-function(x, ...){
 }
 
 #' @export
+#' @method plot ChainEventGraph
 plot.ChainEventGraph<-function(x, ...){
     ceg.graph.simple <- CegGraphSimple1(x$staged.tree$event.tree,
                                        x$position)
@@ -219,6 +222,7 @@ plot.ChainEventGraph<-function(x, ...){
 }
 
 #' @export
+#' @method summary StagedTree
 summary.StagedTree<-function(object){
     print("Merged Stages")
     print(object$result)
@@ -231,6 +235,7 @@ summary.StagedTree<-function(object){
 
 
 #' @export
+#' @method summary ChainEventGraph
 summary.ChainEventGraph<-function(object){
     summary(object$staged.tree)
 }
