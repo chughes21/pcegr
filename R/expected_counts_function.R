@@ -235,7 +235,7 @@ merge_separator<-function(mod,n,p, tree,data_levels, zip=FALSE){
 #'
 #' mod2<-zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
 #' chi_sq_calculator(knee_pain_obs,mod2)
-chi_sq_calculator<-function(data,mod,limit=4,poisson_response=TRUE,variable_time=TRUE,zip=TRUE, dec_place = NA){
+chi_sq_calculator<-function(data,mod,limit=4,min_exp=5,poisson_response=TRUE,variable_time=TRUE,zip=TRUE, dec_place = NA){
 
   if(!poisson_response & variable_time){
     stop("Variable Time Requires Poisson Response")
@@ -262,6 +262,10 @@ chi_sq_calculator<-function(data,mod,limit=4,poisson_response=TRUE,variable_time
   obs.mat<-matrix(nrow=p,ncol=limit+1)
   exp.mat<-matrix(nrow=p,ncol=limit+1)
 
+  min.exp.mat<-matrix(nrow=p,ncol=limit+1)
+
+  x<-c(0:(limit-1))
+
   for(k in 1:p){
     v<-tree[k,c(1:n)]
     ind<-which(row.match(data_use[,1:n],v)==1 )
@@ -283,31 +287,32 @@ chi_sq_calculator<-function(data,mod,limit=4,poisson_response=TRUE,variable_time
       t<-rep(1,length(ind))
     }
 
-    prob_sum<-0
 
-    for(j in 0:(limit-1)){
-      obs.mat[k,j+1]<-length(which(y == j))
-      total_prob<-sum(f(prop,lambda,j,t))
-      exp.mat[k,j+1]<-total_prob
-      prob_sum<-prob_sum+total_prob
-
-    }
+    obs.mat[k,1:limit]<-sapply(x,counter,v=y)
+    exp.mat[k,1:limit]<-colSums(sapply(x,f,p=prop,lambda=lambda,t=t))
 
     obs.mat[k,limit+1]<-length(which(y >= limit))
     exp.mat[k,limit+1]<-length(ind)-sum(exp.mat[k,1:limit])
 
-    chi.mat<-(exp.mat-obs.mat)^2/exp.mat
   }
 
+  min.exp.mat<-exp.mat<min_exp
+
+  if(sum(min.exp.mat)>0){
+    warning("Some expected counts below minimum expected count allowed - these have been excluded from the calculation, consider decreasing count limit")
+  }
+
+  chi.mat<-(exp.mat-obs.mat)^2/exp.mat
+
+  chi.mat[min.exp.mat]<-0
 
   if(!is.na(dec_place)){
     exp.mat<-round(exp.mat,dec_place)
     chi.mat<-round(chi.mat,dec_place)
   }
 
-  v1<-c(0:(limit-1))
-  v2<-paste0(limit,"+")
-  v<-c(v1,v2)
+  v1<-paste0(limit,"+")
+  v<-c(x,v1)
 
   colnames(obs.mat)<-v
   colnames(exp.mat)<-v
