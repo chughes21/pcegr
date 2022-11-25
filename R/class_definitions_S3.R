@@ -156,7 +156,7 @@ plot.StagedTree<-function(x, ...){
   attrsAtt <- list()
   graphAtt <- list(rankdir = "LR", size = "18.0,24.0",
                    bgcolor = "white")
-  edgeAtt <- list(color = "cyan")
+  edgeAtt <- list(color = "black")
   nodeAtt <- list(fillcolor = "lightgreen", shape = "ellipse",
                   fixedsize = FALSE)
   attrsAtt <- list(node = nodeAtt, edge = edgeAtt, graph = graphAtt)
@@ -190,7 +190,7 @@ plot.ChainEventGraph<-function(x, ...){
     attrsAtt <- list()
     graphAtt <- list(rankdir = "LR", size = "18.0,24.0",
                      bgcolor = "white")
-    edgeAtt <- list(color = "cyan")
+    edgeAtt <- list(color = "black")
     nodeAtt <- list(fillcolor = "lightgreen", shape = "ellipse",
                     fixedsize = FALSE)
     attrsAtt <- list(node = nodeAtt, edge = edgeAtt, graph = graphAtt)
