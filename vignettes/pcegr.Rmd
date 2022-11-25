@@ -122,9 +122,9 @@ We can also check the log marginal likelihood and Chi-square calculation for the
 
 ```{r}
 ptree$model.score
-chi_sq_calculator(knee_pain_obs,ptree,zip=FALSE,dec_place=2)
+chi_sq_calculator(knee_pain_obs,limit=3,ptree,zip=FALSE,dec_place=2)
 ```
-In the Chi-square contribution matrix, we can see some large values. In particular, for the leaves with low rates like $l_1$, we can see large contributions for the higher event counts. This is because there are a much higher number of observed counts than we would expect based on the small rate. In contrast, for the leaves with higher rates, such as 4, 6 and 8, we can see that the contributions for the zero counts are much higher. This is because there are much more observed zero counts than would be expected with such a high rate. 
+In the Chi-square contribution matrix, we can see some large values. In particular, for the leaves with higher rates, such as 4, 6 and 8, we can see that the contributions for the zero counts are much higher. This is because there are much more observed zero counts than would be expected with such a high rate, an indication of zero-inflation. In contrast, for the leaves with low rates like $l_1$, we can see large contributions for the nonzero counts. This is because there are a much higher number of observed counts than we would expect based on the small rate. however, for both Leaf 1 and Leaf 5, the expected count is not greater than the minimum expected count of 5, and so they do not factor into the calculation.  
 
 We can also examine the model using the quantile band plot. First, we will plot the raw counts with the default significance level of 5%, and the maximum observed count as the limit for each leaf.
 
@@ -171,7 +171,7 @@ First, we see that, by design, all of the risk free leaves are in the same stage
 We now compare the goodness of fit to the PCEG. First, we calculate the log marginal likelihood and the Chi-square calculation. 
 ```{r}
 ziptree1$model.score
-chi_sq_calculator(knee_pain_obs,ziptree1,zip=TRUE,dec_place=2)
+chi_sq_calculator(knee_pain_obs,limit=3,ziptree1,zip=TRUE,dec_place=2)
 ```
 We can see that the Chi-square value is significantly lower for the ZIPCEG model, which is to be expected as the model was simulated assuming a zero-inflated Poisson distribution.
 
@@ -210,7 +210,7 @@ plot(ziptree2)
 The staged tree matches the result from using the Gibbs sampler. Comparing the two ZIPCEG models fitted, the Bayes Factor appears to favour the *nlm* method while the Chi square barely favours the Gibbs sampler.
 ```{r}
 ziptree1$model.score-ziptree2$model.score
-chi_sq_calculator(knee_pain_obs,ziptree1)$chi_sq-chi_sq_calculator(knee_pain_obs,ziptree2)$chi_sq
+chi_sq_calculator(knee_pain_obs,ziptree1,limit=3)$chi_sq-chi_sq_calculator(knee_pain_obs,ziptree2,limit=3)$chi_sq
 ```
 
 ## ZIPCEG Stability Analysis
@@ -231,7 +231,7 @@ After looking at the plots above, we can be confident in the mergings produced b
 plot(maptree)
 maptree$model.score
 maptree$model.score-ziptree2$model.score
-chi_sq_calculator(knee_pain_obs,maptree,zip=TRUE)$chi_sq-chi_sq_calculator(knee_pain_obs,ziptree2,zip=TRUE)$chi_sq
+chi_sq_calculator(knee_pain_obs,maptree,limit=3,zip=TRUE)$chi_sq-chi_sq_calculator(knee_pain_obs,ziptree2,limit=3,zip=TRUE)$chi_sq
 ```
 As we would expect, the MAP model outperforms both models in terms of the log Bayes Factor, but has a slightly higher Chi-square value.  
 
