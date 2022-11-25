@@ -1,3 +1,16 @@
+#' The Counter Function
+#'
+#' Counts how many elements of a vector match a specific value
+#'
+#' @param x A value
+#' @param v A vector
+#'
+#' @return An integer
+counter<-function(x,v){
+  return(length(which(v==x)))
+}
+
+
 #' The Quantile Band Function
 #'
 #' This function creates a quantile band plot, a diagnostic plot of the suitability of a model to count data.
@@ -80,24 +93,22 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_r
       lim<-limit[k]
     }
 
-    count_vec<-numeric(length = lim+1)
     quant_vec<-matrix(nrow=lim+1,ncol=2)
     median_vec<-numeric(length = lim+1)
 
-    for(j in 0:lim){
-      count_vec[j+1]<-length(which(y == j))
-      prob_vec<-f(prop,lambda,j,t)
-      temp<-qpoibin(c(signif/2,1-signif/2,0.5),prob_vec)
-      quant_vec[j+1,]<-temp[1:2]
-      median_vec[j+1]<-temp[3]
+    x<-c(0:lim)
 
-    }
+    count_vec<-sapply(x,counter,v=y)
+    prob_mat<-sapply(x,f,p=prop,lambda=lambda,t=t)
+    temp<-apply(prob_mat,MARGIN = 2, FUN = qpoibin, qq = c(signif/2,1-signif/2,0.5),wts=NULL)
+
+    quant_vec<-temp[1:2,]
+    median_vec<-temp[3,]
+
     if(shift){
       count_vec<-count_vec-median_vec
       quant_vec<-quant_vec-median_vec
     }
-
-    x<-c(0:lim)
 
     if(shift){
     data.temp<-data.frame(x,count = count_vec,left = quant_vec[,1],right = quant_vec[,2])
@@ -124,3 +135,6 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_r
   print(do.call(ggarrange,list(plotlist=leaves,nrow=p/2,ncol=2)))
 
 }
+
+#mid_quantile_(signif, lambda, prop, t)
+
