@@ -111,9 +111,9 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_r
     }
 
     if(shift){
-    data.temp<-data.frame(x,count = count_vec,left = quant_vec[,1],right = quant_vec[,2])
+    data.temp<-data.frame(x,count = count_vec,left = quant_vec[1,],right = quant_vec[2,])
     }else{
-    data.temp<-data.frame(x,count = count_vec,left = quant_vec[,1],right = quant_vec[,2],median = median_vec)
+    data.temp<-data.frame(x,count = count_vec,left = quant_vec[1,],right = quant_vec[2,],median = median_vec)
     }
 
     if(shift){
