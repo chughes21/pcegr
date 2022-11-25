@@ -131,7 +131,7 @@ We can also examine the model using the quantile band plot. First, we will plot 
 ```{r}
 quantile_band(knee_pain_obs,ptree,shift=FALSE)
 ```
-The green curves are the 2.5% and 97.% quantile bands. The black curve is the median, and the red curve is the raw observed counts.As can be seen, for each leaf besides the first, the raw counts for zero and one events tend to be significantly outside the quantile bands, while the larger event counts are much more in line. This seems to indicate that there is some zero-inflation occurring. 
+The green curves are the 2.5% and 97.% quantile bands. The black curve is the median, and the red curve is the raw observed counts. As can be seen, for each leaf besides the first, the raw counts for zero and one events tend to be significantly outside the quantile bands, while the larger event counts are much more in line. This seems to indicate that there is some zero-inflation occurring. 
 
 When looking at the raw counts and quantiles, the graph can be difficult to interpret. We now shift the counts and quantiles by the median curve.
 
