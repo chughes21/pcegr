@@ -107,7 +107,7 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_r
 
     if(shift){
       count_vec<-count_vec-median_vec
-      quant_vec<-quant_vec-median_vec
+      quant_vec<-quant_vec-matrix(rep(median_vec,2),nrow=2,byrow=TRUE)
     }
 
     if(shift){
