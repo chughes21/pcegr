@@ -201,7 +201,7 @@ CegGraphSimple1<-function (staged.tree, position, range.color = 1)
         edge.weight <- c(edge.weight, rep(round(1/event.tree$num.category[var],
                                                 2), event.tree$num.category[var]))
       }
-      if (num.pos != 1)
+      if (num.pos != 1 | (length(position[[var]][[stage]][[1]])>1))
         count.color <- count.color + 1
     }
     edge.var.list <- edge.var.list + count.pos
