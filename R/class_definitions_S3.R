@@ -250,5 +250,7 @@ summary.StagedTree<-function(object){
 #' @export
 #' @method summary ChainEventGraph
 summary.ChainEventGraph<-function(object){
-    summary(object$staged.tree)
+  print("Position Structure")
+  print(object$position)
+  summary(object$staged.tree)
 }
