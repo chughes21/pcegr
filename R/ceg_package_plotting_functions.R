@@ -191,7 +191,7 @@ CegGraphSimple1<-function (staged.tree, position, range.color = 1)
         node.vector <- c(node.vector, paste0("w",
                                              count.pos))
         node.variable <- c(node.variable, var)
-        if (num.pos == 1)
+        if (num.pos == 1 & (length(position[[var]][[stage]][[1]])==1))
           node.color <- c(node.color, color[1])
         else node.color <- c(node.color, color[count.color])
         aux <- (position[[var]][[stage]][[pos]][1] -
