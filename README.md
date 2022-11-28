@@ -17,7 +17,7 @@ We can plot this model:
 
 plot(ptree)
 
-and convert to a CHainEventGraph object, which can also be plotted:
+and convert to a ChainEventGraph object, which can also be plotted:
 
 pceg1<-ChainEventGraph(ptree)
 plot(pceg1)

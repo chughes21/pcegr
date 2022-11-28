@@ -224,10 +224,23 @@ plot.ChainEventGraph<-function(x, ...){
 #' @export
 #' @method summary StagedTree
 summary.StagedTree<-function(object){
+
+    post<-object$posterior.expectation
+
+    m<-length(post)
+
+    for(i in 1:m){
+      temp<-as.matrix(post[[i]])
+      ind<-which(is.na(temp[,1]))
+      if(length(ind)>0){
+      post[[i]]<-temp[-ind,]
+      }
+    }
+
     print("Merged Stages")
     print(object$result)
     print("Posterior Expectations")
-    print(object$posterior.expectation)
+    print(post)
     print("Log Marginal Likelihood")
     print(object$model.score)
 
