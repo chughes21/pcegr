@@ -183,7 +183,7 @@ plot.StagedTree<-function(x, ...){
 #' @export
 #' @method plot ChainEventGraph
 plot.ChainEventGraph<-function(x, ...){
-    ceg.graph.simple <- CegGraphSimple1(x$staged.tree$event.tree,
+    ceg.graph.simple <- CegGraphSimple1(x$staged.tree,
                                        x$position)
     g <- new("graphNEL", nodes = ceg.graph.simple$node$nodes,
              edgeL = ceg.graph.simple$edge$edges, edgemode = "directed")

@@ -159,8 +159,10 @@ MergeLabels1<-function (edge.list, edge, level)
   return(aux.label)
 }
 
-CegGraphSimple1<-function (event.tree, position, range.color = 1)
+CegGraphSimple1<-function (staged.tree, position, range.color = 1)
 {
+  event.tree<-staged.tree$event.tree
+
   node.vector <- c()
   node.variable <- c()
   node.color <- c()
@@ -223,10 +225,17 @@ CegGraphSimple1<-function (event.tree, position, range.color = 1)
   node.variable <- c(node.variable, rep(var, num.pos))
   node.color <- c(node.color, rep(color[1], num.pos))
   aux.label <- event.tree$label.category[[var]][1]
+  if(event.tree$poisson.response){
+    rates<-round(staged.tree$posterior.expectation[[var]],2)
+    rates<-rates[-is.na(rates)]
+    aux.label<-rep(aux.label,num.pos)
+    aux.label<-paste0(aux.label," (",rates,")")
+  }else{
   for (i in 2:event.tree$num.category[var]) {
     aux.label <- paste0(aux.label, "-", event.tree$label.category[[var]][i])
-  }
+    }
   edge.label <- c(edge.label, rep(aux.label, num.pos))
+  }
   edge.weight <- c(edge.weight, rep(rep(round(1/event.tree$num.category[var],
                                               2), event.tree$num.category[var]), num.pos))
   ref <- count.pos + num.pos + 1
