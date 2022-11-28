@@ -227,9 +227,10 @@ CegGraphSimple1<-function (staged.tree, position, range.color = 1)
   aux.label <- event.tree$label.category[[var]][1]
   if(event.tree$poisson.response){
     rates<-round(staged.tree$posterior.expectation[[var]],2)
-    rates<-rates[-is.na(rates)]
+    rates<-rates[-which(is.na(rates))]
     aux.label<-rep(aux.label,num.pos)
     aux.label<-paste0(aux.label," (",rates,")")
+    edge.label<-c(edge.label,aux.label)
   }else{
   for (i in 2:event.tree$num.category[var]) {
     aux.label <- paste0(aux.label, "-", event.tree$label.category[[var]][i])
