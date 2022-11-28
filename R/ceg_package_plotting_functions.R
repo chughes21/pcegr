@@ -223,7 +223,17 @@ CegGraphSimple1<-function (staged.tree, position, range.color = 1)
   node.vector <- c(node.vector, paste0("w", count.pos +
                                          1:num.pos))
   node.variable <- c(node.variable, rep(var, num.pos))
-  node.color <- c(node.color, rep(color[1], num.pos))
+  aux.color<-c()
+  for(i in 1:num.pos){
+    if(length(position[[var]][[k]][[1]])>1){
+      aux.color<-c(aux.color,color[count.color])
+      count.color<-count.color+1
+      if(count.color>length(color)){
+        count.color<-2
+      }
+    }else{aux.color<-c(aux.color,color[1])}
+  }
+  node.color <- c(node.color,aux.color)
   aux.label <- event.tree$label.category[[var]][1]
   if(event.tree$poisson.response){
     rates<-round(staged.tree$posterior.expectation[[var]],2)
