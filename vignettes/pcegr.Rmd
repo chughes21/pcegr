@@ -168,6 +168,17 @@ plot(zipceg1)
 ```
 First, we see that, by design, all of the risk free leaves are in the same stage. We can also see that the model correctly merges the risk states ($s_{9}$ and $s_{13}$, $s_{10}$ and $s_{14}$). Additionally, the rates for the risk leaves are in their expected stages ($s_{20}$ and $s_{28}$ and $s_{22}$ and $s_{30}$). The covariate relationships have also been preserved from the PCEG. 
 
+However, we can also plot the models assuming the risk free edges and leaves have been removed.
+
+```{r}
+plot(EventTree(knee_pain_obs,zip=TRUE,remove_risk_free = TRUE))
+set.seed(13579)
+ziptree2<-zipceg(knee_pain_obs,"Gibbs",iter=10000,variable_time = TRUE, remove_risk_free=TRUE, stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b, beta_c = c, beta_d = d)
+summary(ziptree2)
+plot(ziptree2)
+```
+
+
 We now compare the goodness of fit to the PCEG. First, we calculate the log marginal likelihood and the Chi-square calculation. 
 ```{r}
 ziptree1$model.score
