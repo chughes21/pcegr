@@ -205,7 +205,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @examples zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time=TRUE)
 zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, plot_rates = TRUE,
                            plot_probs = FALSE, hist = FALSE, line = FALSE, scatter = FALSE, equivsize=2,
-                           poisson_response = TRUE, variable_time = FALSE,stoch_imputation=TRUE,
+                           poisson_response = TRUE, variable_time = FALSE,remove_risk_free = FALSE, stoch_imputation=TRUE,
                            print_output = FALSE, gamma_alpha = 1, gamma_beta = 2, beta_c = 1, beta_d = 1,p_0=NA,l_0=NA,
                            tol=1e-10, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
   if(sum(hist,scatter,line)>1 ){
@@ -234,7 +234,7 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, p
 
   for(i in 1:iter_total){
     ceg.temp<-zipceg(data,method=method,iter = iter_f, equivsize=equivsize, poisson_response = poisson_response,
-                          variable_time = variable_time , stoch_imputation = stoch_imputation,
+                          variable_time = variable_time , remove_risk_free = remove_risk_free, stoch_imputation = stoch_imputation,
                           gamma_alpha =gamma_alpha, gamma_beta = gamma_beta, beta_c = beta_c, beta_d = beta_d,
                           p_0 = p_0, l_0 = l_0, tol=tol, var_disc = var_disc, disc_length = disc_length, restrict = restrict, mirror = mirror)
 

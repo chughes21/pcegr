@@ -84,7 +84,7 @@ First, we will fit a PCEG model to this data set. We specify the effective sampl
 
 This effective sample size is propagated through the tree, and at each level is distributed evenly amongst the nodes and their outgoing edges. As there are $2^3 = 8$ leaves, we will assume each has a prior weight of $a = \tfrac{2}{8} = 0.25$. In order to enforce a prior mean for the rate of 2.5, the simple average for the data set, we choose $b = \tfrac{0.25}{2.5}=0.1$. If we were to desire more bespoke priors for each leaf, they can be input as vectors rather than scalars (which we will see later).
 
-We use the *pceg()* function to fit the model. The outputs from this function include the final stage structure through the *result* component. The outputs from *pceg()* will generally be used for analysis, but in order to plot the resultant Poisson staged tree, the output must be converted into a *Stratified.staged.tree* S4 class from the *ceg* package. Once converted, this can then be plotted.
+We use the *pceg()* function to fit the model. The output from this function are of the StagedTree S3 class, which has plot and summary methods. The summary will show the stage structure, the posterior expectations, and the model score. 
 ```{r}
 ptree<-pceg(knee_pain_obs,gamma_alpha = 0.25,gamma_beta = 0.1)
 summary(ptree)
@@ -92,14 +92,14 @@ plot(ptree)
 ```
 First, we note that that any node that is uncoloured is a singleton stage. We can see that the model has correctly identified that the individuals of either Age who are Overweight with a History of injury are in the same stage ($s_{10} / l_4$ and $s_{14}/l_8$), and likewise for those with No History ($s_{9}/l_3$ and $s_{13}/l_7$). The model has also correctly identified that History is independent of Weight given Age ($s_{3}$ and $s_{4}$ versus $s_{5}$ and $s_{6}$). 
 
-We can also converted the *Stratified.staged.tree* object into a corresponding *Stratified.ceg.model* S4 object from *ceg*, and plot this.
+We can also convert the StagedTree object into a ChainEventGraph S3 object using the constructor method below. This can also be summarizied, which includes position structure, and plotted.
 
 ```{r}
 pceg1<-ChainEventGraph(ptree)
 summary(pceg1)
 plot(pceg1)
 ```
-Similarly to the staged tree, any uncoloured node in the PCEG is a singleton *position*. This is once again a function of the plotting method used, and if the PCEG was drawn manually, the positions with non-singleton stages ($w_9$ and $w_{10}$) would be coloured with the corresponding stage colour in the associated Poisson staged tree. 
+The CEG should carry on the same colours from the associated staged tree, even for singleton positions in the graph. 
 
 We now can estimate the posterior expected values of the transition probabilities for the covariates, and the rates for the response. The transition probabilities can be compared to *cov_probs*, while we have included what the PCEG estimate should be for $\lambda$, based on the product of the true $\pi$ and $\lambda$.
 
@@ -157,7 +157,7 @@ For the Gibbs sampler, we must also specify the hyperparameters of the Beta($c,d
 c<-0.125
 d<-0.125
 ```
-We will also run the Gibbs sampler for $N=10,000$ iterations. When the parameters are estimated using the Gibbs sampler, we will impute the states stochastically. Due to this randomness, and to make sure the results are replicable, we will also set the seed. As before, we will convert the outputs from *zipceg()* into a *Stratified.staged.tree* object and subsequently into a *Stratified.ceg.model* object, and plot the two.
+We will also run the Gibbs sampler for $N=10,000$ iterations. When the parameters are estimated using the Gibbs sampler, we will impute the states stochastically. Due to this randomness, and to make sure the results are replicable, we will also set the seed. 
 ```{r}
 set.seed(13579)
 ziptree1<-zipceg(knee_pain_obs,"Gibbs",iter=10000,variable_time = TRUE, stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b, beta_c = c, beta_d = d)
@@ -168,7 +168,7 @@ plot(zipceg1)
 ```
 First, we see that, by design, all of the risk free leaves are in the same stage. We can also see that the model correctly merges the risk states ($s_{9}$ and $s_{13}$, $s_{10}$ and $s_{14}$). Additionally, the rates for the risk leaves are in their expected stages ($s_{20}$ and $s_{28}$ and $s_{22}$ and $s_{30}$). The covariate relationships have also been preserved from the PCEG. 
 
-However, we can also plot the models assuming the risk free edges and leaves have been removed.
+However, we can also plot the models assuming the risk free edges and leaves have been removed. The resulting model should be the exact same, except now the graphs will be simpler. 
 
 ```{r}
 plot(EventTree(knee_pain_obs,zip=TRUE,remove_risk_free = TRUE))
@@ -177,14 +177,12 @@ ziptree2<-zipceg(knee_pain_obs,"Gibbs",iter=10000,variable_time = TRUE, remove_r
 summary(ziptree2)
 plot(ziptree2)
 ```
-We can also fit a ZIPCEG to this.
+We can see that there are no longer any edges with the value "No Risk", and subsequently no longer any leaves that are risk free. We can also see that the summaries for ziptree1 and ziptree2 are the same, with the same stage structure, posterior expectations, and model score. Now, we can fit a ZIPCEG to this.
 
 ```{r}
 zipceg2<-ChainEventGraph(ziptree2)
 plot(zipceg2)
 ```
-
-
 
 We now compare the goodness of fit to the PCEG. First, we calculate the log marginal likelihood and the Chi-square calculation. 
 ```{r}
@@ -221,14 +219,14 @@ Hence, the ZIPCEG is a significantly better fit to the data than the PCEG accord
 We can also fit the ZIPCEG using the *nlm* method instead. Notably, this doesn't require a Beta($c,d$) prior, or a number of iterations. It is also significantly faster. We once again set the seed. 
 ```{r}
 set.seed(2468)
-ziptree2<-zipceg(knee_pain_obs,"nlm",variable_time = TRUE, stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b)
-plot(ziptree2)
+ziptree3<-zipceg(knee_pain_obs,"nlm",variable_time = TRUE, stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b)
+plot(ziptree3)
 
 ```
 The staged tree matches the result from using the Gibbs sampler. Comparing the two ZIPCEG models fitted, the Bayes Factor appears to favour the *nlm* method while the Chi square barely favours the Gibbs sampler.
 ```{r}
-ziptree1$model.score-ziptree2$model.score
-chi_sq_calculator(knee_pain_obs,ziptree1,limit=3)$chi_sq-chi_sq_calculator(knee_pain_obs,ziptree2,limit=3)$chi_sq
+ziptree1$model.score-ziptree3$model.score
+chi_sq_calculator(knee_pain_obs,ziptree1,limit=3)$chi_sq-chi_sq_calculator(knee_pain_obs,ziptree3,limit=3)$chi_sq
 ```
 
 ## ZIPCEG Stability Analysis
