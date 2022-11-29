@@ -177,6 +177,13 @@ ziptree2<-zipceg(knee_pain_obs,"Gibbs",iter=10000,variable_time = TRUE, remove_r
 summary(ziptree2)
 plot(ziptree2)
 ```
+We can also fit a ZIPCEG to this.
+
+```{r}
+zipceg2<-ChainEventGraph(ziptree2)
+plot(zipceg2)
+```
+
 
 
 We now compare the goodness of fit to the PCEG. First, we calculate the log marginal likelihood and the Chi-square calculation. 

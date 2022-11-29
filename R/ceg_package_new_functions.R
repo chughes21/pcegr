@@ -16,6 +16,8 @@ stage_structure<-function(mod,zip=FALSE,remove_risk_free = FALSE){
 
   for(i in 1:length(numb)){
 
+    N<-numb[[i]]
+
     cluster<-vector(mode="list",length=numb[i])
     m<-as.matrix(M[,which(M[3,]==(i-1))])
 
@@ -43,6 +45,7 @@ stage_structure<-function(mod,zip=FALSE,remove_risk_free = FALSE){
       no_risk_ind<-NA
       m[1:2,]<-m[1:2,]/2
       comp<-comp[-1]/2
+      N<-N/2
       for(j in 1:length(check)){
         check[[j]]<-check[[j]]/2
       }
@@ -54,9 +57,9 @@ stage_structure<-function(mod,zip=FALSE,remove_risk_free = FALSE){
 
     k<-1
 
-    for(j in 1:numb[[i]]){
+    for(j in 1:N){
 
-      if((j==1)&zip_ind ){
+      if((j==1)&zip_ind&(!remove_risk_free) ){
         cluster[[j]]<-no_risk_ind
       } else if((j %in% no_risk_ind[-1])&zip_ind){
         cluster[[j]]<-NA
