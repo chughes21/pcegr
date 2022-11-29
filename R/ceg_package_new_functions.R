@@ -18,7 +18,6 @@ stage_structure<-function(mod,zip=FALSE,remove_risk_free = FALSE){
 
     N<-numb[[i]]
 
-    cluster<-vector(mode="list",length=numb[i])
     m<-as.matrix(M[,which(M[3,]==(i-1))])
 
     if(i>1){
@@ -56,6 +55,8 @@ stage_structure<-function(mod,zip=FALSE,remove_risk_free = FALSE){
     }
 
     k<-1
+
+    cluster<-vector(mode="list",length=N)
 
     for(j in 1:N){
 
