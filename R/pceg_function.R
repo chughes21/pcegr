@@ -611,7 +611,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
   ol<-output_list_converter(newlist,poisson_response) #functions to convert old output to new
   ss<-stage_structure(newlist,zip, remove_risk_free) #functions to convert old output to new
 
-  mod<-StagedTree(exampledata,ol$prior,ol$data,ol$posterior,ss,stages,merged_out,result,poisson_response,variable_time,zip = FALSE,lik) #zip is false because should already be accounted for in exampledata
+  mod<-StagedTree(exampledata,ol$prior,ol$data,ol$posterior,ss,stages,merged_out,result,poisson_response,variable_time,zip = FALSE,remove_risk_free,lik) #zip is false because should already be accounted for in exampledata
 
   return(mod)
 }

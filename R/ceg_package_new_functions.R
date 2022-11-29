@@ -14,10 +14,6 @@ stage_structure<-function(mod,zip=FALSE,remove_risk_free = FALSE){
   comparisonset<-mod$comparisonset
   numb<-mod$numb
 
-  if((!zip) & remove_risk_free){
-    stop("Zero-inflation required to remove risk free edges")
-  }
-
   for(i in 1:length(numb)){
 
     cluster<-vector(mode="list",length=numb[i])
@@ -40,10 +36,10 @@ stage_structure<-function(mod,zip=FALSE,remove_risk_free = FALSE){
       check<-NA
     }
 
-    zip_ind<-(i==length(numb))& zip
+    final_ind <-(i==length(numb))
+    zip_ind<-final_ind & zip
 
-
-    if(zip_ind & remove_risk_free){
+    if(final_ind & remove_risk_free){
       no_risk_ind<-NA
       m[1:2,]<-m[1:2,]/2
       comp<-comp[-1]/2
