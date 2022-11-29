@@ -13,7 +13,7 @@
 #' @examples
 #' tree<-EventTree(knee_pain_obs,TRUE,TRUE)
 #' plot(tree)
-EventTree<-function(data,poisson_response = TRUE, variable_time=TRUE,zip = FALSE){
+EventTree<-function(data,poisson_response = TRUE, variable_time=TRUE,zip = FALSE, remove_risk_free = FALSE){
             if(!poisson_response & variable_time){
               stop("Poisson response needed for variable time")
             }
@@ -32,7 +32,11 @@ EventTree<-function(data,poisson_response = TRUE, variable_time=TRUE,zip = FALSE
             }
 
             if(zip){
-              state<-factor(rep("No Risk",length(data[,1])),levels<-c("No Risk", "Risk"))
+              if(remove_risk_free){
+              state<-factor(rep("Risk",length(data[,1])),levels<-c("No Risk", "Risk"))
+              }else{
+              state<-factor(rep("Risk",length(data[,1])),levels<-c("Risk"))
+              }
               data.final<-data.frame(data.temp[,1:n], State = state, data.temp[,-(1:n)])
             }else{
               data.final<-data.temp
