@@ -33,7 +33,8 @@ EventTree<-function(data,poisson_response = TRUE, variable_time=TRUE,zip = FALSE
 
               if(remove_risk_free){
               state<-factor(rep("Risk",length(data[,1])),levels<-c("Risk"))
-              data.final<-data.frame(data.temp[,1:n], State = state, data.temp[,-(1:n)])
+              n1<-n-1+1*zip
+              data.final<-data.frame(data.temp[,1:n1], State = state, data.temp[,-(1:n)]) #n in the second one is supposed to be like that
               }else if(zip){
               state<-factor(rep("Risk",length(data[,1])),levels<-c("No Risk", "Risk"))
               data.final<-data.frame(data.temp[,1:n], State = state, data.temp[,-(1:n)])
