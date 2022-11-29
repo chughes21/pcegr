@@ -74,11 +74,12 @@ EventTree<-function(data,poisson_response = TRUE, variable_time=TRUE,zip = FALSE
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param zip A logical value indicating whether the process is zero-inflated (TRUE) or not (FALSE). If the process is zero-inflated but this has already been accounted for in the data input, this should still be FALSE.
+#' @param remove_risk_free A logical value indicating whether the risk free leaves and edges should be removed (TRUE) or not (FALSE).
 #' @param lik A numeric value specifying the log marginal likelihood for the model.
 #'
 #' @return An object of the S3 class StagedTree
 #'
-StagedTree<-function(data,prior,counts,posterior,stage.struc,stages,merged,result,poisson_response = TRUE, variable_time = TRUE,zip=FALSE,lik = 0){
+StagedTree<-function(data,prior,counts,posterior,stage.struc,stages,merged,result,poisson_response = TRUE, variable_time = TRUE,zip=FALSE,remove_risk_free = FALSE,lik = 0){
   if(!poisson_response & variable_time){
     stop("Variable time requires a Poisson response")
   }
@@ -87,7 +88,7 @@ StagedTree<-function(data,prior,counts,posterior,stage.struc,stages,merged,resul
     stop("Zero Inflated Poisson requires Poisson response")
   }
 
-  event.tree<-EventTree(data,poisson_response,variable_time,zip)
+  event.tree<-EventTree(data,poisson_response,variable_time,zip,remove_risk_free)
 
   return(structure(list(event.tree = event.tree,stages = stages, merged = merged, stage.structure = stage.struc,
                    result = result, prior.distribution=prior, data.summary = counts, posterior.expectation=posterior,

@@ -4,15 +4,19 @@
 #'
 #' @param mod A list created in [pceg()].
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
+#' @param remove_risk_free A logical value indicating whether the risk free leaves and edges should be removed (TRUE) or not (FALSE).
 #'
-#' @return A list specifying the stage structure from the output of [pceg()] in a way that is compatible with the StagedTree S3 class.
+#' @return A list specifying the stage structure calculated in [pceg()] in a way that is compatible with the StagedTree S3 class.
 #'
-stage_structure<-function(mod,zip=FALSE){
+stage_structure<-function(mod,zip=FALSE,remove_risk_free = FALSE){
   output<-list()
   M<-mod$merged
   comparisonset<-mod$comparisonset
   numb<-mod$numb
 
+  if((!zip) & remove_risk_free){
+    stop("Zero-inflation required to remove risk free edges")
+  }
 
   for(i in 1:length(numb)){
 
@@ -38,9 +42,19 @@ stage_structure<-function(mod,zip=FALSE){
 
     zip_ind<-(i==length(numb))& zip
 
-    if(zip_ind){
+
+    if(zip_ind & remove_risk_free){
+      no_risk_ind<-NA
+      m[1:2,]<-m[1:2,]/2
+      comp<-comp[-1]/2
+      for(j in 1:length(check)){
+        check[[j]]<-check[[j]]/2
+      }
+    }else if(zip_ind & (!remove_risk_free)){
       no_risk_ind<-seq(from=1,to=numb[i]-1,by=2)
-    }else{no_risk_ind<-NA}
+    }else{
+      no_risk_ind<-NA
+    }
 
     k<-1
 

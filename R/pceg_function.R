@@ -112,7 +112,7 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' mod$result
-pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE, zip=FALSE,
+pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE, zip=FALSE,remove_risk_free = FALSE,
                         gamma_alpha =1, gamma_beta = 2,structural_zero = FALSE, var_disc = 0, disc_length = 0,
                         restrict = FALSE, mirror = FALSE, cat_limit=0, collapse = FALSE){
 
@@ -141,6 +141,9 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     stop("Collapsed results only possible when merging is restricted")
   }
 
+  if((!zip) & remove_risk_free ){
+    stop("Zero-inflation required to remove risk free edges")
+  }
 
   numbvariables<-dim(exampledata)[2] - 1*variable_time #this means if there is a variable time, it must come last
   numbcat <-sapply(exampledata[,1:numbvariables],FUN=nlevels) #number of categories at each level
@@ -606,7 +609,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
                  merged=merged_out ,comparisonset=comparisonset ,lik=lik) #old output
 
   ol<-output_list_converter(newlist,poisson_response) #functions to convert old output to new
-  ss<-stage_structure(newlist,zip) #functions to convert old output to new
+  ss<-stage_structure(newlist,zip, remove_risk_free) #functions to convert old output to new
 
   mod<-StagedTree(exampledata,ol$prior,ol$data,ol$posterior,ss,stages,merged_out,result,poisson_response,variable_time,zip = FALSE,lik) #zip is false because should already be accounted for in exampledata
 
