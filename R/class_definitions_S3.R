@@ -33,9 +33,9 @@ EventTree<-function(data,poisson_response = TRUE, variable_time=TRUE,zip = FALSE
 
             if(zip){
               if(remove_risk_free){
-              state<-factor(rep("Risk",length(data[,1])),levels<-c("No Risk", "Risk"))
-              }else{
               state<-factor(rep("Risk",length(data[,1])),levels<-c("Risk"))
+              }else{
+              state<-factor(rep("Risk",length(data[,1])),levels<-c("No Risk", "Risk"))
               }
               data.final<-data.frame(data.temp[,1:n], State = state, data.temp[,-(1:n)])
             }else{
