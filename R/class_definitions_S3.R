@@ -90,7 +90,7 @@ StagedTree<-function(data,prior,counts,posterior,stage.struc,stages,merged,resul
 
   event.tree<-EventTree(data,poisson_response,variable_time,zip,remove_risk_free)
 
-  return(structure(list(event.tree = event.tree,stages = stages, merged = merged, stage.structure = stage.struc,
+  return(structure(list(event.tree = event.tree,stages = stages, remove.risk.free.edges = remove_risk_free, merged = merged, stage.structure = stage.struc,
                    result = result, prior.distribution=prior, data.summary = counts, posterior.expectation=posterior,
                    model.score=lik),class="StagedTree"))
 }
