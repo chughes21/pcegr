@@ -4,15 +4,17 @@
 \alias{stage_structure}
 \title{The Stage Structure Function}
 \usage{
-stage_structure(mod, zip = FALSE)
+stage_structure(mod, zip = FALSE, remove_risk_free = FALSE)
 }
 \arguments{
 \item{mod}{A list created in \code{\link[=pceg]{pceg()}}.}
 
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
+
+\item{remove_risk_free}{A logical value indicating whether the risk free leaves and edges should be removed (TRUE) or not (FALSE).}
 }
 \value{
-A list specifying the stage structure from the output of \code{\link[=pceg]{pceg()}} in a way that is compatible with the StagedTree S3 class.
+A list specifying the stage structure calculated in \code{\link[=pceg]{pceg()}} in a way that is compatible with the StagedTree S3 class.
 }
 \description{
 This function takes a list of inputs and creates a stage structure that is compatible with the StagedTree S3 class.

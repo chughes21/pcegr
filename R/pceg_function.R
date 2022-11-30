@@ -96,6 +96,7 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
+#' @param remove_risk_free A logical value indicating whether the risk free leaves and edges should be removed (TRUE) or not (FALSE).
 #' @param gamma_alpha A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.
 #' @param gamma_beta A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.
 #' @param structural_zero A logical value indicating whether zero counts in the data set should be considered as structural (TRUE) or sampling (FALSE) for the setting of the prior.

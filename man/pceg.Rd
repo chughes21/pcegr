@@ -10,6 +10,7 @@ pceg(
   poisson_response = TRUE,
   variable_time = TRUE,
   zip = FALSE,
+  remove_risk_free = FALSE,
   gamma_alpha = 1,
   gamma_beta = 2,
   structural_zero = FALSE,
@@ -31,6 +32,8 @@ pceg(
 \item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.}
 
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
+
+\item{remove_risk_free}{A logical value indicating whether the risk free leaves and edges should be removed (TRUE) or not (FALSE).}
 
 \item{gamma_alpha}{A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.}
 

@@ -16,6 +16,7 @@ StagedTree(
   poisson_response = TRUE,
   variable_time = TRUE,
   zip = FALSE,
+  remove_risk_free = FALSE,
   lik = 0
 )
 }
@@ -41,6 +42,8 @@ StagedTree(
 \item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.}
 
 \item{zip}{A logical value indicating whether the process is zero-inflated (TRUE) or not (FALSE). If the process is zero-inflated but this has already been accounted for in the data input, this should still be FALSE.}
+
+\item{remove_risk_free}{A logical value indicating whether the risk free leaves and edges should be removed (TRUE) or not (FALSE).}
 
 \item{lik}{A numeric value specifying the log marginal likelihood for the model.}
 }

@@ -11,6 +11,7 @@ zipceg(
   equivsize = 2,
   poisson_response = TRUE,
   variable_time = TRUE,
+  remove_risk_free = FALSE,
   stoch_imputation = TRUE,
   gamma_alpha = 1,
   gamma_beta = 2,
@@ -38,6 +39,8 @@ zipceg(
 \item{poisson_response}{A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).}
 
 \item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.}
+
+\item{remove_risk_free}{A logical value indicating whether the risk free leaves and edges should be removed (TRUE) or not (FALSE).}
 
 \item{stoch_imputation}{A logical value indicating whether stochastic (TRUE) or deterministic (FALSE) imputation should be used.}
 

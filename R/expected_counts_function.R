@@ -221,6 +221,7 @@ merge_separator<-function(mod,n,p, tree,data_levels, zip=FALSE){
 #' @param data A data set, where the observed count vector and time vector (if variable) are the last two columns
 #' @param mod A StagedTree model fit to the data set, as produced by pceg() or zipceg().
 #' @param limit An integer where the number of event counts greater than or equal to this integer are grouped together.
+#' @param min_exp An integer specifying the minimum expected count necessary for its chi square contribution to be considered.
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).

@@ -4,7 +4,13 @@
 \alias{EventTree}
 \title{The EventTree constructor function}
 \usage{
-EventTree(data, poisson_response = TRUE, variable_time = TRUE, zip = FALSE)
+EventTree(
+  data,
+  poisson_response = TRUE,
+  variable_time = TRUE,
+  zip = FALSE,
+  remove_risk_free = FALSE
+)
 }
 \arguments{
 \item{data}{A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.}
@@ -14,6 +20,8 @@ EventTree(data, poisson_response = TRUE, variable_time = TRUE, zip = FALSE)
 \item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.}
 
 \item{zip}{A logical value indicating whether the process is zero-inflated (TRUE) or not (FALSE). If the process is zero-inflated but this has already been accounted for in the data input, this should still be FALSE.}
+
+\item{remove_risk_free}{A logical value indicating whether the risk free leaves and edges should be removed (TRUE) or not (FALSE).}
 }
 \value{
 An object of the S3 class EventTree

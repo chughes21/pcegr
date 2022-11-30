@@ -8,6 +8,7 @@ chi_sq_calculator(
   data,
   mod,
   limit = 4,
+  min_exp = 5,
   poisson_response = TRUE,
   variable_time = TRUE,
   zip = TRUE,
@@ -20,6 +21,8 @@ chi_sq_calculator(
 \item{mod}{A StagedTree model fit to the data set, as produced by pceg() or zipceg().}
 
 \item{limit}{An integer where the number of event counts greater than or equal to this integer are grouped together.}
+
+\item{min_exp}{An integer specifying the minimum expected count necessary for its chi square contribution to be considered.}
 
 \item{poisson_response}{A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).}
 

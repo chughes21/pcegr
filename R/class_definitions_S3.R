@@ -6,6 +6,7 @@
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param zip A logical value indicating whether the process is zero-inflated (TRUE) or not (FALSE). If the process is zero-inflated but this has already been accounted for in the data input, this should still be FALSE.
+#' @param remove_risk_free A logical value indicating whether the risk free leaves and edges should be removed (TRUE) or not (FALSE).
 #'
 #' @return An object of the S3 class EventTree
 #' @export
