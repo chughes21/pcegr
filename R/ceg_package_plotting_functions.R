@@ -9,7 +9,7 @@ TreeGraph1<-function(stagedtree, name = c(), range.color = 1)
   m<-tree$num.situation[n]
 
   if(tree$poisson.response){
-  rates<-parameter_extractor(solution,post,n,tree$poisson.response)
+  rates<-parameter_extractor(solution,post,n,tree$poisson.response,stagedtree$remove.risk.free.edges)
   }else{rates<-NA}
 
   nodes <- NodeSet1(tree)
