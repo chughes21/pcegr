@@ -43,7 +43,7 @@ EventTreeGraph1<-function (event.tree)
   node.label <- NodeLabel1(event.tree$num.variable, event.tree$num.situation,
                           event.tree$num.category, names(data))
   edge.label <- EdgeLabel1(event.tree$num.variable, event.tree$num.situation,
-                          event.tree$label.category)
+                          event.tree$label.category, FALSE, FALSE)
   total.node <- cumsum(event.tree$num.situation)
   node.color <- rep("white", total.node[event.tree$num.variable] +
                       event.tree$num.category[event.tree$num.variable] * event.tree$num.situation[event.tree$num.variable])
