@@ -609,12 +609,12 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
   newlist <-list(prior=prior ,data=data ,numb=numb_out,stages=stages ,result=result ,score=score ,
                  merged=merged_out ,comparisonset=comparisonset ,lik=lik) #old output
 
-  levels<-lapply(exampledata[,1:nv],levels)
+  lev<-lapply(exampledata[,1:nv],levels)
   if(poisson_response){
-    levels[[nv+1]]<-colnames(exampledata[,nv+1])
+    lev[[nv+1]]<-colnames(exampledata)[nv+1]
   }
 
-  ol<-output_list_converter(newlist,poisson_response,levels) #functions to convert old output to new
+  ol<-output_list_converter(newlist,poisson_response,lev) #functions to convert old output to new
   ss<-stage_structure(newlist,zip, remove_risk_free) #functions to convert old output to new
 
   mod<-StagedTree(exampledata,ol$prior,ol$data,ol$posterior,ss,stages,merged_out,result,poisson_response,variable_time,zip = FALSE,remove_risk_free,lik) #zip is false because should already be accounted for in exampledata
