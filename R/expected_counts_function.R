@@ -298,6 +298,7 @@ chi_sq_calculator<-function(data,mod,limit=4,min_exp=5,variable_time=TRUE,zip=TR
   }
 
   #below is copied into quantile_band - if this changes, so should that
+  #make into own function
 
   path_details<-refactored_tree_matrix(data,variable_time)
   data_use<-path_details$data_use
@@ -319,6 +320,8 @@ chi_sq_calculator<-function(data,mod,limit=4,min_exp=5,variable_time=TRUE,zip=TR
     len<-seq(2,2*p,by=2)
     rates<-rates[len]
   }
+
+  probs<-probs[,2]
 
   obs.mat<-matrix(nrow=p,ncol=limit+1)
   exp.mat<-matrix(nrow=p,ncol=limit+1)

@@ -63,6 +63,8 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, variable_
     rates<-rates[len]
   }
 
+  probs<-probs[,2]
+
   max_y<-FALSE
 
   if(is.na(limit)){
