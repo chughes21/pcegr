@@ -14,6 +14,7 @@ TreeGraph1<-function(stagedtree, name = c(), range.color = 1)
 
   if(tree$poisson.response & stagedtree$remove.risk.free.edges){
     probs<-parameter_extractor(solution,post,n-1,tree$poisson.response,stagedtree$remove.risk.free.edges)
+    probs<-probs[,2]
   }else{probs<-NA}
 
   nodes <- NodeSet1(tree)
