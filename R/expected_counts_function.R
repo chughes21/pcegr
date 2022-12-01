@@ -209,6 +209,55 @@ merge_separator<-function(mod,n,p, tree,data_levels, zip=FALSE){
 
 }
 
+parameter_extractor<-function(stage_struct, posterior, var, poisson_response = TRUE, remove_risk_free = TRUE){
+
+  if(remove_risk_free & !poisson_response){
+    stop("Risk and Risk free requires Poisson Response ")
+  }
+
+  n<-length(posterior)
+
+  post<-as.matrix(posterior[[var]])
+  solution<-stage_struct[[var]]
+
+  m<-dim(post)[1]
+
+  rrf_ind<-remove_risk_free & (n == var)
+
+  if(rrf_ind){
+    len<-seq(from=2,to=m,by=2)
+    m<-m/2
+  }else{
+    len<-c(1:m)
+  }
+
+  if(m != length(solution)){
+    stop("Posterior and Stage Structure have different lengths - check inputs again")
+  }
+
+  output<-as.matrix(post[len,])
+
+  for(i in len){
+    if(rrf_ind){
+      i<-i/2
+    }
+    ind<-solution[[i]]
+    j<-min(ind)
+    if(rrf_ind){
+      j<-2*j
+    }
+    if(!is.na(j)){
+    output[ind,]<-matrix(rep(post[j,],times=length(ind)),byrow=TRUE,nrow=length(ind))
+    }
+  }
+
+  if(poisson_response & (n==var)){
+    output<-as.vector(output)
+  }
+  return(output)
+}
+
+
 
 #' The Chi Square calculator function.
 #'
@@ -246,19 +295,21 @@ chi_sq_calculator<-function(data,mod,limit=4,min_exp=5,poisson_response=TRUE,var
     stop("Zero Inflated Poisson Requires Poisson Response")
   }
 
+  #below is copied into quantile_band - if this changes, so should that
+
   path_details<-refactored_tree_matrix(data,variable_time)
   data_use<-path_details$data_use
   n<-path_details$num_var
   p<-path_details$p
   tree<-path_details$tree_matrix
-  data_levels<-path_details$data_levels
 
   #a lot of the below is copied into quantile_band - if this changes, so should that
 
-  output<-merge_separator(mod,n,p,tree,data_levels,zip)
-  tree<-output$tree
-  rates<-output$rates
-  probs<-output$probs
+  posterior<-mod$posterior.expectation
+  stage.struct<-mod$stage.structure
+
+  rates<-parameter_extractor(stage.struct,posterior,n,poisson_response)
+  probs<-parameter_extractor(stage.struct,posterior,n-1,poisson_response)
 
   obs.mat<-matrix(nrow=p,ncol=limit+1)
   exp.mat<-matrix(nrow=p,ncol=limit+1)
@@ -270,12 +321,10 @@ chi_sq_calculator<-function(data,mod,limit=4,min_exp=5,poisson_response=TRUE,var
   for(k in 1:p){
     v<-tree[k,c(1:n)]
     ind<-which(row.match(data_use[,1:n],v)==1 )
-    lambda_stage<-tree$rate_stage[k]
-    lambda<-rates[lambda_stage]
+    lambda<-rates[k]
 
     if(zip){
-      prop_stage<-tree$prob_stage[k]
-      prop<-probs[prop_stage]
+      prop<-probs[k]
     }else{
       prop<-1
     }

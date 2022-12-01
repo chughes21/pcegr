@@ -156,7 +156,7 @@ plot.EventTree<-function(x, ... ){
 #' @method plot StagedTree
 plot.StagedTree<-function(x, ...){
 
-  staged.tree.graph <- TreeGraph1(x$event.tree, x$stage.structure)
+  staged.tree.graph <- TreeGraph1(x)
   g <- new("graphNEL", nodes = staged.tree.graph$node$nodes,
            edgeL = staged.tree.graph$edge$edges, edgemode = "directed")
   attrsAtt <- list()

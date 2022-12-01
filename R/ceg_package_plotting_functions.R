@@ -1,12 +1,23 @@
 
-TreeGraph1<-function(tree, solution = list(), name = c(), range.color = 1)
+TreeGraph1<-function(stagedtree, name = c(), range.color = 1)
 {
+  tree<-stagedtree$event.tree
+  solution<-stagedtree$stage.structure
+  post<-stagedtree$posterior.expectation
+
+  n<-tree$num.variable
+  m<-tree$num.situation[n]
+
+  if(tree$poisson.response){
+  rates<-parameter_extractor(solution,post,n,tree$poisson.response)
+  }else{rates<-NA}
+
   nodes <- NodeSet1(tree)
   edgeList <- EdgeList1(tree, nodes)
   node.label <- NodeLabel1(tree$num.variable, tree$num.situation,
                           tree$num.category, name)
   edge.label <- EdgeLabel1(tree$num.variable, tree$num.situation,
-                          tree$label.category)
+                          tree$label.category, poisson_response = tree$poisson.response,rates=rates)
   node.color <- NodeColor1(tree$num.variable, tree$num.situation,
                           tree$num.category, solution, range.color)
   graph <- list()
@@ -77,7 +88,7 @@ NodeLabel1<-function (num.variable, num.situation, num.category, label)
   return(result)
 }
 
-EdgeLabel1<-function (num.variable, num.situation, label)
+EdgeLabel1<-function (num.variable, num.situation, label, poisson_response, rates = NA)
 {
   result <- sapply(1:num.variable, function(x) rep(label[[x]],
                                                    num.situation[x]))

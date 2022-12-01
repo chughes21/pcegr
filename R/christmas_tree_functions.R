@@ -46,12 +46,12 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_r
   n<-path_details$num_var
   p<-path_details$p
   tree<-path_details$tree_matrix
-  data_levels<-path_details$data_levels
 
-  output<-merge_separator(mod,n,p,tree,data_levels,zip)
-  tree<-output$tree
-  rates<-output$rates
-  probs<-output$probs
+  posterior<-mod$posterior.expectation
+  stage.struct<-mod$stage.structure
+
+  rates<-parameter_extractor(stage.struct,posterior,n,poisson_response)
+  probs<-parameter_extractor(stage.struct,posterior,n-1,poisson_response)
 
   max_y<-FALSE
 
@@ -69,12 +69,10 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_r
 
     v<-tree[k,c(1:n)]
     ind<-which(row.match(data_use[,1:n],v)==1 )
-    lambda_stage<-tree$rate_stage[k]
-    lambda<-rates[lambda_stage]
+    lambda<-rates[k]
 
     if(zip){
-      prop_stage<-tree$prob_stage[k]
-      prop<-probs[prop_stage]
+      prop<-probs[k]
     }else{
       prop<-1
     }
