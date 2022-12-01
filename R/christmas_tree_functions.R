@@ -32,6 +32,7 @@ counter<-function(x,v){
 quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, variable_time=TRUE,zip=FALSE){
 
   poisson_response<-mod$event.tree$poisson.response
+  remove_risk_free<-mod$remove.risk.free.edges
 
   if(poisson_response == FALSE){
     stop("Quantile band plots only well-defined for count models.")

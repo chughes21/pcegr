@@ -287,7 +287,7 @@ parameter_extractor<-function(stage_struct, posterior, var, poisson_response = T
 chi_sq_calculator<-function(data,mod,limit=4,min_exp=5,variable_time=TRUE,zip=TRUE, dec_place = NA){
 
   poisson_response<-mod$event.tree$poisson.response
-  remove_risk_free<-mod$remove_risk_free
+  remove_risk_free<-mod$remove.risk.free.edges
 
   if(!poisson_response & variable_time){
     stop("Variable Time Requires Poisson Response")
