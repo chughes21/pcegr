@@ -58,6 +58,11 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, variable_
   rates<-parameter_extractor(stage.struct,posterior,n1,poisson_response,remove_risk_free)
   probs<-parameter_extractor(stage.struct,posterior,n1-1,poisson_response,remove_risk_free)
 
+  if(zip & !(remove_risk_free)){
+    len<-seq(2,2*p,by=2)
+    rates<-rates[len]
+  }
+
   max_y<-FALSE
 
   if(is.na(limit)){
