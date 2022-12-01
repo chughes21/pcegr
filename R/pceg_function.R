@@ -262,18 +262,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     }
     comparisonset <-c(comparisonset ,list(ind_temp))
   }
-  labelling <-c()
-  for (k in 1:(numbvariables -1)){
-    label <-c(1,rep("NA",sum(numb[1:k]) -1))
-    label<-c(label ,rep(levels(exampledata[,k]),numb[k]))
-    if (k<(numbvariables -1)){
-      for (i in (k+1):(numbvariables -1)){
-        label<-c(label ,rep(levels(exampledata[,k]),each=numb[i+1]/numb[k+1],numb[k+1]
-                            /numbcat[k]))
-      }
-    }
-    labelling<-cbind(labelling ,label)
-  }
+
   mergedlist <-c()
   for (i in 1:sum(numb)){
     mergedlist<-c(mergedlist ,list(labelling[i,]))
