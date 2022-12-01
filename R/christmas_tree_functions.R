@@ -20,7 +20,6 @@ counter<-function(x,v){
 #' @param signif A numeric value specifying the significance level for the quantiles.
 #' @param limit An integer vector specifying the maximium number of possible counts to analyse. If it is a vector of length one, this value will be used for all leaves. If NA, this will be the maximum count recorded per leaf.
 #' @param shift A logical value indicating whether the raw observed counts and quantiles should be used (FALSE), or whether they should be shifted by the median (TRUE).
-#' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #'
@@ -30,7 +29,10 @@ counter<-function(x,v){
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' quantile_band(knee_pain_obs,mod,limit=10,zip=FALSE)
-quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_response=TRUE,variable_time=TRUE,zip=FALSE){
+quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, variable_time=TRUE,zip=FALSE){
+
+  poisson_response<-mod$event.tree$poisson.response
+
   if(poisson_response == FALSE){
     stop("Quantile band plots only well-defined for count models.")
   }
@@ -50,8 +52,8 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, poisson_r
   posterior<-mod$posterior.expectation
   stage.struct<-mod$stage.structure
 
-  rates<-parameter_extractor(stage.struct,posterior,n+1*poisson_response,poisson_response)
-  probs<-parameter_extractor(stage.struct,posterior,n-1+1*poisson_response,poisson_response)
+  rates<-parameter_extractor(stage.struct,posterior,n+1*poisson_response,poisson_response,remove_risk_free)
+  probs<-parameter_extractor(stage.struct,posterior,n-1+1*poisson_response,poisson_response,remove_risk_free)
 
   max_y<-FALSE
 

@@ -271,7 +271,6 @@ parameter_extractor<-function(stage_struct, posterior, var, poisson_response = T
 #' @param mod A StagedTree model fit to the data set, as produced by pceg() or zipceg().
 #' @param limit An integer where the number of event counts greater than or equal to this integer are grouped together.
 #' @param min_exp An integer specifying the minimum expected count necessary for its chi square contribution to be considered.
-#' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #' @param dec_place An integer value detailing how many decimal places the outputs should be rounded to. If NA, no rounding will occur.
@@ -285,7 +284,10 @@ parameter_extractor<-function(stage_struct, posterior, var, poisson_response = T
 #'
 #' mod2<-zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
 #' chi_sq_calculator(knee_pain_obs,mod2)
-chi_sq_calculator<-function(data,mod,limit=4,min_exp=5,poisson_response=TRUE,variable_time=TRUE,zip=TRUE, dec_place = NA){
+chi_sq_calculator<-function(data,mod,limit=4,min_exp=5,variable_time=TRUE,zip=TRUE, dec_place = NA){
+
+  poisson_response<-mod$event.tree$poisson.response
+  remove_risk_free<-mod$remove_risk_free
 
   if(!poisson_response & variable_time){
     stop("Variable Time Requires Poisson Response")
@@ -308,8 +310,8 @@ chi_sq_calculator<-function(data,mod,limit=4,min_exp=5,poisson_response=TRUE,var
   posterior<-mod$posterior.expectation
   stage.struct<-mod$stage.structure
 
-  rates<-parameter_extractor(stage.struct,posterior,n+1*poisson_response,poisson_response)
-  probs<-parameter_extractor(stage.struct,posterior,n-1+1*poisson_response,poisson_response)
+  rates<-parameter_extractor(stage.struct,posterior,n+1*poisson_response,poisson_response,remove_risk_free)
+  probs<-parameter_extractor(stage.struct,posterior,n-1+1*poisson_response,poisson_response,remove_risk_free)
 
   obs.mat<-matrix(nrow=p,ncol=limit+1)
   exp.mat<-matrix(nrow=p,ncol=limit+1)
