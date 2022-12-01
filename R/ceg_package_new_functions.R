@@ -117,6 +117,22 @@ output_list_converter<-function(mod,poisson_response=TRUE,levels = NA){
       data_mat_temp[j,]<-data[[nodes_temp[j]]]
     }
 
+    final_poiss_ind<-(i==n)&poisson_response
+
+    if(final_poiss_ind){
+    colnames(prior_mat_temp)<-c("a","b")
+
+    colnames(data_mat_temp)<-c(levels[[n]],"t")
+    prior_out[[i]]<-prior_mat_temp
+    data_out[[i]]<-data_mat_temp
+
+    sum_out<-prior_mat_temp+data_mat_temp
+
+    post_out[[i]]<-sum_out[,1]/sum_out[,2]
+
+    colnames(post_out[[i]])<-levels[[n]]
+
+    }else{
     colnames(prior_mat_temp)<-levels[[i]]
     colnames(data_mat_temp)<-levels[[i]]
 
@@ -125,11 +141,9 @@ output_list_converter<-function(mod,poisson_response=TRUE,levels = NA){
 
     sum_out<-prior_mat_temp+data_mat_temp
 
-    if((i==n)&poisson_response){
-      post_out[[i]]<-sum_out[,1]/sum_out[,2]
-    }else{
-      post_out[[i]]<-sum_out/rowSums(sum_out)
-      }
+    post_out[[i]]<-sum_out/rowSums(sum_out)
+    }
+
     }
   return(list(prior=prior_out,data=data_out,posterior=post_out))
 }
