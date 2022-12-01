@@ -12,12 +12,17 @@ TreeGraph1<-function(stagedtree, name = c(), range.color = 1)
   rates<-parameter_extractor(solution,post,n,tree$poisson.response,stagedtree$remove.risk.free.edges)
   }else{rates<-NA}
 
+  if(tree$poisson.response & stagedtree$remove.risk.free.edges){
+    probs<-parameter_extractor(solution,post,n-1,tree$poisson.response,stagedtree$remove.risk.free.edges)
+  }else{probs<-NA}
+
   nodes <- NodeSet1(tree)
   edgeList <- EdgeList1(tree, nodes)
   node.label <- NodeLabel1(tree$num.variable, tree$num.situation,
                           tree$num.category, name)
   edge.label <- EdgeLabel1(tree$num.variable, tree$num.situation,
-                          tree$label.category, poisson_response = tree$poisson.response,rates=rates)
+                          tree$label.category, poisson_response = tree$poisson.response,
+                          remove_risk_free = stagedtree$remove.risk.free.edges, rates=rates,probs = probs)
   node.color <- NodeColor1(tree$num.variable, tree$num.situation,
                           tree$num.category, solution, range.color)
   graph <- list()
@@ -88,10 +93,18 @@ NodeLabel1<-function (num.variable, num.situation, num.category, label)
   return(result)
 }
 
-EdgeLabel1<-function (num.variable, num.situation, label, poisson_response, rates = NA)
+EdgeLabel1<-function (num.variable, num.situation, label, poisson_response, remove_risk_free, rates = NA, probs = NA)
 {
   result <- sapply(1:num.variable, function(x) rep(label[[x]],
                                                    num.situation[x]))
+  if(poisson_response){
+    result[[num.variable]]<-paste0(result[[num.variable]]," (",rates,")")
+  }
+
+  if(remove_risk_free & poisson_response){
+    result[[num.variable-1]]<-paste0(result[[num.variable-1]]," (",probs,")")
+  }
+
   result <- ListToVector1(result, num.variable)
   return(result)
 }
