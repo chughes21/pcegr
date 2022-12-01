@@ -97,6 +97,9 @@ EdgeLabel1<-function (num.variable, num.situation, label, poisson_response, remo
 {
   result <- sapply(1:num.variable, function(x) rep(label[[x]],
                                                    num.situation[x]))
+
+  rates<-round(rates,2)
+  probs<-round(probs,2)
   if(poisson_response){
     result[[num.variable]]<-paste0(result[[num.variable]]," (",rates,")")
   }
