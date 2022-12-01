@@ -90,7 +90,7 @@ stage_structure<-function(mod,zip=FALSE,remove_risk_free = FALSE){
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #'
 #' @return A list for the prior distribution and a list for the posterior distribution.
-output_list_converter<-function(mod,poisson_response=TRUE){
+output_list_converter<-function(mod,poisson_response=TRUE,levels = NA){
   prior<-mod$prior
   data<-mod$data
   numb<-mod$numb
@@ -116,6 +116,10 @@ output_list_converter<-function(mod,poisson_response=TRUE){
       prior_mat_temp[j,]<-prior[[nodes_temp[j]]]
       data_mat_temp[j,]<-data[[nodes_temp[j]]]
     }
+
+    colnames(prior_mat_temp)<-levels[[i]]
+    colnames(data_mat_temp)<-levels[[i]]
+
     prior_out[[i]]<-prior_mat_temp
     data_out[[i]]<-data_mat_temp
 
