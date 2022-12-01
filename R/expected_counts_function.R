@@ -310,8 +310,10 @@ chi_sq_calculator<-function(data,mod,limit=4,min_exp=5,variable_time=TRUE,zip=TR
   posterior<-mod$posterior.expectation
   stage.struct<-mod$stage.structure
 
-  rates<-parameter_extractor(stage.struct,posterior,n+1*poisson_response,poisson_response,remove_risk_free)
-  probs<-parameter_extractor(stage.struct,posterior,n-1+1*poisson_response,poisson_response,remove_risk_free)
+  n1<-n+1*poisson_response +1*zip
+
+  rates<-parameter_extractor(stage.struct,posterior,n1,poisson_response,remove_risk_free)
+  probs<-parameter_extractor(stage.struct,posterior,n1-1,poisson_response,remove_risk_free)
 
   obs.mat<-matrix(nrow=p,ncol=limit+1)
   exp.mat<-matrix(nrow=p,ncol=limit+1)

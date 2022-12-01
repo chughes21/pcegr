@@ -53,8 +53,10 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, variable_
   posterior<-mod$posterior.expectation
   stage.struct<-mod$stage.structure
 
-  rates<-parameter_extractor(stage.struct,posterior,n+1*poisson_response,poisson_response,remove_risk_free)
-  probs<-parameter_extractor(stage.struct,posterior,n-1+1*poisson_response,poisson_response,remove_risk_free)
+  n1<-n+1*poisson_response +1*zip
+
+  rates<-parameter_extractor(stage.struct,posterior,n1,poisson_response,remove_risk_free)
+  probs<-parameter_extractor(stage.struct,posterior,n1-1,poisson_response,remove_risk_free)
 
   max_y<-FALSE
 
