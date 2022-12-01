@@ -130,8 +130,6 @@ output_list_converter<-function(mod,poisson_response=TRUE,levels = NA){
 
     post_out[[i]]<-sum_out[,1]/sum_out[,2]
 
-    colnames(post_out[[i]])<-levels[[n]]
-
     }else{
     colnames(prior_mat_temp)<-levels[[i]]
     colnames(data_mat_temp)<-levels[[i]]
