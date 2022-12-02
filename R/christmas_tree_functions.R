@@ -20,6 +20,7 @@ counter<-function(x,v){
 #' @param signif A numeric value specifying the significance level for the quantiles.
 #' @param limit An integer vector specifying the maximium number of possible counts to analyse. If it is a vector of length one, this value will be used for all leaves. If NA, this will be the maximum count recorded per leaf.
 #' @param shift A logical value indicating whether the raw observed counts and quantiles should be used (FALSE), or whether they should be shifted by the median (TRUE).
+#' @param max_hist
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #'
@@ -29,7 +30,7 @@ counter<-function(x,v){
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' quantile_band(knee_pain_obs,mod,limit=10,zip=FALSE)
-quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, variable_time=TRUE,zip=FALSE){
+quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_plot = 8, variable_time=TRUE,zip=FALSE){
 
   poisson_response<-mod$event.tree$poisson.response
   remove_risk_free<-mod$remove.risk.free.edges
@@ -76,6 +77,19 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, variable_
   }
 
   leaves<-list()
+
+  if(p > max_per_plot){
+    n_plot<-p%/%max_per_plot
+    p_plot<-rep(max_per_plot, n_plot)
+    n_plot<-n_plot+1
+    p_plot<-c(p_plot,p%%max_per_plot)
+    ind_plot_start<-c(1,cumsum(p_plot)+1)
+    ind_plot_end<-ind_plot_start[-1]-1
+    ind_plot_start<-ind_plot_start[-(n_plot+1)]
+    print("Number of leaves greater than maximum number of plots per page - use back arrow to see previous plots")
+  }else{
+    n_plot<-1
+    p_plot<-p}
 
   for(k in 1:p){
 
@@ -142,7 +156,17 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, variable_
     }
 
   }
-  print(do.call(ggarrange,list(plotlist=leaves,nrow=p/2,ncol=2)))
+  for(i in 1:n_plot){
+  p.temp<-p_plot[i]
+  start.temp<-ind_plot_start[i]
+  end.temp<-ind_plot_end[i]
+  ind.temp<-c(start.temp:end.temp)
+  leaves.temp<-list()
+  for(j in 1:p.temp){
+    leaves.temp[[j]]<-leaves[[ind.temp[j]]]
+  }
+  print(do.call(ggarrange,list(plotlist=leaves.temp,nrow=p.temp/2,ncol=2))) #does this work when odd number?
+  }
 
 }
 
