@@ -81,14 +81,14 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_p
   if(p > max_per_plot){
     n_plot<-p%/%max_per_plot
     p_plot<-rep(max_per_plot, n_plot)
-    n_plot<-n_plot+1
     rem<-p%%max_per_plot
     if(rem>0){
       p_plot<-c(p_plot,rem)
+      n_plot<-n_plot+1
     }
     ind_plot_start<-c(1,cumsum(p_plot)+1)
     ind_plot_end<-ind_plot_start[-1]-1
-    ind_plot_start<-ind_plot_start[-n_plot]
+    ind_plot_start<-ind_plot_start[-(n_plot+1)]
     print(paste0("Number of leaves greater than maximum number of plots per page - ",n_plot," pages needed, use back arrow to see previous plots"))
   }else{
     n_plot<-1
