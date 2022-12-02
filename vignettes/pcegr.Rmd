@@ -136,7 +136,7 @@ The green curves are the 2.5% and 97.% quantile bands. The black curve is the me
 When looking at the raw counts and quantiles, the graph can be difficult to interpret. We now shift the counts and quantiles by the median curve.
 
 ```{r}
-quantile_band(knee_pain_obs,ptree,max_per_plot = 4)
+quantile_band(knee_pain_obs,ptree)
 ```
 Here, the zero-inflation, and lower accuracy for small event counts, can be clearly seen, and so we will instead pursue a zipceg. 
 
