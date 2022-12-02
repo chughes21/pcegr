@@ -20,7 +20,7 @@ counter<-function(x,v){
 #' @param signif A numeric value specifying the significance level for the quantiles.
 #' @param limit An integer vector specifying the maximium number of possible counts to analyse. If it is a vector of length one, this value will be used for all leaves. If NA, this will be the maximum count recorded per leaf.
 #' @param shift A logical value indicating whether the raw observed counts and quantiles should be used (FALSE), or whether they should be shifted by the median (TRUE).
-#' @param max_hist
+#' @param max_per_plot An integer value specifying the maximum number of leaves that can be shown in a single plot.
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #'
@@ -92,7 +92,9 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_p
     print(paste0("Number of leaves greater than maximum number of plots per page - ",n_plot," pages needed, use back arrow to see previous plots"))
   }else{
     n_plot<-1
-    p_plot<-p}
+    p_plot<-p
+    ind_plot_start<-1
+    ind_plot_end<-p}
 
   for(k in 1:p){
 
