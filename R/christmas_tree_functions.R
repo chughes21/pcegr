@@ -168,7 +168,7 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_p
   for(j in 1:p.temp){
     leaves.temp[[j]]<-leaves[[ind.temp[j]]]
   }
-  print(do.call(ggarrange,list(plotlist=leaves.temp,nrow=p.temp/2,ncol=2))) #does this work when odd number?
+  print(do.call(ggarrange,list(plotlist=leaves.temp,nrow=ceiling(p.temp/2),ncol=2)))
   }
 
 }
