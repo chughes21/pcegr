@@ -88,8 +88,8 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_p
     }
     ind_plot_start<-c(1,cumsum(p_plot)+1)
     ind_plot_end<-ind_plot_start[-1]-1
-    ind_plot_start<-ind_plot_start[-(n_plot+1)]
-    print(paste0("Number of leaves greater than maximum number of plots per page -",n_plot," pages needed, use back arrow to see previous plots"))
+    ind_plot_start<-ind_plot_start[-n_plot]
+    print(paste0("Number of leaves greater than maximum number of plots per page - ",n_plot," pages needed, use back arrow to see previous plots"))
   }else{
     n_plot<-1
     p_plot<-p}
