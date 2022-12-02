@@ -112,7 +112,11 @@ gibbs_zip<-function(data,N = 1000, variable_time = TRUE, a = 1, b = 1, c = 1, d 
 
     r<-rep(1,m)
     r[which(y==0)]<-0
+    if(sum(y)>0){
     l_0<-sum(y)/(sum(t[y>0]))
+    }else{
+    l_0<-0
+    }
     p_0<-sum(r)/m #could maybe base this on l_0
     lambda<-rep(l_0,N)
     prob<-rep(p_0,N)
