@@ -231,27 +231,20 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, p
 
   score<-numeric(iter_total)
 
+
+
   for(i in 1:iter_total){
     ceg.temp<-zipceg(data,method=method,iter = iter_f, equivsize=equivsize, poisson_response = poisson_response,
                           variable_time = variable_time , remove_risk_free = remove_risk_free, stoch_imputation = stoch_imputation,
                           gamma_alpha =gamma_alpha, gamma_beta = gamma_beta, beta_c = beta_c, beta_d = beta_d,
                           p_0 = p_0, l_0 = l_0, tol=tol, var_disc = var_disc, disc_length = disc_length, restrict = restrict, mirror = mirror)
 
-    output<-merge_separator(ceg.temp,n,p,tree,data_levels,zip=TRUE)
-    tree.out<-output$tree
-    rates.temp<-output$rates
-    probs.temp<-output$probs
-
     if(plot_rates){
-
-    rates[i,]<-rates.temp[tree.out$rate_stage]
-
+    rates[i,]<-parameter_extractor(ceg.temp$stage.structure,ceg.temp$posterior.expectation,n+2,poisson_response,remove_risk_free)
     }
 
     if(plot_probs){
-
-      probs[i,]<-probs.temp[tree.out$prob_stage]
-
+      probs[i,]<-parameter_extractor(ceg.temp$stage.structure,ceg.temp$posterior.expectation,n+1,poisson_response,remove_risk_free)
     }
 
     score[i]<-ceg.temp$model.score
