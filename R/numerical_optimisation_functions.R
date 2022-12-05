@@ -68,18 +68,13 @@ ziplike<-function(params, y, t){
 #' @examples
 #' nlm_zip(knee_pain_obs)
 nlm_zip<-function(data,variable_time = TRUE){
-  n<-dim(data)[2] - 1 - 1*variable_time #if there are variable times, they will be an extra column
-  data_levels<-sapply(data[,1:n],nlevels)
-  data.use<-path_refactor(data,n,data_levels)
-  p<-prod(data_levels)
-  Z<-lapply(data_levels,vec_from)#changed because if they don't have same number of levels for each, we get a list.
-  #so we start with a list
-  tree_matrix<-Z[[1]]
-  for(i in 2:n){
-    tree_matrix<-expand_grid(tree_matrix,Z[[i]]) #changed to list too
-    colnames(tree_matrix)[1:i]<-colnames(data.use[,1:n])[1:i]
-  }
-  tree_matrix<-as.data.frame(tree_matrix)
+  #below is also in other zip functions
+
+  path_details<-refactored_tree_matrix(data,variable_time)
+  data.use<-path_details$data_use
+  n<-path_details$num_var
+  p<-path_details$p
+  tree_matrix<-path_details$tree_matrix
 
   output_matrix<-cbind(tree_matrix, p_hat=rep(0,p), l_hat=rep(0,p),n_zero = rep(0,p),n_pos=rep(0,p),y_bar=rep(0,p),t_bar = rep(0,p))
 
@@ -100,7 +95,7 @@ nlm_zip<-function(data,variable_time = TRUE){
     }
 
     if(sum(y)==0){
-      p_0 <- 0
+      p_0 <- 1
       l_0<-0
     }else{
       p_0<-glogit(sum(y>0)/m) #could maybe base this on l_0
