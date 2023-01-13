@@ -144,11 +144,11 @@ plot.EventTree<-function(x, ... ){
             graphics::par(mar = c(1, 1, 1, 1))
             Rgraphviz::plot(g, main = "Event Tree Graph",
                             nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
-           grDevices::pdf("./event-tree-plot.pdf",
-                           width = 8, height = 6, title = "")
-            Rgraphviz::plot(g, main = "Event Tree Graph",
-                            nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
-            grDevices::dev.off()
+         #  grDevices::pdf("./event-tree-plot.pdf",
+         #                  width = 8, height = 6, title = "")
+         #   Rgraphviz::plot(g, main = "Event Tree Graph",
+         #                   nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
+         #   grDevices::dev.off()
 }
 
 
@@ -178,11 +178,11 @@ plot.StagedTree<-function(x, ...){
   names(nAttrs$fillcolor) <- graph::nodes(g)
   Rgraphviz::plot(g, main = "Staged Tree Graph",
                   nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
-  grDevices::pdf("./staged.tree.graph.pdf", width = 8,
-                 height = 6, title = "")
-  Rgraphviz::plot(g, main = "Staged Tree Graph",
-                  nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
-  grDevices::dev.off()
+ # grDevices::pdf("./staged.tree.graph.pdf", width = 8,
+ #                 height = 6, title = "")
+ # Rgraphviz::plot(g, main = "Staged Tree Graph",
+ #                 nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
+ # grDevices::dev.off()
 
 }
 
@@ -219,11 +219,11 @@ plot.ChainEventGraph<-function(x, ...){
     names(nAttrs$fillcolor) <- graph::nodes(g)
     Rgraphviz::plot(g, main = "Chain Event Graph",
                     nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
-    grDevices::pdf("./figure02ceg.pdf", width = 8,
-                  height = 6, title = "Chain Event Graph")
-    Rgraphviz::plot(g, main = "Chain Event Graph",
-                    nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
-    grDevices::dev.off()
+  #  grDevices::pdf("./figure02ceg.pdf", width = 8,
+  #                  height = 6, title = "Chain Event Graph")
+  #  Rgraphviz::plot(g, main = "Chain Event Graph",
+  #                    nodeAttrs = nAttrs, edgeAttrs = eAttrs, attrs = attrsAtt)
+  #  grDevices::dev.off()
 
 }
 
