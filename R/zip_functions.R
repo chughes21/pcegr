@@ -251,16 +251,7 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, p
     }
 
     if(plot_probs){
-      temp<-parameter_extractor(ceg.temp$stage.structure,ceg.temp$posterior.expectation,n+1,poisson_response,remove_risk_free)[,2]
-    if(!remove_risk_free){
-      m<-length(temp)
-      if(m/2 != p){
-        stop("Number of Leaves is Incorrect")
-      }
-      probs[i,]<-temp[seq(from=2,to=m,by=2)]
-    }else{
-      probs[i,]<-temp
-    }
+      probs[i,]<-parameter_extractor(ceg.temp$stage.structure,ceg.temp$posterior.expectation,n+1,poisson_response,remove_risk_free)[,2]
     }
 
     score[i]<-ceg.temp$model.score
