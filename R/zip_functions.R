@@ -238,11 +238,29 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, p
                           p_0 = p_0, l_0 = l_0, tol=tol, var_disc = var_disc, disc_length = disc_length, restrict = restrict, mirror = mirror)
 
     if(plot_rates){
-    rates[i,]<-parameter_extractor(ceg.temp$stage.structure,ceg.temp$posterior.expectation,n+2,poisson_response,remove_risk_free=TRUE) #don't need risk free edges for this
+    temp<-parameter_extractor(ceg.temp$stage.structure,ceg.temp$posterior.expectation,n+2,poisson_response,remove_risk_free)
+    if(!remove_risk_free){
+      m<-length(temp)
+      if(m/2 != p){
+        stop("Number of Leaves is Incorrect")
+      }
+      rates[i,]<-temp[seq(from=2,to=m,by=2)]
+    }else{
+      rates[i,]<-temp
+    }
     }
 
     if(plot_probs){
-      probs[i,]<-parameter_extractor(ceg.temp$stage.structure,ceg.temp$posterior.expectation,n+1,poisson_response,remove_risk_free=TRUE)[,2] #don't need risk free edges for this
+      temp<-parameter_extractor(ceg.temp$stage.structure,ceg.temp$posterior.expectation,n+1,poisson_response,remove_risk_free)[,2]
+    if(!remove_risk_free){
+      m<-length(temp)
+      if(m/2 != p){
+        stop("Number of Leaves is Incorrect")
+      }
+      probs[i,]<-temp[seq(from=2,to=m,by=2)]
+    }else{
+      probs[i,]<-temp
+    }
     }
 
     score[i]<-ceg.temp$model.score
