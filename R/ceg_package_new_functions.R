@@ -18,6 +18,12 @@ stage_structure<-function(mod,zip=FALSE,remove_risk_free = FALSE){
 
     N<-numb[[i]]
 
+    if(length(M)==0){
+      for(j in 1:N){
+        cluster[[j]]=j
+      }
+    }else{
+
     m<-as.matrix(M[,which(M[3,]==(i-1))])
 
     if(i>1){
@@ -74,8 +80,10 @@ stage_structure<-function(mod,zip=FALSE,remove_risk_free = FALSE){
         cluster[[j]]<-as.vector(unlist(check[k]))
         k<-k+1
       }
+     }
     }
     output[[i]]=cluster
+
   }
 
   return(output)
