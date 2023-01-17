@@ -235,7 +235,11 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
       y_temp=0
       t_temp=0
       v<-data_sum[k,1:(numbvariables-1)]
+      if(numbvariables>2){
       ind<-which(row.match(exampledata[,1:(numbvariables-1)],v)==1 )
+      }else{
+        ind<-which(exampledata[,1:(numbvariables-1)]==v)
+      }
       data_counts[[k]]<-exampledata[ind,-(1:(numbvariables-1))]
       if(!variable_time){
         len<-length(data_counts[[k]])
