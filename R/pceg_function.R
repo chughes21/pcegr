@@ -604,7 +604,12 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
   newlist <-list(prior=prior ,data=data ,numb=numb_out,stages=stages ,result=result ,score=score ,
                  merged=merged_out ,comparisonset=comparisonset ,lik=lik) #old output
 
+  if(nv>1){
   lev<-lapply(exampledata[,1:nv],levels)
+  }else{
+  lev<-levels(exampledata[,1])
+  }
+
   if(poisson_response){
     lev[[nv+1]]<-colnames(exampledata)[nv+1]
   }
