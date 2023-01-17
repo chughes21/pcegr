@@ -607,7 +607,8 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
   if(nv>1){
   lev<-lapply(exampledata[,1:nv],levels)
   }else{
-  lev<-levels(exampledata[,1])
+  lev<-list()
+  lev[[1]]<-levels(exampledata[,1])
   }
 
   if(poisson_response){
