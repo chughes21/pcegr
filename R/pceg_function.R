@@ -155,17 +155,19 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     stop("Variable to discretise does not exist")
   }
 
-  situation_data<-c(list(rbind(table(exampledata[,1]))))
-  for (i in 2:(numbvariables-1*poisson_response)){
-    for (j in 1:numb[i]){
-      situation_data<-c(situation_data ,list(rbind(ftable(exampledata[,1:i])[j,])))
-    }
-  }
-
   nv<-numbvariables-1*poisson_response
 
   if(any(numbcat[1:nv]==0)){
     stop("Covariate and/or non Poisson response should be a factor - check again")
+  }
+
+  situation_data<-c(list(rbind(table(exampledata[,1]))))
+  if(nv > 1){
+  for (i in 2:nv){
+    for (j in 1:numb[i]){
+      situation_data<-c(situation_data ,list(rbind(ftable(exampledata[,1:i])[j,])))
+    }
+   }
   }
 
   prior_output<-prior_set(situation_data,structural_zero,nv,numbcat[1:nv],numb[1:nv],equivsize)

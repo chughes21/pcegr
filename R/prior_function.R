@@ -41,8 +41,10 @@ prior_set<-function(sample,struc_zero,numbvariables,numbcat,numb,equivsize){
   paths<-matrix(nrow=n_leaves,ncol=numbvariables+1)
   paths[,1]<-1
   paths[,numbvariables+1]<-leaves
+  if(numbvariables>1){
   for(k in 2:numbvariables){
     paths[,k]=rep(node_list[[k]],each=prod(numbcat[k:numbvariables]))
+    }
   }
 
   paths_edit<-paths
