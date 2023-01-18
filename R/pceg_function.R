@@ -329,6 +329,8 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     indep_ind<-k %in% indep
     saturated_ind<-k %in% saturated
 
+    indep_check<-FALSE
+
     if(!saturated_ind){
 
     if(poisson_response & final_ind){
@@ -456,6 +458,9 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
         }
 
         if(indep_ind){
+          if(length(possible_i)==1){
+            indep_check <- TRUE
+          }
           possible_i = possible_i[1]
         }
 
@@ -603,7 +608,12 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
       if(disc & cat_limit_ind){
         if(sum(abs(min_category-total_cats))==0){ break} #break when minimum categories have been reached
       }
-    }
+
+     if(indep_check){
+       diff.end<-0
+     }
+
+      }
 
     if(zip & k == length(comparisonset)){
       comparisonset1<-c(no_risk_stage,comparisonset1)
