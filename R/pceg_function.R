@@ -480,6 +480,10 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
             i<-seq(i,i+num_nodes*(groups-1),by = num_nodes)
           }
 
+          if(indep_ind){
+            int_set = i+1
+          }
+
           for (j in int_set){
             #to compare
             if(mirror){
@@ -512,8 +516,8 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
               merged_temp<-cbind(merged_temp,c(compare1[l],compare2[l],k))
             }
             #   print(result) use for checking
-            #if the resulting difference is greater than the current difference then we replace it
-            if (result > difference){
+            #if the resulting difference is greater than the current difference then we replace it, or if we are forcing all merging
+            if (result > difference | indep_ind){
               difference<-result
               merged<-merged_temp
             }
