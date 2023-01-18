@@ -114,7 +114,7 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' mod$result
 pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE, zip=FALSE,remove_risk_free = FALSE,
-                        gamma_alpha =1, gamma_beta = 2,structural_zero = FALSE, var_disc = 0, disc_length = 0,
+                        gamma_alpha =1, gamma_beta = 2,structural_zero = FALSE, indep = NA, saturated = NA,var_disc = 0, disc_length = 0,
                         restrict = FALSE, mirror = FALSE, cat_limit=0, collapse = FALSE){
 
   exampledata<-data
@@ -146,6 +146,12 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     stop("Zero-inflation required to remove risk free edges")
   }
 
+  if(!is.na(indep)&!is.na(saturated)){
+    if(length(intersect(indep,saturated))>0){
+      stop("Independent and saturated variables overlap - can only choose one")
+    }
+  }
+
   numbvariables<-dim(exampledata)[2] - 1*variable_time #this means if there is a variable time, it must come last
   numbcat <-sapply(exampledata[,1:numbvariables],FUN=nlevels) #number of categories at each level
   numb<-c(1,cumprod(numbcat[1:(numbvariables-1)])) #number of nodes at each level
@@ -153,6 +159,14 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
 
   if(var_disc > numbvariables){
     stop("Variable to discretise does not exist")
+  }
+
+  if(max(indep)>numbvariables | min(indep)<2){
+    stop("Independent variable does not exist - must be between 2 and number of variables")
+  }
+
+  if(max(saturated)>numbvariables | min(saturated) < 2){
+    stop("Saturated variable does not exist - must be between 2 and number of variables")
   }
 
   nv<-numbvariables-1*poisson_response
@@ -299,11 +313,19 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
 
   n_iter<-length(comparisonset)
 
+  indep<-indep-1
+  saturated<-saturated-1
+
   for (k in 1:n_iter){
 
     diff.end<-1 #to start the algorithm
 
     final_ind<-k == n_iter #final level indicator
+
+    indep_ind<-k %in% indep
+    saturated_ind<-k %in% saturated
+
+    if(!saturated_ind){
 
     if(poisson_response & final_ind){
       poisson<-TRUE #poisson response indicator
@@ -570,7 +592,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
       comparisonset1<-c(no_risk_stage,comparisonset1)
       comparisonset[[k]]<-c(no_risk_stage,comparisonset[[k]])
     }
-
+   }#added
   }
   # Output : stages of the finest partition to be combined to obtain the most probable CEG structure
   stages<-c(1)
