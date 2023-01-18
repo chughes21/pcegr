@@ -455,6 +455,10 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
           intervals_init_temp<-intervals_init
         }
 
+        if(indep_ind){
+          possible_i = possible_i[1]
+        }
+
         for (i in possible_i){
           compare1_temp <-comparisonset2[i]
           num_nodes = length(comparisonset2) #might not need this but I checked and its necessary, unless more changes are made
