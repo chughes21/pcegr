@@ -529,9 +529,14 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
         }
       }
       diff.end<-difference
+
+      if(indep_ind){
+        diff.end<-1
+      }
+
       #We update our priorlist , datalist and comparisonset to obtain the priorlist ,
       #datalist and comparisonlist for C_ {1}
-      if(diff.end >0 | indep_ind){
+      if(diff.end >0){
 
         l1<-which(comparisonset1==merged[1,1])
         l2<-which(comparisonset1==merged[2,1])
