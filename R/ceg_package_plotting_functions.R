@@ -96,7 +96,7 @@ NodeLabel1<-function (num.variable, num.situation, num.category, label)
 
 EdgeLabel1<-function (num.variable, num.situation, label, poisson_response, remove_risk_free, rates = NA, probs = NA)
 {
-  result <- sapply(1:num.variable, function(x) rep(label[[x]],
+  result <- lapply(1:num.variable, function(x) rep(label[[x]],
                                                    num.situation[x]))
 
   rates<-round(rates,2)

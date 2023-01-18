@@ -19,8 +19,9 @@ stage_structure<-function(mod,zip=FALSE,remove_risk_free = FALSE){
     N<-numb[[i]]
 
     if(length(M)==0){
+      cluster<-list()
       for(j in 1:N){
-        cluster[[j]]=j
+        cluster[[j]]<-j
       }
     }else{
 
