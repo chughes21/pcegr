@@ -146,7 +146,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     stop("Zero-inflation required to remove risk free edges")
   }
 
-  if(!is.na(indep)&!is.na(saturated)){
+  if(!anyNA(indep)&!anyNA(saturated)){
     if(length(intersect(indep,saturated))>0){
       stop("Independent and saturated variables overlap - can only choose one")
     }
@@ -161,13 +161,13 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     stop("Variable to discretise does not exist")
   }
 
-  if(!is.na(indep)){
+  if(!anyNA(indep)){
   if(max(indep)>numbvariables | min(indep)<2){
     stop("Independent variable does not exist - must be between 2 and number of variables")
     }
   }
 
-  if(!is.na(saturated)){
+  if(!anyNA(saturated)){
   if(max(saturated)>numbvariables | min(saturated) < 2){
     stop("Saturated variable does not exist - must be between 2 and number of variables")
     }
