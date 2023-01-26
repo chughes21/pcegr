@@ -14,6 +14,8 @@ pceg(
   gamma_alpha = 1,
   gamma_beta = 2,
   structural_zero = FALSE,
+  indep = NA,
+  saturated = NA,
   var_disc = 0,
   disc_length = 0,
   restrict = FALSE,

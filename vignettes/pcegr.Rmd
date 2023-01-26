@@ -118,6 +118,20 @@ hdi_beta_extractor(knee_pain_obs,ptree,level_rel_final = -1, zip=FALSE)
 ```
 For a Poisson response, we use the Gamma function, but for the transition probabilities we use the Beta function. The intervals can be quite tight, which should be expected given the sample sizes. 
 
+We can use a marginal effects plot to assess the impact of each individual covariate. These compare the change in parameters for a particular output variable, generally the response, when one or more of the covariates are changed. This can be used to identify which covariates have positive or negative effects on the parameter estimates, and the magnitude of these effects. Similarly, it can be used to find conditional independence relationships. These plots are particularly useful when the number of covariates, and thus the size of the tree, is large, and it can be difficult to identify conditional independence relationships by eye. If the input_variable and output_variable arguments are not included, the default is to plot the effects of all covariates against the response variable. 
+
+```{r}
+marginal_effect(knee_pain_obs,ptree)
+```
+For Age, we can see a horizontal line for both cases when weight is Over. This represents the conditional independence of knee pain and age given that the individual is overweight. For each variable, besides this conditional independence, we can see that the marginal effect decreases when the value changes from 0 to 1. That is, being Young, being a Normal weight, and having No history of injury all decrease your rates of knee pain. In the plot for history, we can only see three lines. This is because the two lines for Overweight are the exact same, once again representing the conditional independence from Age given Overweight.
+
+These marginal effects are not limited to the response variable. We can also investigate the effects of the covariates on each other. 
+
+```{r}
+marginal_effect(knee_pain_obs,ptree,output_variable=3)
+```
+Notably, as these are probabilities not rates, it is the probability of the variable value corresponding to 1 that is shown, in this case the probability of No history of injury. From the first plot, we can see that going from old to Young increase the probability of No history, but this is the same for both weights. Similarly, in the second plot, we can see that changing the weight has no effect on the probability, but the Young group has a higher probability. These two graphs are showing the same things: namely that Young people have a much higher probability of being injury free, and that History of injury is conditionally independent of Weight given Age.  
+
 We can also check the log marginal likelihood and Chi-square calculation for the model, to assess the fit. 
 
 ```{r}

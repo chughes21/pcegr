@@ -10,7 +10,7 @@ quantile_band(
   signif = 0.05,
   limit = NA,
   shift = TRUE,
-  poisson_response = TRUE,
+  max_per_plot = 8,
   variable_time = TRUE,
   zip = FALSE
 )
@@ -26,7 +26,7 @@ quantile_band(
 
 \item{shift}{A logical value indicating whether the raw observed counts and quantiles should be used (FALSE), or whether they should be shifted by the median (TRUE).}
 
-\item{poisson_response}{A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).}
+\item{max_per_plot}{An integer value specifying the maximum number of leaves that can be shown in a single plot.}
 
 \item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.}
 

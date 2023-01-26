@@ -4,7 +4,7 @@
 \alias{output_list_converter}
 \title{The Output List Converter Function}
 \usage{
-output_list_converter(mod, poisson_response = TRUE)
+output_list_converter(mod, poisson_response = TRUE, levels = NA)
 }
 \arguments{
 \item{mod}{A list created in \code{\link[=pceg]{pceg()}}.}

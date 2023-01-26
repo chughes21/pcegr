@@ -9,7 +9,6 @@ chi_sq_calculator(
   mod,
   limit = 4,
   min_exp = 5,
-  poisson_response = TRUE,
   variable_time = TRUE,
   zip = TRUE,
   dec_place = NA
@@ -23,8 +22,6 @@ chi_sq_calculator(
 \item{limit}{An integer where the number of event counts greater than or equal to this integer are grouped together.}
 
 \item{min_exp}{An integer specifying the minimum expected count necessary for its chi square contribution to be considered.}
-
-\item{poisson_response}{A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).}
 
 \item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).}
 
