@@ -36,8 +36,10 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
 
   output_variable <- numbvariables + rel_output
 
+  resp_out<-(rel_output==0)
+
   if(length(input_variable)==0){
-    input_variable <- c(1:(output_variable-1-1*zip)) #default input variables are all variables not including the risk state if ZIP
+    input_variable <- c(1:(output_variable-1-1*zip*resp_out)) #default input variables are all variables not including the risk state if ZIP
   }
 
   if(!poisson_response & (variable_time)){
@@ -82,7 +84,7 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
 
   output<-pcegr:::parameter_extractor(stage.struct,posterior,output_variable,poisson_response,remove_risk_free) #used to have n1 instead of output_variable, but now I think they're the same
 
-  cv<-output_variable-1-1*zip*(rel_output==0) #the number of covariates that will be used for this
+  cv<-output_variable-1-1*zip*resp_out #the number of covariates that will be used for this
   cv_ind<-1:cv
 
   if(!poisson_response){

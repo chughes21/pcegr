@@ -204,6 +204,10 @@ marginal_effect(knee_pain_obs,ziptree2,zip=TRUE)
 ```
 Instead, we focus on the risk probabilities. 
 
+```{r}
+marginal_effect(knee_pain_obs,ziptree2,rel_output=-1,zip=TRUE)
+```
+
 We now compare the goodness of fit to the PCEG. First, we calculate the log marginal likelihood and the Chi-square calculation. 
 ```{r}
 ziptree1$model.score
