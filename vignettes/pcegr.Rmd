@@ -123,7 +123,7 @@ We can use a marginal effects plot to assess the impact of each individual covar
 ```{r}
 marginal_effect(knee_pain_obs,ptree)
 ```
-For Age, we can see a horizontal line for both cases when weight is Over. This represents the conditional independence of knee pain from age given that the individual is overweight. For each variable, besides this conditional independence, we can see that the marginal effect decreases when the value changes from 0 to 1. That is, being Young, being a Normal weight, or having No history of injury all decrease your rates of knee pain. In the plot for history, we can only see three lines. This is because the two lines for Overweight are the exact same (the green endpoints can be seen with the purple line), once again representing the conditional independence from Age given Overweight.
+For Age, we can see a horizontal line for both cases when weight is Over. This represents the conditional independence of knee pain from age given that the individual is overweight. For each variable, besides this conditional independence, we can see that the marginal effect decreases when the value changes from 0 to 1. That is, being Young, being a Normal weight, or having No history of injury all decrease your rates of knee pain. In the plot for history, we can see two line that are parallel and adjacent to each other. This is because the two lines for Overweight are the exact same (the green endpoints can be seen with the purple line) adn have been "jittered" for plotting, once again representing the conditional independence from Age given Overweight.
 
 These marginal effects are not limited to the response variable. We can also investigate the effects of the covariates on each other. 
 
