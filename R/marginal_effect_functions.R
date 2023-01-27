@@ -4,7 +4,7 @@
 #' @param data A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.
 #' @param mod A StagedTree model fit to the data set, as produced by pceg() or zipceg()
 #' @param input_variable An integer vector detailing the covariates whose marginal effect is to be analysed. The default is to analyse all covariates.
-#' @param output_variable An integer value detailing the variable which is being affect by the input variable(s). The default is to analyse the response variable, but any variable that appears after the input variables in the tree can be analysed.
+#' @param rel_output A non-positive integer value detailing the variable which is being affected by the input variable(s), relative to the response. When 0, this will analyse the response variable, but any variable that appears after the input variables in the tree can be analysed.
 #' @param max_per_plot An integer value specifying the maximum number of leaves that can be shown in a single plot.
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
@@ -15,7 +15,7 @@
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' marginal_effect(knee_pain_obs,mod)
-marginal_effect<-function(data,mod,input_variable = c(),output_variable=0,max_per_plot = 4,variable_time = TRUE,zip=FALSE){
+marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plot = 4,variable_time = TRUE,zip=FALSE){
 
   names<-colnames(data)
 
@@ -25,17 +25,19 @@ marginal_effect<-function(data,mod,input_variable = c(),output_variable=0,max_pe
   numbvariables<-dim(data)[2] + 1*zip-1*variable_time #total number of variables in the dataset including response and possibly ZIP, without time
   numbcovar<-numbvariables-1 #total number of covariates in the data
 
-  if(output_variable==0){
-    output_variable <- numbvariables #default output variable is the response
+  if(rel_output>0){
+    stop("Output variable relative to the response should be nonpositive") #default output variable is the response
   }
+
+  if(rel_output < 0 & !zip){#if want a different output variable to the response
+    poisson_response<-FALSE
+    variable_time<-FALSE
+  }
+
+  output_variable <- numbvariables + rel_output
 
   if(length(input_variable)==0){
     input_variable <- c(1:(output_variable-1-1*zip)) #default input variables are all variables not including the risk state if ZIP
-  }
-
-  if(output_variable < numbvariables){ #if want a different output variable to the response
-    poisson_response<-FALSE
-    variable_time<-FALSE
   }
 
   if(!poisson_response & (variable_time)){
@@ -46,8 +48,8 @@ marginal_effect<-function(data,mod,input_variable = c(),output_variable=0,max_pe
     stop("Only one output variable possible")
   }
 
-  if(max(max(output_variable),output_variable)>numbvariables){
-    stop("Variable number exceeds variables in data")
+  if(max(input_variable)>numbvariables){
+    stop("Input variable number exceeds variables in data")
   }
 
   if(max(input_variable)>= output_variable){
