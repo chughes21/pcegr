@@ -18,12 +18,17 @@
 marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plot = 4,variable_time = TRUE,zip=FALSE){
 
   names<-colnames(data)
+  n<-dim(data)[2]
+
+  if(zip){
+    names<-c(names[c(1:(n-1-1*variable_time))],"risk free",names[-c(1:(n-1-1*variable_time))])
+  }
 
   poisson_response<-mod$event.tree$poisson.response
   remove_risk_free<-mod$remove.risk.free.edges
 
-  numbvariables<-dim(data)[2] + 1*zip-1*variable_time #total number of variables in the dataset including response and possibly ZIP, without time
-  numbcovar<-numbvariables-1 #total number of covariates in the data
+  numbvariables<-n + 1*zip-1*variable_time #total number of variables in the dataset including response and possibly ZIP, without time
+  numbcovar<-numbvariables-1-1*zip #total number of covariates in the data
 
   if(rel_output>0){
     stop("Output variable relative to the response should be nonpositive") #default output variable is the response
@@ -33,16 +38,16 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
     stop("Poisson response needed for variable time")
   }
 
-  if(rel_output < 0 ){#if want a different output variable to the response
-    variable_time<-FALSE
-    if(!zip){
-    poisson_response<-FALSE
-    }
-  }
-
   output_variable <- numbvariables + rel_output
 
-  resp_out<-(rel_output==0)
+  if(output_variable <= numbcovar){ #if the output variable is one of the covariates
+    poisson_response<-FALSE
+    variable_time<-FALSE
+    remove_risk_free<-FALSE
+    zip<-FALSE
+  }
+
+  resp_out<-(rel_output==0) #is the response the output variable
 
   if(length(input_variable)==0){
     input_variable <- c(1:(output_variable-1-1*zip*resp_out)) #default input variables are all variables not including the risk state if ZIP
@@ -67,13 +72,12 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
   #below is copied from expected_counts and into quantile_band - if this changes, so should that
   #make into own function
 
-  ov<-output_variable+1*variable_time -1*zip #an indicator of how far in the data set you want to look, should be all covariates up to output, and then the output.
+  ov<-output_variable-1*zip*resp_out #an indicator of how far in the data set you want to look, should be all covariates up to output, and then the output.
   #if output is the Poisson response with variable time, then we include it
-  #the risk state is not in the data so we need to subtract it from output_variable
+  #the risk state is not in the data so we need to subtract it from output_variable in the case that the response is the output
 
-  path_details<-pcegr:::refactored_tree_matrix(data[,1:ov],variable_time)
+  path_details<-pcegr:::refactored_tree_matrix(data[,1:ov],variable_time = FALSE)#can assume time is false cause we don't need to include
   data_use<-path_details$data_use
-  #n<-path_details$num_var
   p<-path_details$p
   tree<-path_details$tree_matrix
 
@@ -87,9 +91,10 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
   output<-pcegr:::parameter_extractor(stage.struct,posterior,output_variable,poisson_response,remove_risk_free) #used to have n1 instead of output_variable, but now I think they're the same
 
   cv<-output_variable-1-1*zip*resp_out #the number of covariates that will be used for this
+  #don't include the risk state as a covariate cause it doesn't affect the parameter estimates differently (always 0 or not)
   cv_ind<-1:cv
 
-  if(!poisson_response){
+  if(!(poisson_response&resp_out)){
     m<-dim(output)[2]-1
     output<-as.matrix(output[,1:m])
   }else{
@@ -161,7 +166,7 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
       data_temp<-rbind(data_temp,data.frame(input=input_temp,output=output_temp,label=string))
     }
     }
-    if(poisson_response & (output_variable == numbvariables)){
+    if(poisson_response & resp_out){
       ylabel<-"Rate"
     }else{
       ylabel<-"Prob"
@@ -172,7 +177,7 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
     max_lim<-ceiling(max(data_temp$output))
 
     plots[[q]]<-ggplot(data=data_temp,mapping=aes(x=input,y=output,col=label,group=label))+geom_point()+geom_line()+
-      xlab(names[i])+ylab(ylabel)+ylim(0,max_lim)
+      xlab(names[i])+ylab(ylabel)+ylim(0,max_lim)+ggtitle(paste0("Effect of ",names[i]," on ",names[output_variable]," given covariates"))
     q<-q+1
   }
 
