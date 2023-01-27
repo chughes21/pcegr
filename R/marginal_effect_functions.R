@@ -29,9 +29,15 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
     stop("Output variable relative to the response should be nonpositive") #default output variable is the response
   }
 
-  if(rel_output < 0 & !zip){#if want a different output variable to the response
-    poisson_response<-FALSE
+  if(!poisson_response & (variable_time)){
+    stop("Poisson response needed for variable time")
+  }
+
+  if(rel_output < 0 ){#if want a different output variable to the response
     variable_time<-FALSE
+    if(!zip){
+    poisson_response<-FALSE
+    }
   }
 
   output_variable <- numbvariables + rel_output
@@ -40,10 +46,6 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
 
   if(length(input_variable)==0){
     input_variable <- c(1:(output_variable-1-1*zip*resp_out)) #default input variables are all variables not including the risk state if ZIP
-  }
-
-  if(!poisson_response & (variable_time)){
-    stop("Poisson response needed for variable time")
   }
 
   if(length(output_variable)>1){
