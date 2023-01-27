@@ -22,7 +22,7 @@ marginal_effect<-function(data,mod,input_variable = c(),output_variable=0,max_pe
   poisson_response<-mod$event.tree$poisson.response
   remove_risk_free<-mod$remove.risk.free.edges
 
-  numbvariables<-dim(data)[2]-1*variable_time #total number of variables in the dataset including response, without time
+  numbvariables<-dim(data)[2] + 1*zip-1*variable_time #total number of variables in the dataset including response and possibly ZIP, without time
   numbcovar<-numbvariables-1 #total number of covariates in the data
 
   if(output_variable==0){
@@ -30,7 +30,7 @@ marginal_effect<-function(data,mod,input_variable = c(),output_variable=0,max_pe
   }
 
   if(length(input_variable)==0){
-    input_variable <- c(1:(output_variable-1)) #default input variables are all variables
+    input_variable <- c(1:(output_variable-1-1*zip)) #default input variables are all variables not including the risk state if ZIP
   }
 
   if(output_variable < numbvariables){ #if want a different output variable to the response
@@ -55,17 +55,15 @@ marginal_effect<-function(data,mod,input_variable = c(),output_variable=0,max_pe
   }
 
   numbcat <-sapply(data[,1:numbvariables],FUN=nlevels) #number of categories at each level
-  numb<-c(1,cumprod(numbcat[1:(numbvariables-1)])) #number of nodes at each level
+# numb<-c(1,cumprod(numbcat[1:(numbvariables-1)])) #number of nodes at each level
   labels<-lapply(data[,1:numbcovar],levels) #the labels for the covariates, for plotting
-
-  #iv<-length(input_variable)
 
   #below is copied from expected_counts and into quantile_band - if this changes, so should that
   #make into own function
 
-  ov<-output_variable+1*variable_time #an indicator of how far in the data set you want to look, should be all covariates up to output, and then the output.
+  ov<-output_variable+1*variable_time -1*zip #an indicator of how far in the data set you want to look, should be all covariates up to output, and then the output.
   #if output is the Poisson response with variable time, then we include it
-
+  #the risk state is not in the data so we need to subtract it from output_variable
 
   path_details<-pcegr:::refactored_tree_matrix(data[,1:ov],variable_time)
   data_use<-path_details$data_use
@@ -78,9 +76,9 @@ marginal_effect<-function(data,mod,input_variable = c(),output_variable=0,max_pe
   posterior<-mod$posterior.expectation
   stage.struct<-mod$stage.structure
 
-  n1<-ov -1*variable_time +1*zip #a number to be used below
+ #  n1<-ov -1*variable_time +1*zip #a number to be used below
 
-  output<-pcegr:::parameter_extractor(stage.struct,posterior,n1,poisson_response,remove_risk_free)
+  output<-pcegr:::parameter_extractor(stage.struct,posterior,output_variable,poisson_response,remove_risk_free) #used to have n1 instead of output_variable, but now I think they're the same
 
   cv<-output_variable-1 #the number of covariates that will be used for this
   cv_ind<-1:cv
