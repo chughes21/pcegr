@@ -65,17 +65,20 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
     stop("Output variable must come after input variable(s)")
   }
 
-  numbcat <-sapply(data[,1:numbcovar],FUN=nlevels) #number of categories at each level
-  labels<-lapply(data[,1:numbcovar],levels) #the labels for the covariates, for plotting
+  cv<-output_variable-1-1*zip*resp_out #the number of covariates that will be used for this
+  #don't include the risk state as a covariate cause it doesn't affect the parameter estimates differently (always 0 or not)
+  cv_ind<-1:cv
 
+  numbcat <-sapply(data[,1:cv],FUN=nlevels) #number of categories at each level
+# numb<-c(1,cumprod(numbcat[1:(numbvariables-1)])) #number of nodes at each level
+  labels<-lapply(data[,1:cv],levels) #the labels for the covariates, for plotting
+
+  #below is copied from expected_counts and into quantile_band - if this changes, so should that
+  #make into own function
 
   ov<-output_variable-1*zip*resp_out #an indicator of how far in the data set you want to look, should be all covariates up to output, and then the output.
   #if output is the Poisson response with variable time, then we include it
   #the risk state is not in the data so we need to subtract it from output_variable in the case that the response is the output
-
-
-  #below is copied from expected_counts and into quantile_band - if this changes, so should that
-  #make into own function
 
   path_details<-pcegr:::refactored_tree_matrix(data[,1:ov],variable_time = FALSE)#can assume time is false cause we don't need to include
   data_use<-path_details$data_use
@@ -129,7 +132,7 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
 
     non_input<-cv_ind[-i] #the covariates that are not being examined
 
-    combinations<-expand.grid()
+    combinations<-expand.grid(num_levels[-i])
 
     h<-dim(combinations)[1]
 
