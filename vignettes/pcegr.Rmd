@@ -123,12 +123,12 @@ We can use a marginal effects plot to assess the impact of each individual covar
 ```{r}
 marginal_effect(knee_pain_obs,ptree)
 ```
-For Age, we can see a horizontal line for both cases when weight is Over. This represents the conditional independence of knee pain and age given that the individual is overweight. For each variable, besides this conditional independence, we can see that the marginal effect decreases when the value changes from 0 to 1. That is, being Young, being a Normal weight, and having No history of injury all decrease your rates of knee pain. In the plot for history, we can only see three lines. This is because the two lines for Overweight are the exact same, once again representing the conditional independence from Age given Overweight.
+For Age, we can see a horizontal line for both cases when weight is Over. This represents the conditional independence of knee pain from age given that the individual is overweight. For each variable, besides this conditional independence, we can see that the marginal effect decreases when the value changes from 0 to 1. That is, being Young, being a Normal weight, or having No history of injury all decrease your rates of knee pain. In the plot for history, we can only see three lines. This is because the two lines for Overweight are the exact same (the green endpoints can be seen with the purple line), once again representing the conditional independence from Age given Overweight.
 
 These marginal effects are not limited to the response variable. We can also investigate the effects of the covariates on each other. 
 
 ```{r}
-marginal_effect(knee_pain_obs,ptree,output_variable=3)
+marginal_effect(knee_pain_obs,ptree,rel_output=-1)
 ```
 Notably, as these are probabilities not rates, it is the probability of the variable value corresponding to 1 that is shown, in this case the probability of No history of injury. From the first plot, we can see that going from old to Young increase the probability of No history, but this is the same for both weights. Similarly, in the second plot, we can see that changing the weight has no effect on the probability, but the Young group has a higher probability. These two graphs are showing the same things: namely that Young people have a much higher probability of being injury free, and that History of injury is conditionally independent of Weight given Age.  
 
@@ -200,7 +200,7 @@ plot(zipceg2)
 
 We can once again use the marginal effects plot to investigate the effects of the covariates on both the risk probabilities and the rates. For the rates, the plots should look like scaled versions of the original Poisson staged tree.  
 ```{r}
-marginal_effect(knee_pain_obs,ziptree2,output_variable=4,zip=TRUE)
+marginal_effect(knee_pain_obs,ziptree2,zip=TRUE)
 ```
 Instead, we focus on the risk probabilities. 
 
