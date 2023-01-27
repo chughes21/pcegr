@@ -171,7 +171,7 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
 
     max_lim<-ceiling(max(data_temp$output))
 
-    plots[[q]]<-ggplot(data=data_temp,mapping=aes(x=input,y=output,col=label,group=label))+geom_point()+geom_line(position = position_dodge(width = 0.2))+
+    plots[[q]]<-ggplot(data=data_temp,mapping=aes(x=input,y=output,col=label,group=label))+geom_point(position = position_dodge(width = 0.2))+geom_line(position = position_dodge(width = 0.2))+
       xlab(names[i])+ylab(ylabel)+ylim(0,max_lim)+ggtitle(paste0("Effect of ",names[i]," on ",names[output_variable]," given covariates"))
     q<-q+1
   }
