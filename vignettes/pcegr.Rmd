@@ -207,7 +207,7 @@ Instead, we focus on the risk probabilities. Note that the probabilities shown a
 ```{r}
 marginal_effect(knee_pain_obs,ziptree2,rel_output=-1,zip=TRUE)
 ```
-We can see that a Young age, a Normal weight, or No history all increase the probability of being risk free, as expected. 
+We can see that a Young age, a Normal weight, or No history all increase the probability of being risk free, as expected. In fact, we can see that these plots are almost a mirror image to the plots for the rates, this is due to the relationship between the risk free probabilities and rates that was enforced in the simulation and will not be true in general. 
 
 We now compare the goodness of fit to the PCEG. First, we calculate the log marginal likelihood and the Chi-square calculation. 
 ```{r}
