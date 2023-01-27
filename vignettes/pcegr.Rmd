@@ -202,11 +202,12 @@ We can once again use the marginal effects plot to investigate the effects of th
 ```{r}
 marginal_effect(knee_pain_obs,ziptree2,zip=TRUE)
 ```
-Instead, we focus on the risk probabilities. 
+Instead, we focus on the risk probabilities. Note that the probabilities shown are the probability of being risk free, so an increase in probability is positive.
 
 ```{r}
 marginal_effect(knee_pain_obs,ziptree2,rel_output=-1,zip=TRUE)
 ```
+We can see that a Young age, a Normal weight, or No history all increase the probability of being risk free, as expected. 
 
 We now compare the goodness of fit to the PCEG. First, we calculate the log marginal likelihood and the Chi-square calculation. 
 ```{r}

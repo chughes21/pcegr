@@ -8,7 +8,7 @@ marginal_effect(
   data,
   mod,
   input_variable = c(),
-  output_variable = 0,
+  rel_output = 0,
   max_per_plot = 4,
   variable_time = TRUE,
   zip = FALSE
@@ -21,7 +21,7 @@ marginal_effect(
 
 \item{input_variable}{An integer vector detailing the covariates whose marginal effect is to be analysed. The default is to analyse all covariates.}
 
-\item{output_variable}{An integer value detailing the variable which is being affect by the input variable(s). The default is to analyse the response variable, but any variable that appears after the input variables in the tree can be analysed.}
+\item{rel_output}{A non-positive integer value detailing the variable which is being affected by the input variable(s), relative to the response. When 0, this will analyse the response variable, but any variable that appears after the input variables in the tree can be analysed.}
 
 \item{max_per_plot}{An integer value specifying the maximum number of leaves that can be shown in a single plot.}
 
