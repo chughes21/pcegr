@@ -135,7 +135,7 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
     combinations<-as.matrix(num_levels[[non_input[1]]])
     if(cv>2){
     for(j in 2:(cv-1)){
-      combinations<-expand.grid(combinations,num_levels[[non_input[1]]])
+      combinations<-expand.grid(combinations,num_levels[[non_input[j]]])
      }
     }
 
