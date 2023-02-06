@@ -114,7 +114,7 @@ state_imputer<-function(data,lambda=1,prob=0.5,variable_time=TRUE,stoch=TRUE,all
 #' mod<-zipceg(knee_pain_obs,"nlm")
 #' summary(mod)
 zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response = TRUE,
-                      variable_time = TRUE, remove_risk_free = FALSE, stoch_imputation = TRUE, gamma_alpha =1, gamma_beta = 2, beta_c = 1, beta_d = 1,
+                      variable_time = TRUE, remove_risk_free = TRUE, stoch_imputation = TRUE, gamma_alpha =1, gamma_beta = 2, beta_c = 1, beta_d = 1,
                       p_0 = 0.5, l_0 = 1, tol=1e-10, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
 
   if(!(method %in% c("Gibbs","nlm","EM","mle","mm"))){
@@ -204,7 +204,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @examples zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time=TRUE)
 zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, plot_rates = TRUE,
                            plot_probs = FALSE, hist = FALSE, line = FALSE, scatter = FALSE, equivsize=2,
-                           poisson_response = TRUE, variable_time = FALSE,remove_risk_free = FALSE, stoch_imputation=TRUE,
+                           poisson_response = TRUE, variable_time = TRUE,remove_risk_free = TRUE, stoch_imputation=TRUE,
                            print_output = FALSE, gamma_alpha = 1, gamma_beta = 2, beta_c = 1, beta_d = 1,p_0=NA,l_0=NA,
                            tol=1e-10, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
   if(sum(hist,scatter,line)>1 ){

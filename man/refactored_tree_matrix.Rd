@@ -4,7 +4,7 @@
 \alias{refactored_tree_matrix}
 \title{The Tree Matrix Function}
 \usage{
-refactored_tree_matrix(data, variable_time)
+refactored_tree_matrix(data, variable_time = TRUE)
 }
 \arguments{
 \item{data}{A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.}

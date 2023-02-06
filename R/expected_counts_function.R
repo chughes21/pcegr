@@ -284,7 +284,7 @@ parameter_extractor<-function(stage_struct, posterior, var, poisson_response = T
 #'
 #' mod2<-zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
 #' chi_sq_calculator(knee_pain_obs,mod2)
-chi_sq_calculator<-function(data,mod,limit=4,min_exp=5,variable_time=TRUE,zip=TRUE, dec_place = NA){
+chi_sq_calculator<-function(data,mod,limit=4,min_exp=5,variable_time=TRUE,zip=FALSE, dec_place = NA){
 
   poisson_response<-mod$event.tree$poisson.response
   remove_risk_free<-mod$remove.risk.free.edges

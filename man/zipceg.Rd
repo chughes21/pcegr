@@ -11,7 +11,7 @@ zipceg(
   equivsize = 2,
   poisson_response = TRUE,
   variable_time = TRUE,
-  remove_risk_free = FALSE,
+  remove_risk_free = TRUE,
   stoch_imputation = TRUE,
   gamma_alpha = 1,
   gamma_beta = 2,

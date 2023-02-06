@@ -10,7 +10,7 @@ chi_sq_calculator(
   limit = 4,
   min_exp = 5,
   variable_time = TRUE,
-  zip = TRUE,
+  zip = FALSE,
   dec_place = NA
 )
 }

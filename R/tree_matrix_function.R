@@ -7,7 +7,7 @@
 #'
 #' @return A list containing the refactored data, the number of levels in the tree, the number of leaves in the tree, a vector of the levels for each variable, and the refactored tree matrix.
 #'
-refactored_tree_matrix<-function(data,variable_time){
+refactored_tree_matrix<-function(data,variable_time = TRUE){
 
   n<-dim(data)[2] - 1 - 1*variable_time#if there are variable times, they will be an extra column
   data_levels<-sapply(data[,1:n],nlevels)

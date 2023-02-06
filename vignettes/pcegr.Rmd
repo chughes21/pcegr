@@ -123,7 +123,7 @@ We can use a marginal effects plot to assess the impact of each individual covar
 ```{r}
 marginal_effect(knee_pain_obs,ptree)
 ```
-For Age, we can see a horizontal line for both cases when weight is Over. This represents the conditional independence of knee pain from age given that the individual is overweight. For each variable, besides this conditional independence, we can see that the marginal effect decreases when the value changes from 0 to 1. That is, being Young, being a Normal weight, or having No history of injury all decrease your rates of knee pain. In the plot for history, we can see two line that are parallel and adjacent to each other. This is because the two lines for Overweight are the exact same (the green endpoints can be seen with the purple line) adn have been "jittered" for plotting, once again representing the conditional independence from Age given Overweight.
+For Age, we can see a horizontal line for both cases when weight is Over. This represents the conditional independence of knee pain from age given that the individual is overweight. We can see that being Young, being a Normal weight, or having No history of injury all decrease your rates of knee pain. In the plot for history, we can see two lines that are parallel and adjacent to each other. This is because the two lines for Overweight are the exact same (the green endpoints can be seen with the purple line) and have been "jittered" for plotting, once again representing the conditional independence from Age given Overweight.
 
 These marginal effects are not limited to the response variable. We can also investigate the effects of the covariates on each other. 
 
@@ -136,7 +136,7 @@ We can also check the log marginal likelihood and Chi-square calculation for the
 
 ```{r}
 ptree$model.score
-chi_sq_calculator(knee_pain_obs,limit=3,ptree,zip=FALSE,dec_place=2)
+chi_sq_calculator(knee_pain_obs,limit=3,ptree,dec_place=2)
 ```
 In the Chi-square contribution matrix, we can see some large values. In particular, for the leaves with higher rates, such as 4, 6 and 8, we can see that the contributions for the zero counts are much higher. This is because there are much more observed zero counts than would be expected with such a high rate, an indication of zero-inflation. In contrast, for the leaves with low rates like $l_1$, we can see large contributions for the nonzero counts. This is because there are a much higher number of observed counts than we would expect based on the small rate. however, for both Leaf 1 and Leaf 5, the expected count is not greater than the minimum expected count of 5, and so they do not factor into the calculation.  
 
