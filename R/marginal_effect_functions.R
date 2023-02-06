@@ -167,6 +167,12 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
       ylabel<-"Prob"
     }
 
+    max_lev<-mod$event.tree$num.category[i]
+    lev_temp<-c(max_lev:1)-1
+    for(k in 1:max_lev){
+      data.temp$input[which(data.temp$input==lev_temp[k])]<-labels[[i]][k]
+    }
+
     data_temp$input<-as.factor(data_temp$input)
 
     max_lim<-ceiling(max(data_temp$output))
