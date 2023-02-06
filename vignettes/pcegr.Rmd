@@ -174,7 +174,7 @@ d<-0.125
 We will also run the Gibbs sampler for $N=10,000$ iterations. When the parameters are estimated using the Gibbs sampler, we will impute the states stochastically. Due to this randomness, and to make sure the results are replicable, we will also set the seed. 
 ```{r}
 set.seed(13579)
-ziptree1<-zipceg(knee_pain_obs,"Gibbs",iter=1000,variable_time = TRUE, stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b, beta_c = c, beta_d = d)
+ziptree1<-zipceg(knee_pain_obs,"Gibbs",iter=1000,remove_risk_free = FALSE, stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b, beta_c = c, beta_d = d)
 summary(ziptree1)
 zipceg1<-ChainEventGraph(ziptree1)
 plot(ziptree1)
@@ -187,7 +187,7 @@ However, we can also plot the models assuming the risk free edges and leaves hav
 ```{r}
 plot(EventTree(knee_pain_obs,zip=TRUE,remove_risk_free = TRUE))
 set.seed(13579)
-ziptree2<-zipceg(knee_pain_obs,"Gibbs",iter=1000,variable_time = TRUE, remove_risk_free=TRUE, stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b, beta_c = c, beta_d = d)
+ziptree2<-zipceg(knee_pain_obs,"Gibbs",iter=1000, remove_risk_free=TRUE, stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b, beta_c = c, beta_d = d)
 summary(ziptree2)
 plot(ziptree2)
 ```
@@ -244,14 +244,14 @@ Hence, the ZIPCEG is a significantly better fit to the data than the PCEG accord
 We can also fit the ZIPCEG using the *nlm* method instead. Notably, this doesn't require a Beta($c,d$) prior, or a number of iterations. It is also significantly faster. We once again set the seed. 
 ```{r}
 set.seed(2468)
-ziptree3<-zipceg(knee_pain_obs,"nlm",variable_time = TRUE, stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b)
+ziptree3<-zipceg(knee_pain_obs,"nlm", stoch_imputation = TRUE, gamma_alpha = a, gamma_beta = b)
 plot(ziptree3)
 
 ```
 The staged tree matches the result from using the Gibbs sampler. Comparing the two ZIPCEG models fitted, the Bayes Factor appears to favour the *nlm* method while the Chi square barely favours the Gibbs sampler.
 ```{r}
 ziptree1$model.score-ziptree3$model.score
-chi_sq_calculator(knee_pain_obs,ziptree1,limit=3)$chi_sq-chi_sq_calculator(knee_pain_obs,ziptree3,limit=3)$chi_sq
+chi_sq_calculator(knee_pain_obs,ziptree1,limit=3,zip=TRUE)$chi_sq-chi_sq_calculator(knee_pain_obs,ziptree3,limit=3,zip=TRUE)$chi_sq
 ```
 
 ## ZIPCEG Stability Analysis
@@ -261,9 +261,9 @@ However, both of these models are the result of one iteration, and the ZIPCEG mo
 we will use violin plots to visualise, but there are options to use histograms, scatter plots, or line plots. We will use the *nlm* method at each iteration, due to its lower computational cost. 
 ```{r}
 set.seed(1098765)
-maptree<-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time = TRUE,remove_risk_free = TRUE, gamma_alpha=a,gamma_beta=b,print_output = FALSE)$mod
+maptree<-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,remove_risk_free = TRUE, gamma_alpha=a,gamma_beta=b,print_output = FALSE)$mod
 set.seed(314159)
-noprint.mod<-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,variable_time = TRUE,remove_risk_free = TRUE, plot_rates=FALSE,plot_probs=TRUE,gamma_alpha=a,gamma_beta=b)
+noprint.mod<-zipceg.iter(knee_pain_obs,"nlm",iter_total=100,remove_risk_free = TRUE, plot_rates=FALSE,plot_probs=TRUE,gamma_alpha=a,gamma_beta=b)
 ```
 We can see in the plot of the rates the merging that is present for leaves 3 and 7, and 4 and 8. The violin plots are identical, indicating that they always merge, and so we can be confident in the result from our initial model selection. In general, the violin plots are quite tight, which is a result of the large sample size and demarcation between the leaves. The risk probabilities also show these mergings, although not as consistently as for the rates. For example, the risk probability of leaf 4 occasionally merges with leaf 6 instead of 8. In both plots, leaf 5 is by far the most variable, and this is a result of it having the smallest sample size.
 
