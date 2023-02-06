@@ -170,7 +170,7 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
     max_lev<-mod$event.tree$num.category[i]
     lev_temp<-c(max_lev:1)-1
     for(k in 1:max_lev){
-      data.temp$input[which(data.temp$input==lev_temp[k])]<-labels[[i]][k]
+      data_temp$input[which(data_temp$input==lev_temp[k])]<-labels[[i]][k]
     }
 
     data_temp$input<-as.factor(data_temp$input)
