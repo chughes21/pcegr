@@ -82,7 +82,7 @@ prior_set<-function(sample,struc_zero,numbvariables,numbcat,numb,equivsize){
           v[k]=length(which(paths_zoom_edit[,i+1]==edges[k]))
         }
         leaf_list_edit<-c(leaf_list_edit,list(v))
-        prior<-c(prior,list(equivsize*leaf_list_edit[[count]]/n_leaves_edit))
+        prior<-c(prior,list(rbind(equivsize*leaf_list_edit[[count]]/n_leaves_edit)))
         count<-count+1
       }
     }
