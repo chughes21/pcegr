@@ -300,6 +300,13 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
   for( i in 1: sum(numb)){
     alpha<-unlist(prior[i])
     N<-unlist(data[i])
+    if(structural_zero){
+      alpha<-alpha[alpha>0]
+      N<-N[N>0]
+      if(length(alpha)!=length(N)){
+        stop("Zeroes in prior don't match data")
+      }
+    }
     lik<-lik+sum(lgamma(alpha+N)-lgamma(alpha))+sum(lgamma(sum(alpha))-lgamma(
       sum(alpha+N)))
   }
