@@ -307,8 +307,10 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
         stop("Zeroes in prior don't match data")
       }
     }
+    if(length(alpha)>0){
     lik<-lik+sum(lgamma(alpha+N)-lgamma(alpha))+sum(lgamma(sum(alpha))-lgamma(
       sum(alpha+N)))
+    }
   }
 
   if(poisson_response){
