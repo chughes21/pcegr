@@ -67,7 +67,7 @@ uniform_time_zip<-function(data,method = "mle",time_input = FALSE){
 
     output_matrix$l_hat[i]=lambda
     output_matrix$p_hat[i]=prob
-    output_matrix$n_pos[i]=round(output_matrix$p_hat[i]*m)
+    output_matrix$n_pos[i]=sum(y>0)
     output_matrix$n_zero[i]=m-output_matrix$n_pos[i]
     output_matrix$y_bar[i]=sum(y)
     output_matrix$t_bar[i]=m

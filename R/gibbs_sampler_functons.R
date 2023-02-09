@@ -124,7 +124,7 @@ gibbs_zip<-function(data,N = 1000, variable_time = TRUE, a = 1, b = 1, c = 1, d 
     }
     output_matrix$l_hat[i]=mean(lambda)
     output_matrix$p_hat[i]=mean(prob)
-    output_matrix$n_pos[i]=round(output_matrix$p_hat[i]*m)
+    output_matrix$n_pos[i]=sum(y>0)
     output_matrix$n_zero[i]=m-output_matrix$n_pos[i]
     output_matrix$y_bar[i]=sum(y)
     output_matrix$t_bar[i]=sum(t)
