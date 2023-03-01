@@ -132,6 +132,14 @@ marginal_effect(knee_pain_obs,ptree,rel_output=-1)
 ```
 Notably, as these are probabilities not rates, it is the probability of the variable value corresponding to 1 that is shown, in this case the probability of No history of injury. From the first plot, we can see that going from old to Young increase the probability of No history, but this is the same for both weights. Similarly, in the second plot, we can see that changing the weight has no effect on the probability, but the Young group has a higher probability. These two graphs are showing the same things: namely that Young people have a much higher probability of being injury free, and that History of injury is conditionally independent of Weight given Age.  
 
+In a similar way to logistic regression, we can also calculate the variance inflation factor (vif). The vif is a measure of multicollinearity in the model, but staged trees we will often use it to find confounders. Strong association between the covariates themselves is not necessarily an issue in staged trees, as they do not require independence between them, and in fact is a benefit for the depiction of the process. However, we will use the vif to identify confounders, or at least one interpretation of confounders. When the association between two (or more) variables is so strong that it leads to consistently sparse edge counts, it can be useful to remove one of the variables. The vif can identify when a variable, whether a covariate or response, is strongly correlated with the preceding variables in the tree. However, it is only defined for categorical variables as of yet. 
+
+```{r}
+vif(ptree,2)
+vif(ptree,3)
+```
+The vif is close enough to 1 in both cases to indicate there is not too much correlation between the covariates. 
+
 We can also check the log marginal likelihood and Chi-square calculation for the model, to assess the fit. 
 
 ```{r}
