@@ -29,11 +29,10 @@ vif<-function(mod,var){
 
   ind<-which(!is.na(post[,1]))
   J<-length(ind)
-  K<-length(post[1,])
 
   l1<-0
 
-  for(j in 1:J){
+  for(j in ind){
     pv<-post[j,]
     dv<-data[j,]
     l1<-l1+sum(dv*log(pv))
