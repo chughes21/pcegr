@@ -45,7 +45,7 @@ path_prob_extractor<-function(mod,precision = 5){
   num_var<-mod$event.tree$num.variable-1*poisson.response
   data_levels<-mod$event.tree$num.category[1:num_var]
 
-  params<-c(list(post[[1]]),lapply(c(2:num_var),pcegr:::parameter_extractor,stage_struct = stage.struct, posterior = post, poisson_response = poisson.response,remove_risk_free = remove.risk.free))
+  params<-c(list(post[[1]]),lapply(c(2:num_var),parameter_extractor,stage_struct = stage.struct, posterior = post, poisson_response = poisson.response,remove_risk_free = remove.risk.free))
 
   edges<-cumprod(data_levels)
   p<-max(edges)

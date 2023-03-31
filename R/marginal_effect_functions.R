@@ -80,7 +80,7 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
   #if output is the Poisson response with variable time, then we include it
   #the risk state is not in the data so we need to subtract it from output_variable in the case that the response is the output
 
-  path_details<-pcegr:::refactored_tree_matrix(data[,1:ov],variable_time = FALSE)#can assume time is false cause we don't need to include
+  path_details<-refactored_tree_matrix(data[,1:ov],poisson_response,variable_time = FALSE)#can assume time is false cause we don't need to include
   data_use<-path_details$data_use
   p<-path_details$p
   tree<-path_details$tree_matrix
