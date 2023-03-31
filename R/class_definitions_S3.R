@@ -110,6 +110,11 @@ StagedTree<-function(data,prior,counts,posterior,stage.struc,stages,merged,resul
 #' ceg<-ChainEventGraph(mod)
 #' plot(ceg)
 ChainEventGraph<-function(staged.tree){
+
+  if(staged.tree$event.tree$num.variable<=2){
+    stop("ChainEventGraph constructor only defined for StagedTrees with more than two variables.")
+  }
+
   position <- StratifiedCegPosition1(staged.tree$stage.structure,
                                      staged.tree$event.tree$num.category, staged.tree$event.tree$num.situation)
   return(structure(list(staged.tree = staged.tree,
