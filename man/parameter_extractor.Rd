@@ -29,7 +29,3 @@ A numeric matrix or vector (for Poisson rates) detailing the individual posterio
 \description{
 The Parameter Extractor Function
 }
-\examples{
-mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-parameter_extractor(mod$stage.structure,mod$posterior.expectation,2,TRUE,FALSE)
-}

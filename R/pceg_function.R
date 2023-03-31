@@ -100,6 +100,8 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #' @param gamma_alpha A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.
 #' @param gamma_beta A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.
 #' @param structural_zero A logical value indicating whether zero counts in the data set should be considered as structural (TRUE) or sampling (FALSE) for the setting of the prior.
+#' @param indep An integer vector indicating which variables should be assumed to be independent of preceding variables (all situations in same stage).
+#' @param saturated An integer vector indicating which variables should be assumed to be saturated (all situations in own stage).
 #' @param var_disc An integer value specifying which variable to discretise. If 0, no discretisation is necessary.
 #' @param disc_length An integer value specifying how many neighbours can be searched over for the purposes of variable discetisation. If 0, all other possible stages may be merged over.
 #' @param restrict A logical value indicating whether variable discretisation should be restricted to stages with the same unfolding of the process (TRUE) or not (FALSE).

@@ -218,10 +218,6 @@ merge_separator<-function(mod,n,p, tree,data_levels, zip=FALSE){
 #' @param remove_risk_free A logical value indicating whether the risk free leaves and edges should be removed (TRUE) or not (FALSE).
 #'
 #' @return A numeric matrix or vector (for Poisson rates) detailing the individual posterior expectations for each situation for the chosen variable.
-#'
-#' @examples
-#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-#' parameter_extractor(mod$stage.structure,mod$posterior.expectation,2,TRUE,FALSE)
 parameter_extractor<-function(stage_struct, posterior, var, poisson_response = TRUE, remove_risk_free = TRUE){
 
   if(remove_risk_free & !poisson_response){

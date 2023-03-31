@@ -15,7 +15,3 @@ A numeric vector with mn elements, where each row of the matrix is concatenated 
 \description{
 Convert a matrix into a vector, row by row.
 }
-\examples{
-mat<-matrix(runif(6),nrow=3);mat
-matrix_to_vector(mat)
-}

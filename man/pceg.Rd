@@ -43,6 +43,10 @@ pceg(
 
 \item{structural_zero}{A logical value indicating whether zero counts in the data set should be considered as structural (TRUE) or sampling (FALSE) for the setting of the prior.}
 
+\item{indep}{An integer vector indicating which variables should be assumed to be independent of preceding variables (all situations in same stage).}
+
+\item{saturated}{An integer vector indicating which variables should be assumed to be saturated (all situations in own stage).}
+
 \item{var_disc}{An integer value specifying which variable to discretise. If 0, no discretisation is necessary.}
 
 \item{disc_length}{An integer value specifying how many neighbours can be searched over for the purposes of variable discetisation. If 0, all other possible stages may be merged over.}

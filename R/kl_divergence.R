@@ -5,10 +5,6 @@
 #' @param mat A numeric matrix with m rows and n columns
 #'
 #' @return A numeric vector with mn elements, where each row of the matrix is concatenated to the next.
-#'
-#' @examples
-#' mat<-matrix(runif(6),nrow=3);mat
-#' matrix_to_vector(mat)
 matrix_to_vector<-function(mat){
   return(c(t(mat)))
 }
@@ -22,9 +18,6 @@ matrix_to_vector<-function(mat){
 #' @param num_leaves An integer count of the number of leaves in the StagedTree object.
 #'
 #' @return A numeric vector the length of num_leaves where each element is the corresponding stage probability for that part of the path.
-#'
-#' @examples
-#' tree_repeater(c(0.5,0.5),8)
 tree_repeater<-function(vec,num_leaves){
   i=num_leaves/length(vec)
   return(rep(vec,each=i))

@@ -97,6 +97,7 @@ stage_structure<-function(mod,zip=FALSE,remove_risk_free = FALSE){
 #'
 #' @param mod A list created in [pceg()].
 #' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
+#' @param levels A list indicating the column names.
 #'
 #' @return A list for the prior distribution and a list for the posterior distribution.
 output_list_converter<-function(mod,poisson_response=TRUE,levels = NA){

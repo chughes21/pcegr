@@ -10,6 +10,8 @@ output_list_converter(mod, poisson_response = TRUE, levels = NA)
 \item{mod}{A list created in \code{\link[=pceg]{pceg()}}.}
 
 \item{poisson_response}{A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).}
+
+\item{levels}{A list indicating the column names.}
 }
 \value{
 A list for the prior distribution and a list for the posterior distribution.

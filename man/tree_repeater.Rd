@@ -17,6 +17,3 @@ A numeric vector the length of num_leaves where each element is the correspondin
 \description{
 Repeat stage probabilities for each path they are a constituent of.
 }
-\examples{
-tree_repeater(c(0.5,0.5),8)
-}
