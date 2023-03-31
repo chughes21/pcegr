@@ -3,13 +3,14 @@
 #' A function to refactor the data and create a refactored matrix that matches the covariates in the tree.
 #'
 #' @param data A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.
+#' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #'
 #' @return A list containing the refactored data, the number of levels in the tree, the number of leaves in the tree, a vector of the levels for each variable, and the refactored tree matrix.
 #'
-refactored_tree_matrix<-function(data,variable_time = TRUE){
+refactored_tree_matrix<-function(data,poisson_response = TRUE, variable_time = TRUE){
 
-  n<-dim(data)[2] - 1 - 1*variable_time#if there are variable times, they will be an extra column
+  n<-dim(data)[2] - 1*poisson_response - 1*variable_time#if there are variable times, they will be an extra column
   data_levels<-sapply(data[,1:n],nlevels)
   p<-prod(data_levels)
 

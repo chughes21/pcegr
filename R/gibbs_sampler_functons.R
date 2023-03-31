@@ -6,7 +6,7 @@
 #' @param n An integer for the number of columns to refactor, beginning from the start.
 #' @param data_levels An integer vector of the number of levels for each covariate.
 #'
-#' @return A data set where the categorical covariates have been refactor to start at 0 and end at the number of levels - 1.
+#' @return A data set where the categorical covariates have been refactored to start at 0 and end at the number of levels - 1.
 #'
 #'
 path_refactor<-function(data,n,data_levels){
@@ -48,7 +48,7 @@ gibbs_zip<-function(data,N = 1000, variable_time = TRUE, a = 1, b = 1, c = 1, d 
 
   #below is also in other zip functions
 
-  path_details<-refactored_tree_matrix(data,variable_time)
+  path_details<-refactored_tree_matrix(data,TRUE,variable_time)
   data.use<-path_details$data_use
   n<-path_details$num_var
   p<-path_details$p

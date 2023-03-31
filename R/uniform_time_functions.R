@@ -26,7 +26,7 @@ uniform_time_zip<-function(data,method = "mle",time_input = FALSE){
 
   #below is also in other zip functions
 
-  path_details<-refactored_tree_matrix(data,time_input)
+  path_details<-refactored_tree_matrix(data,TRUE,time_input)
   data.use<-path_details$data_use
   n<-path_details$num_var
   p<-path_details$p

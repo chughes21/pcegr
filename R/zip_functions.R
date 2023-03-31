@@ -17,7 +17,7 @@ state_imputer<-function(data,lambda=1,prob=0.5,variable_time=TRUE,stoch=TRUE,all
 
   #below is also in other zip functions
 
-  path_details<-refactored_tree_matrix(data,variable_time)
+  path_details<-refactored_tree_matrix(data,TRUE,variable_time)
   data.use<-path_details$data_use
   n<-path_details$num_var
   p<-path_details$p

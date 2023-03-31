@@ -92,7 +92,7 @@ em_zip<-function(data,p_0=0.5,l_0=1, variable_time = TRUE, max_iter = 10000,tol=
 
   #below is also in other zip functions
 
-  path_details<-refactored_tree_matrix(data,variable_time)
+  path_details<-refactored_tree_matrix(data,TRUE,variable_time)
   data.use<-path_details$data_use
   n<-path_details$num_var
   p<-path_details$p

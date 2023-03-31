@@ -45,7 +45,7 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_p
 
   #a lot of the below is copied from chi_square - if that changes, so should this
 
-  path_details<-refactored_tree_matrix(data,variable_time)
+  path_details<-refactored_tree_matrix(data,poisson_response,variable_time)
   data_use<-path_details$data_use
   n<-path_details$num_var
   p<-path_details$p

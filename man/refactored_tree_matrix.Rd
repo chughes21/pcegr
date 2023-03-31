@@ -4,10 +4,12 @@
 \alias{refactored_tree_matrix}
 \title{The Tree Matrix Function}
 \usage{
-refactored_tree_matrix(data, variable_time = TRUE)
+refactored_tree_matrix(data, poisson_response = TRUE, variable_time = TRUE)
 }
 \arguments{
 \item{data}{A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.}
+
+\item{poisson_response}{A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).}
 
 \item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.}
 }

@@ -209,6 +209,19 @@ merge_separator<-function(mod,n,p, tree,data_levels, zip=FALSE){
 
 }
 
+#' The Parameter Extractor Function
+#'
+#' @param stage_struct A list detailing the stage structure from a StagedTree object.
+#' @param posterior A list detailing the posterior expectations of parameters from a StagedTree object.
+#' @param var An integer value indicating which variable should have its parameters extracted.
+#' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
+#' @param remove_risk_free A logical value indicating whether the risk free leaves and edges should be removed (TRUE) or not (FALSE).
+#'
+#' @return A numeric matrix or vector (for Poisson rates) detailing the individual posterior expectations for each situation for the chosen variable.
+#'
+#' @examples
+#' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
+#' parameter_extractor(mod$stage.structure,mod$posterior.expectation,2,TRUE,FALSE)
 parameter_extractor<-function(stage_struct, posterior, var, poisson_response = TRUE, remove_risk_free = TRUE){
 
   if(remove_risk_free & !poisson_response){
@@ -220,6 +233,7 @@ parameter_extractor<-function(stage_struct, posterior, var, poisson_response = T
   post<-as.matrix(posterior[[var]])
   solution<-stage_struct[[var]]
 
+  if(var>1){
   m<-dim(post)[1]
 
   rrf_ind<-remove_risk_free & (n == var)
@@ -253,6 +267,9 @@ parameter_extractor<-function(stage_struct, posterior, var, poisson_response = T
 
   if(poisson_response & (n==var)){
     output<-as.vector(output)
+  }
+  }else{
+    output<-post
   }
   return(output)
 }
@@ -300,7 +317,7 @@ chi_sq_calculator<-function(data,mod,limit=4,min_exp=5,variable_time=TRUE,zip=FA
   #below is copied into quantile_band - if this changes, so should that
   #make into own function
 
-  path_details<-refactored_tree_matrix(data,variable_time)
+  path_details<-refactored_tree_matrix(data,poisson_response,variable_time)
   data_use<-path_details$data_use
   n<-path_details$num_var
   p<-path_details$p

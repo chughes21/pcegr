@@ -70,7 +70,7 @@ ziplike<-function(params, y, t){
 nlm_zip<-function(data,variable_time = TRUE){
   #below is also in other zip functions
 
-  path_details<-refactored_tree_matrix(data,variable_time)
+  path_details<-refactored_tree_matrix(data,TRUE,variable_time)
   data.use<-path_details$data_use
   n<-path_details$num_var
   p<-path_details$p

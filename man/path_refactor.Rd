@@ -14,7 +14,7 @@ path_refactor(data, n, data_levels)
 \item{data_levels}{An integer vector of the number of levels for each covariate.}
 }
 \value{
-A data set where the categorical covariates have been refactor to start at 0 and end at the number of levels - 1.
+A data set where the categorical covariates have been refactored to start at 0 and end at the number of levels - 1.
 }
 \description{
 This function takes the categorical covariates from a data set and refactors each one from 0 to the number of levels - 1.
