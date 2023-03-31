@@ -65,9 +65,13 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
     stop("Output variable must come after input variable(s)")
   }
 
+  if(min(input_variable)<=0){
+    stop("Input variables must be positive")
+  }
+
   cv<-output_variable-1-1*zip*resp_out #the number of covariates that will be used for this
   #don't include the risk state as a covariate cause it doesn't affect the parameter estimates differently (always 0 or not)
-  cv_ind<-1:cv
+  cv_ind<-1:cv #not same as input_variable as includes even those we don't want as input variables
 
   numbcat <-sapply(data[,1:cv],FUN=nlevels) #number of categories at each level
 # numb<-c(1,cumprod(numbcat[1:(numbvariables-1)])) #number of nodes at each level
@@ -80,7 +84,8 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
   #if output is the Poisson response with variable time, then we include it
   #the risk state is not in the data so we need to subtract it from output_variable in the case that the response is the output
 
-  path_details<-refactored_tree_matrix(data[,1:ov],poisson_response,variable_time = FALSE)#can assume time is false cause we don't need to include
+  path_details<-refactored_tree_matrix(data[,1:ov],poisson_response = TRUE,variable_time = FALSE)#can assume time is false cause we don't need to include
+  #assume poisson response is true cause we don't want the last column anyway
   data_use<-path_details$data_use
   p<-path_details$p
   tree<-path_details$tree_matrix
