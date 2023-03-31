@@ -178,7 +178,7 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
       data_temp$input[which(data_temp$input==lev_temp[k])]<-labels[[i]][k]
     }
 
-    data_temp$input<-as.factor(data_temp$input)
+    data_temp$input<-as.factor(data_temp$input,levels=labels[[i]])
 
     max_obs<-max(data_temp$output)
     max_lim<-round(max_obs,1)
