@@ -92,7 +92,7 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
 
  #  n1<-ov -1*variable_time +1*zip #a number to be used below
 
-  output<-pcegr:::parameter_extractor(stage.struct,posterior,output_variable,poisson_response,remove_risk_free) #used to have n1 instead of output_variable, but now I think they're the same
+  output<-parameter_extractor(stage.struct,posterior,output_variable,poisson_response,remove_risk_free) #used to have n1 instead of output_variable, but now I think they're the same
 
   if(!(poisson_response&resp_out)){
     m<-dim(output)[2]-1
@@ -102,7 +102,7 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
     output<-as.matrix(output)
     }
 
-  num_levels<-lapply(numbcat,pcegr:::vec_from)
+  num_levels<-lapply(numbcat,vec_from)
 
   #below copied from Christmas tree plots
 
