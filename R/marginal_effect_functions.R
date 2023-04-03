@@ -6,7 +6,6 @@
 #' @param input_variable An integer vector detailing the covariates whose marginal effect is to be analysed. The default is to analyse all covariates.
 #' @param rel_output A non-positive integer value detailing the variable which is being affected by the input variable(s), relative to the response. When 0, this will analyse the response variable, but any variable that appears after the input variables in the tree can be analysed.
 #' @param max_per_plot An integer value specifying the maximum number of leaves that can be shown in a single plot.
-#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #'
 #' @return A marginal effect plot for each variable.
@@ -15,17 +14,18 @@
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' marginal_effect(knee_pain_obs,mod)
-marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plot = 4,variable_time = TRUE,zip=FALSE){
+marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plot = 4,zip=FALSE){
 
   names<-colnames(data)
   n<-dim(data)[2]
 
+  poisson_response<-mod$event.tree$poisson.response
+  remove_risk_free<-mod$remove.risk.free.edges
+  variable_time<-mod$event.tree$variable.time
+
   if(zip){
     names<-c(names[c(1:(n-1-1*variable_time))],"risk free",names[-c(1:(n-1-1*variable_time))])
   }
-
-  poisson_response<-mod$event.tree$poisson.response
-  remove_risk_free<-mod$remove.risk.free.edges
 
   numbvariables<-n + 1*zip-1*variable_time #total number of variables in the dataset including response and possibly ZIP, without time
   numbcovar<-numbvariables-1-1*zip #total number of covariates in the data

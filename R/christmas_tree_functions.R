@@ -21,7 +21,6 @@ counter<-function(x,v){
 #' @param limit An integer vector specifying the maximium number of possible counts to analyse. If it is a vector of length one, this value will be used for all leaves. If NA, this will be the maximum count recorded per leaf.
 #' @param shift A logical value indicating whether the raw observed counts and quantiles should be used (FALSE), or whether they should be shifted by the median (TRUE).
 #' @param max_per_plot An integer value specifying the maximum number of leaves that can be shown in a single plot.
-#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #'
 #' @return A quantile-band plot for each leaf.
@@ -30,10 +29,11 @@ counter<-function(x,v){
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' quantile_band(knee_pain_obs,mod,limit=10,zip=FALSE)
-quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_plot = 8, variable_time=TRUE,zip=FALSE){
+quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_plot = 8, zip=FALSE){
 
   poisson_response<-mod$event.tree$poisson.response
   remove_risk_free<-mod$remove.risk.free.edges
+  variable_time<-mod$event.tree$variable.time
 
   if(poisson_response == FALSE){
     stop("Quantile band plots only well-defined for count models.")

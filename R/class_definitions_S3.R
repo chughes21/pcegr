@@ -56,7 +56,7 @@ EventTree<-function(data,poisson_response = TRUE, variable_time=TRUE,zip = FALSE
             })
             return(structure( list(num.variable = num.variable,
                        num.category = num.category, label.category = label.category, num.situation = num.situation,
-                       num.slice = num.slice, situation.list = mergedlist, poisson.response = poisson_response),class="EventTree"))
+                       num.slice = num.slice, situation.list = mergedlist, poisson.response = poisson_response, variable.time=variable_time),class="EventTree"))
           }
 
 

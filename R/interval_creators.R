@@ -8,7 +8,6 @@
 #' @param mod A StagedTree model fit to the data set, as produced by [pceg()].
 #' @param ci A numeric value between 0 and 1 specifying the perecentage confidence for the highest density interval.
 #' @param N An integer specifying the number of iterations for the empirical functions used.
-#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #'
 #' @return A series of highest density intervals for each parameter.
@@ -17,7 +16,9 @@
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' hdi_gamma_extractor(knee_pain_obs,mod,zip=FALSE)
-hdi_gamma_extractor<-function(data,mod,ci=0.95,N=10000,variable_time=TRUE,zip=TRUE){
+hdi_gamma_extractor<-function(data,mod,ci=0.95,N=10000,zip=TRUE){
+
+  variable_time <- mod$event.tree$variable.time
 
   n<-dim(data)[2]-1*variable_time
 
@@ -46,8 +47,6 @@ hdi_gamma_extractor<-function(data,mod,ci=0.95,N=10000,variable_time=TRUE,zip=TR
 #' @param ci A numeric value between 0 and 1 specifying the perecentage confidence for the highest density interval.
 #' @param N An integer specifying the number of iterations for the empirical functions used.
 #' @param level_rel_final A non-positive integer indicating where the desired variable is relative to the response variable.
-#' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
-#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #'
 #' @return A series of highest density intervals for each parameter of interest.
@@ -56,7 +55,10 @@ hdi_gamma_extractor<-function(data,mod,ci=0.95,N=10000,variable_time=TRUE,zip=TR
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' hdi_beta_extractor(knee_pain_obs,mod,zip=FALSE)
-hdi_beta_extractor<-function(data,mod,ci=0.95,N=10000,level_rel_final=-1,poisson_response=TRUE,variable_time = TRUE,zip=TRUE){
+hdi_beta_extractor<-function(data,mod,ci=0.95,N=10000,level_rel_final=-1,zip=TRUE){
+
+  poisson_response<-mod$event.tree$poisson.response
+  variable_time<-mod$event.tree$variable.time
 
   if(level_rel_final == 0 & poisson_response){
     stop("Beta Distribution not for Poisson Response - Use Gamma")
