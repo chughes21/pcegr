@@ -105,6 +105,11 @@ situation_stage_monitor<-function(data,mod,var = NULL,stage = NULL,cat=1,N=10000
   situation_index<-as.vector(unlist(stage_struct[[var]][relative_stage_index]))
   overall_situation_index<-situation_starts[var]+situation_index-1
 
+  m<-length(situation_index)
+  if(m<=1){
+    stop("Chosen stage must not be singleton")
+  }
+
   data_stage<-sat_mod$data.summary[[var]][situation_index,]
   prior_stage<-sat_mod$prior.distribution[[var]][situation_index,]
 
@@ -116,13 +121,7 @@ situation_stage_monitor<-function(data,mod,var = NULL,stage = NULL,cat=1,N=10000
     prior_summ<-cbind(prior_stage[,cat],prior_stage[,-cat])
   }
 
-  m<-length(situation_index)
-
   output<-data.frame(situation=overall_situation_index,post=numeric(m),ci_low=numeric(m),ci_high=numeric(m),obs=numeric(m))
-
-  if(m<=1){
-    stop("Chosen stage must not be singleton")
-  }
 
   for(j in 1:m){
 
