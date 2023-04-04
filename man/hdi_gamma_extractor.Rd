@@ -4,25 +4,16 @@
 \alias{hdi_gamma_extractor}
 \title{The Gamma Highest Density Interval Creator}
 \usage{
-hdi_gamma_extractor(
-  data,
-  mod,
-  ci = 0.95,
-  N = 10000,
-  variable_time = TRUE,
-  zip = TRUE
-)
+hdi_gamma_extractor(data, mod, ci = 0.95, N = 10000, zip = TRUE)
 }
 \arguments{
-\item{data}{A data set, where the observed count vector and time vector (if variable) are the last two columns}
+\item{data}{A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.}
 
 \item{mod}{A StagedTree model fit to the data set, as produced by \code{\link[=pceg]{pceg()}}.}
 
-\item{ci}{A numeric value between 0 and 1 specifying the perecentage confidence for the highest density interval.}
+\item{ci}{A numeric value between 0 and 1 specifying the percentage confidence for the highest density interval.}
 
 \item{N}{An integer specifying the number of iterations for the empirical functions used.}
-
-\item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).}
 
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
 }

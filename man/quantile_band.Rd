@@ -11,7 +11,6 @@ quantile_band(
   limit = NA,
   shift = TRUE,
   max_per_plot = 8,
-  variable_time = TRUE,
   zip = FALSE
 )
 }
@@ -27,8 +26,6 @@ quantile_band(
 \item{shift}{A logical value indicating whether the raw observed counts and quantiles should be used (FALSE), or whether they should be shifted by the median (TRUE).}
 
 \item{max_per_plot}{An integer value specifying the maximum number of leaves that can be shown in a single plot.}
-
-\item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.}
 
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
 }

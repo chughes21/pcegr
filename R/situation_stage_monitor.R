@@ -17,7 +17,7 @@
 #' @examples
 #' mod<-pceg(knee_pain_obs,2)
 #' situation_stage_monitor(knee_pain_obs,mod,var=4,stage=3) #the third stage for variable 4
-#' situation_stage_monitor(knee_pain_obs,mod,stage=10) #the 10th stage in the tree, which is the same as the above
+#' situation_stage_monitor(knee_pain_obs,mod,stage=8) #the 10th stage in the tree, which is the same as the above
 situation_stage_monitor<-function(data,mod,var = NULL,stage = NULL,cat=1,N=10000,ci=0.95,zip=FALSE){
 
   poisson_response<-mod$event.tree$poisson.response

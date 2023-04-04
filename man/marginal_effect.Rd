@@ -10,7 +10,6 @@ marginal_effect(
   input_variable = c(),
   rel_output = 0,
   max_per_plot = 4,
-  variable_time = TRUE,
   zip = FALSE
 )
 }
@@ -24,8 +23,6 @@ marginal_effect(
 \item{rel_output}{A non-positive integer value detailing the variable which is being affected by the input variable(s), relative to the response. When 0, this will analyse the response variable, but any variable that appears after the input variables in the tree can be analysed.}
 
 \item{max_per_plot}{An integer value specifying the maximum number of leaves that can be shown in a single plot.}
-
-\item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.}
 
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
 }

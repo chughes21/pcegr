@@ -11,7 +11,7 @@ merge_separator(mod, n, p, tree, data_levels, zip = FALSE)
 
 \item{n}{An integer value}
 
-\item{p}{SAn integer value}
+\item{p}{An integer value}
 
 \item{tree}{A matrix}
 

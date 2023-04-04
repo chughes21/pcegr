@@ -10,8 +10,6 @@ hdi_beta_extractor(
   ci = 0.95,
   N = 10000,
   level_rel_final = -1,
-  poisson_response = TRUE,
-  variable_time = TRUE,
   zip = TRUE
 )
 }
@@ -25,10 +23,6 @@ hdi_beta_extractor(
 \item{N}{An integer specifying the number of iterations for the empirical functions used.}
 
 \item{level_rel_final}{A non-positive integer indicating where the desired variable is relative to the response variable.}
-
-\item{poisson_response}{A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).}
-
-\item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).}
 
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
 }
