@@ -4,9 +4,9 @@
 #'
 #' This function calculates the highest density interval for the estimated rates of the leaf stages in a PCEG or ZIPCEG.
 #'
-#' @param data A data set, where the observed count vector and time vector (if variable) are the last two columns
+#' @param data A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.
 #' @param mod A StagedTree model fit to the data set, as produced by [pceg()].
-#' @param ci A numeric value between 0 and 1 specifying the perecentage confidence for the highest density interval.
+#' @param ci A numeric value between 0 and 1 specifying the percentage confidence for the highest density interval.
 #' @param N An integer specifying the number of iterations for the empirical functions used.
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #'
