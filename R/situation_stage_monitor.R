@@ -58,9 +58,7 @@ situation_stage_monitor<-function(data,mod,var = NULL,stage = NULL,cat=1,N=10000
     }
     var<-stages_level[stage]
     stage_index<-stage
-  }
-
-  if(!is.null(var)){
+  }else{
     if(is.null(stage)){
       stage<-1 #default just look at first stage for a variable
     }else{
