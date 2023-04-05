@@ -205,6 +205,10 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     stop("Covariate and/or non Poisson response should be a factor - check again")
   }
 
+  if(mean_post_cluster & max(numbcat)>2){
+    stop("Mean posterior clustering only defined for binary/Poisson variables")
+  }
+
   situation_data<-c(list(rbind(table(exampledata[,1]))))
   if(nv > 1){
   for (i in 2:nv){
@@ -569,9 +573,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
                    #   prior[[compare2[l]]]+data[[compare2[l]]]))+
                    # sum(lgamma(prior[[compare2[l]]]+data[[compare2[l]]]))-sum(lgamma(prior[[compare2[l]]])
                    # ) )
-
               }
-
               merged_temp<-cbind(merged_temp,c(compare1[l],compare2[l],k))
             }
             #   print(result) use for checking
@@ -619,17 +621,20 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
                 result2 = bayes_factor(data, prior,cluster_index[1], cluster_index[i] ) #note just regular data and prior, due to what the stages are
               }
               else{
-                result2<-lgamma(sum(prior[[cluster_index[1]]]+prior[[cluster_index[i]]]))-lgamma(sum(prior[[
-                  cluster_index[1]]]+data[[cluster_index[1]]]+prior[[cluster_index[i]]]+data[[cluster_index[i]]]))+
-                  sum(lgamma(prior[[cluster_index[1]]]+data[[cluster_index[1]]]+prior[[cluster_index[i]]]+data[[
-                    cluster_index[i]]]))-sum(lgamma(prior[[cluster_index[1]]]+prior[[cluster_index[i]]]))-
+                result2<-lgs(prior[[cluster_index[1]]]+prior[[cluster_index[i]]])
+                        -lgs(prior[[cluster_index[1]]]+data[[cluster_index[1]]]+prior[[cluster_index[i]]]+data[[cluster_index[i]]])
+                        +slg(prior[[cluster_index[1]]]+data[[cluster_index[1]]]+prior[[cluster_index[i]]]+data[[cluster_index[i]]])
+                        -slg(prior[[cluster_index[1]]]+prior[[cluster_index[i]]])-
                   # and the CEG where the two stages are not merged
-                  (lgamma(sum(prior[[cluster_index[1]]]))-lgamma(sum(prior[[cluster_index[1]]]+data[[cluster_index[1]
-                  ]]))+sum(lgamma(prior[[cluster_index[1]]]+data[[cluster_index[1]]]))-
-                    sum(lgamma(prior[[cluster_index[1]]]))+lgamma(sum(prior[[cluster_index[i]]]))-lgamma(sum(
-                      prior[[cluster_index[i]]]+data[[cluster_index[i]]]))+
-                    sum(lgamma(prior[[cluster_index[i]]]+data[[cluster_index[i]]]))-sum(lgamma(prior[[cluster_index[i]]])
-                    ) )
+                        (lgs(prior[[cluster_index[1]]])
+                        -lgs(prior[[cluster_index[1]]]+data[[cluster_index[1]]])
+                        +slg(prior[[cluster_index[1]]]+data[[cluster_index[1]]])
+                        -slg(prior[[cluster_index[1]]])
+                        +lgs(prior[[cluster_index[i]]])
+                        -lgs(prior[[cluster_index[i]]]+data[[cluster_index[i]]])
+                        +slg(prior[[cluster_index[i]]]+data[[cluster_index[i]]])
+                        -slg(prior[[cluster_index[i]]])
+                    )
               }
               replace_len<-length(prior[[cluster_index [1]]])
               replace_NA<-matrix(rep(NA,replace_len),nrow=1)
