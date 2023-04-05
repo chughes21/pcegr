@@ -16,6 +16,7 @@ pceg(
   structural_zero = FALSE,
   indep = NA,
   saturated = NA,
+  mean_post_cluster = FALSE,
   var_disc = 0,
   disc_length = 0,
   restrict = FALSE,
@@ -46,6 +47,8 @@ pceg(
 \item{indep}{An integer vector indicating which variables should be assumed to be independent of preceding variables (all situations in same stage).}
 
 \item{saturated}{An integer vector indicating which variables should be assumed to be saturated (all situations in own stage).}
+
+\item{mean_post_cluster}{A logical value indicating whether mean posterior clustering should be used (TRUE) or not (FALSE).}
 
 \item{var_disc}{An integer value specifying which variable to discretise. If 0, no discretisation is necessary.}
 

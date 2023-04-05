@@ -85,6 +85,28 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
   return(diff)
 }
 
+#' The Sum-log-gamma function
+#'
+#' Takes the sum of the log-gamma of a vector
+#'
+#' @param v A numeric vector
+#'
+#' @return A numeric value
+slg<-function(v){
+  return(sum(lgamma(v)))
+}
+
+#' The Log-gamma-sum function
+#'
+#' Takes the log-gamma of the sum of a vector
+#'
+#' @param v A numeric vector
+#'
+#' @return A numeric value
+lgs<-function(v){
+  return(sum(lgamma(v)))
+}
+
 #' The PCEG function
 #'
 #' This function fits a PCEG model to a data set.
@@ -102,6 +124,7 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #' @param structural_zero A logical value indicating whether zero counts in the data set should be considered as structural (TRUE) or sampling (FALSE) for the setting of the prior.
 #' @param indep An integer vector indicating which variables should be assumed to be independent of preceding variables (all situations in same stage).
 #' @param saturated An integer vector indicating which variables should be assumed to be saturated (all situations in own stage).
+#' @param mean_post_cluster A logical value indicating whether mean posterior clustering should be used (TRUE) or not (FALSE).
 #' @param var_disc An integer value specifying which variable to discretise. If 0, no discretisation is necessary.
 #' @param disc_length An integer value specifying how many neighbours can be searched over for the purposes of variable discetisation. If 0, all other possible stages may be merged over.
 #' @param restrict A logical value indicating whether variable discretisation should be restricted to stages with the same unfolding of the process (TRUE) or not (FALSE).
@@ -116,7 +139,7 @@ bayes_factor<-function(sample_sum, prior, stage1, stage2){
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' mod$result
 pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE, zip=FALSE,remove_risk_free = FALSE,
-                        gamma_alpha =1, gamma_beta = 2,structural_zero = FALSE, indep = NA, saturated = NA,var_disc = 0, disc_length = 0,
+                        gamma_alpha =1, gamma_beta = 2,structural_zero = FALSE, indep = NA, saturated = NA,mean_post_cluster = FALSE, var_disc = 0, disc_length = 0,
                         restrict = FALSE, mirror = FALSE, cat_limit=0, collapse = FALSE){
 
   exampledata<-data
@@ -520,17 +543,32 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
               if(poisson){
                 result = result + bayes_factor(data, prior,compare1[l], compare2[l] ) #note just regular data and prior, due to what the stages are
               }
-              else{ result=result+lgamma(sum(prior[[compare1[l]]]+prior[[compare2[l]]]))-lgamma(sum(prior[[
-                compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[compare2[l]]]))+
-                sum(lgamma(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[
-                  compare2[l]]]))-sum(lgamma(prior[[compare1[l]]]+prior[[compare2[l]]]))-
+              else{ result=result+lgs(prior[[compare1[l]]]+prior[[compare2[l]]])
+                    -lgs(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[compare2[l]]])
+                    +slg(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]] +data[[compare2[l]]])
+                    -slg(prior[[compare1[l]]]+prior[[compare2[l]]])-
                 # and the CEG where the two stages are not merged
-                (lgamma(sum(prior[[compare1[l]]]))-lgamma(sum(prior[[compare1[l]]]+data[[compare1[l]
-                ]]))+sum(lgamma(prior[[compare1[l]]]+data[[compare1[l]]]))-
-                  sum(lgamma(prior[[compare1[l]]]))+lgamma(sum(prior[[compare2[l]]]))-lgamma(sum(
-                    prior[[compare2[l]]]+data[[compare2[l]]]))+
-                  sum(lgamma(prior[[compare2[l]]]+data[[compare2[l]]]))-sum(lgamma(prior[[compare2[l]]])
-                  ) )
+                    (lgs(prior[[compare1[l]]])
+                    -lgs(prior[[compare1[l]]]+data[[compare1[l]]])
+                    +slg(prior[[compare1[l]]]+data[[compare1[l]]])
+                    -slg(prior[[compare1[l]]])
+                    +lgs(prior[[compare2[l]]])
+                    -lgs(prior[[compare2[l]]]+data[[compare2[l]]])
+                    +slg(prior[[compare2[l]]]+data[[compare2[l]]])
+                    -slg(prior[[compare2[l]]])
+                    )
+                   #result=result+lgamma(sum(prior[[compare1[l]]]+prior[[compare2[l]]]))-lgamma(sum(prior[[
+                   #compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[compare2[l]]]))+
+                   # sum(lgamma(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[
+                   # compare2[l]]]))-sum(lgamma(prior[[compare1[l]]]+prior[[compare2[l]]]))-
+                   # and the CEG where the two stages are not merged
+                   # (lgamma(sum(prior[[compare1[l]]]))-lgamma(sum(prior[[compare1[l]]]+data[[compare1[l]
+                   # ]]))+sum(lgamma(prior[[compare1[l]]]+data[[compare1[l]]]))-
+                   # sum(lgamma(prior[[compare1[l]]]))+lgamma(sum(prior[[compare2[l]]]))-lgamma(sum(
+                   #   prior[[compare2[l]]]+data[[compare2[l]]]))+
+                   # sum(lgamma(prior[[compare2[l]]]+data[[compare2[l]]]))-sum(lgamma(prior[[compare2[l]]])
+                   # ) )
+
               }
 
               merged_temp<-cbind(merged_temp,c(compare1[l],compare2[l],k))
