@@ -199,6 +199,10 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @param p_0 A numeric initial value for the risk probability.
 #' @param l_0 A numeric initial value for the rate.
 #' @param tol A numeric which represents the minimum change in the complete data log likelihood needed to continue the Expectation-Maximisation algorithm.
+#' @param structural_zero A logical value indicating whether zero counts in the data set should be considered as structural (TRUE) or sampling (FALSE) for the setting of the prior.
+#' @param indep An integer vector indicating which variables should be assumed to be independent of preceding variables (all situations in same stage).
+#' @param saturated An integer vector indicating which variables should be assumed to be saturated (all situations in own stage).
+#' @param mean_post_cluster A logical value indicating whether mean posterior clustering should be used (TRUE) or not (FALSE).
 #' @param var_disc An integer value specifying which variable to discretise. If 0, no discretisation is necessary.
 #' @param disc_length An integer value specifying how many neighbours can be searched over for the purposes of variable discetisation. If 0, all other possible stages may be merged over.
 #' @param restrict A logical value indicating whether variable discretisation should be restricted to stages with the same unfolding of the process (TRUE) or not (FALSE).
@@ -214,7 +218,8 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, p
                            plot_probs = FALSE, hist = FALSE, line = FALSE, scatter = FALSE, equivsize=2,
                            poisson_response = TRUE, variable_time = TRUE,remove_risk_free = TRUE, stoch_imputation=TRUE,
                            print_output = FALSE, gamma_alpha = 1, gamma_beta = 2, beta_c = 1, beta_d = 1,p_0=NA,l_0=NA,
-                           tol=1e-10, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
+                           tol=1e-10, structural_zero = FALSE, indep = NA, saturated = NA,mean_post_cluster = FALSE,
+                           var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
   if(sum(hist,scatter,line)>1 ){
     stop("Only 1 display option possible between histogram, line and scatter") #default is lines
   }
@@ -242,8 +247,9 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, p
   for(i in 1:iter_total){
     ceg.temp<-zipceg(data,method=method,iter = iter_f, equivsize=equivsize, poisson_response = poisson_response,
                           variable_time = variable_time , remove_risk_free = remove_risk_free, stoch_imputation = stoch_imputation,
-                          gamma_alpha =gamma_alpha, gamma_beta = gamma_beta, beta_c = beta_c, beta_d = beta_d,
-                          p_0 = p_0, l_0 = l_0, tol=tol, var_disc = var_disc, disc_length = disc_length, restrict = restrict, mirror = mirror)
+                          gamma_alpha =gamma_alpha, gamma_beta = gamma_beta, beta_c = beta_c, beta_d = beta_d, p_0 = p_0, l_0 = l_0, tol=tol,
+                          structural_zero = structural_zero, indep = indep, saturated = saturated,mean_post_cluster = mean_post_cluster,
+                          var_disc = var_disc, disc_length = disc_length, restrict = restrict, mirror = mirror)
 
     if(plot_rates){
     temp<-parameter_extractor(ceg.temp$stage.structure,ceg.temp$posterior.expectation,n+2,poisson_response,remove_risk_free)

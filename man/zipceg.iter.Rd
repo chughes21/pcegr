@@ -27,6 +27,10 @@ zipceg.iter(
   p_0 = NA,
   l_0 = NA,
   tol = 1e-10,
+  structural_zero = FALSE,
+  indep = NA,
+  saturated = NA,
+  mean_post_cluster = FALSE,
   var_disc = 0,
   disc_length = 0,
   restrict = FALSE,
@@ -78,6 +82,14 @@ zipceg.iter(
 \item{l_0}{A numeric initial value for the rate.}
 
 \item{tol}{A numeric which represents the minimum change in the complete data log likelihood needed to continue the Expectation-Maximisation algorithm.}
+
+\item{structural_zero}{A logical value indicating whether zero counts in the data set should be considered as structural (TRUE) or sampling (FALSE) for the setting of the prior.}
+
+\item{indep}{An integer vector indicating which variables should be assumed to be independent of preceding variables (all situations in same stage).}
+
+\item{saturated}{An integer vector indicating which variables should be assumed to be saturated (all situations in own stage).}
+
+\item{mean_post_cluster}{A logical value indicating whether mean posterior clustering should be used (TRUE) or not (FALSE).}
 
 \item{var_disc}{An integer value specifying which variable to discretise. If 0, no discretisation is necessary.}
 
