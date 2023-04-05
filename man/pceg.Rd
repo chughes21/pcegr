@@ -73,5 +73,5 @@ This function takes a data set, a prior structure, and various other inputs to f
 }
 \examples{
 mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-mod$result
+plot(mod)
 }
