@@ -101,6 +101,10 @@ state_imputer<-function(data,lambda=1,prob=0.5,variable_time=TRUE,stoch=TRUE,all
 #' @param p_0 A numeric initial value for the risk probability.
 #' @param l_0 A numeric initial value for the rate.
 #' @param tol A numeric which represents the minimum change in the complete data log likelihood needed to continue the Expectation-Maximisation algorithm.
+#' @param structural_zero A logical value indicating whether zero counts in the data set should be considered as structural (TRUE) or sampling (FALSE) for the setting of the prior.
+#' @param indep An integer vector indicating which variables should be assumed to be independent of preceding variables (all situations in same stage).
+#' @param saturated An integer vector indicating which variables should be assumed to be saturated (all situations in own stage).
+#' @param mean_post_cluster A logical value indicating whether mean posterior clustering should be used (TRUE) or not (FALSE).
 #' @param var_disc An integer value specifying which variable to discretise. If 0, no discretisation is necessary.
 #' @param disc_length An integer value specifying how many neighbours can be searched over for the purposes of variable discetisation. If 0, all other possible stages may be merged over.
 #' @param restrict A logical value indicating whether variable discretisation should be restricted to stages with the same unfolding of the process (TRUE) or not (FALSE).
@@ -112,10 +116,11 @@ state_imputer<-function(data,lambda=1,prob=0.5,variable_time=TRUE,stoch=TRUE,all
 #'
 #' @examples
 #' mod<-zipceg(knee_pain_obs,"nlm")
+#' plot(mod)
 #' summary(mod)
 zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response = TRUE,
                       variable_time = TRUE, remove_risk_free = TRUE, stoch_imputation = TRUE, gamma_alpha =1, gamma_beta = 2, beta_c = 1, beta_d = 1,
-                      p_0 = 0.5, l_0 = 1, tol=1e-10, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
+                      p_0 = 0.5, l_0 = 1, tol=1e-10,structural_zero = FALSE, indep = NA, saturated = NA,mean_post_cluster = FALSE, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
 
   if(!(method %in% c("Gibbs","nlm","EM","mle","mm"))){
     stop("Unknown estimation method chosen - Please choose either Gibbs, nlm, EM, mle or mm")
@@ -159,7 +164,10 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 
   data.adj<-state_imputer(data,lambda=le,prob=pe,variable_time = variable_time, stoch = stoch_imputation)
 
-  return(pceg(data.adj,equivsize=equivsize, poisson_response=poisson_response, variable_time = variable_time, zip=TRUE, remove_risk_free = remove_risk_free, gamma_alpha=gamma_alpha, gamma_beta=gamma_beta, var_disc=var_disc, disc_length=disc_length, restrict=restrict, mirror=mirror, cat_limit=cat_limit))
+  return(pceg(data.adj,equivsize=equivsize, poisson_response=poisson_response, variable_time = variable_time, zip=TRUE,
+              remove_risk_free = remove_risk_free, gamma_alpha=gamma_alpha, gamma_beta=gamma_beta,
+              structural_zero = structural_zero, indep = indep, saturated = saturated,mean_post_cluster = mean_post_cluster,
+              var_disc=var_disc, disc_length=disc_length, restrict=restrict, mirror=mirror, cat_limit=cat_limit))
 
 }
 

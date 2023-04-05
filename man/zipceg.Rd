@@ -20,6 +20,10 @@ zipceg(
   p_0 = 0.5,
   l_0 = 1,
   tol = 1e-10,
+  structural_zero = FALSE,
+  indep = NA,
+  saturated = NA,
+  mean_post_cluster = FALSE,
   var_disc = 0,
   disc_length = 0,
   restrict = FALSE,
@@ -58,6 +62,14 @@ zipceg(
 
 \item{tol}{A numeric which represents the minimum change in the complete data log likelihood needed to continue the Expectation-Maximisation algorithm.}
 
+\item{structural_zero}{A logical value indicating whether zero counts in the data set should be considered as structural (TRUE) or sampling (FALSE) for the setting of the prior.}
+
+\item{indep}{An integer vector indicating which variables should be assumed to be independent of preceding variables (all situations in same stage).}
+
+\item{saturated}{An integer vector indicating which variables should be assumed to be saturated (all situations in own stage).}
+
+\item{mean_post_cluster}{A logical value indicating whether mean posterior clustering should be used (TRUE) or not (FALSE).}
+
 \item{var_disc}{An integer value specifying which variable to discretise. If 0, no discretisation is necessary.}
 
 \item{disc_length}{An integer value specifying how many neighbours can be searched over for the purposes of variable discetisation. If 0, all other possible stages may be merged over.}
@@ -79,5 +91,6 @@ This function takes the same inputs as the \code{\link[=pceg]{pceg()}}, along wi
 }
 \examples{
 mod<-zipceg(knee_pain_obs,"nlm")
+plot(mod)
 summary(mod)
 }
