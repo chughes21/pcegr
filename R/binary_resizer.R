@@ -1,3 +1,19 @@
+#' The Binary Resizer Function
+#'
+#' Reparameterise any data set into one where each non-binary variable is replaced by dummy variables to account for the number of categories.
+#'
+#' @param data A data set where the observed response vector and time vector (if applicable and variable) are the last two columns.
+#' @param poisson_response A logical value indicating whether the response variable is Poisson (TRUE) or categorical (FALSE).
+#' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
+#'
+#' @return A data set where each variable is binary.
+#' @export
+#'
+#' @examples
+#' v1<-factor(sample(c(0,1,2),10000,TRUE))
+#' data<-cbind(v1,knee_pain_obs)
+#' summary(data)
+#' summary(binary_resizer(data))
 binary_resizer<-function(data,poisson_response = TRUE, variable_time = TRUE){
 
   if(!poisson_response & variable_time){
