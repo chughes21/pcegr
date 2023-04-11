@@ -199,6 +199,10 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     }
   }
 
+  if(mean_post_cluster & max(numbcat)>2){
+    stop("Mean posterior clustering requires binary variables - consider using binary_resizer() function")
+  }
+
   nv<-numbvariables-1*poisson_response
 
   if(any(numbcat[1:nv]==0)){
@@ -531,6 +535,10 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
           if(indep_ind){
             int_set = i+1
           }
+
+        #  if(mean_post_cluster){
+        #    posterior<-
+        #  }
 
           for (j in int_set){
             #to compare
