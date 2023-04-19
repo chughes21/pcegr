@@ -558,7 +558,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
               }
               else{ result=result+lgs(prior[[compare1[l]]]+prior[[compare2[l]]]) -
                     lgs(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[compare2[l]]])+
-                    slg(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]] +data[[compare2[l]]])-
+                    slg(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[compare2[l]]])-
                     slg(prior[[compare1[l]]]+prior[[compare2[l]]])-
                 # and the CEG where the two stages are not merged
                     (lgs(prior[[compare1[l]]])-lgs(prior[[compare1[l]]]+data[[compare1[l]]])+
