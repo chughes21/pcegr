@@ -34,6 +34,7 @@ usethis::use_r("vif")
 usethis::use_r("kl_divergence")
 usethis::use_r("situation_stage_monitor")
 usethis::use_r("binary_resizer")
+usethis::use_r("random_function")
 
 devtools::load_all()
 devtools::check()
