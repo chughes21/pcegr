@@ -556,19 +556,16 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
               if(poisson){
                 result = result + bayes_factor(data, prior,compare1[l], compare2[l] ) #note just regular data and prior, due to what the stages are
               }
-              else{ result=result+lgs(prior[[compare1[l]]]+prior[[compare2[l]]])
-                    -lgs(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[compare2[l]]])
-                    +slg(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]] +data[[compare2[l]]])
-                    -slg(prior[[compare1[l]]]+prior[[compare2[l]]])-
+              else{ result=result+lgs(prior[[compare1[l]]]+prior[[compare2[l]]]) -
+                    lgs(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[compare2[l]]])+
+                    slg(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]] +data[[compare2[l]]])-
+                    slg(prior[[compare1[l]]]+prior[[compare2[l]]])-
                 # and the CEG where the two stages are not merged
-                    (lgs(prior[[compare1[l]]])
-                    -lgs(prior[[compare1[l]]]+data[[compare1[l]]])
-                    +slg(prior[[compare1[l]]]+data[[compare1[l]]])
-                    -slg(prior[[compare1[l]]])
-                    +lgs(prior[[compare2[l]]])
-                    -lgs(prior[[compare2[l]]]+data[[compare2[l]]])
-                    +slg(prior[[compare2[l]]]+data[[compare2[l]]])
-                    -slg(prior[[compare2[l]]])
+                    (lgs(prior[[compare1[l]]])-lgs(prior[[compare1[l]]]+data[[compare1[l]]])+
+                    slg(prior[[compare1[l]]]+data[[compare1[l]]])-
+                    slg(prior[[compare1[l]]])+lgs(prior[[compare2[l]]])-
+                    lgs(prior[[compare2[l]]]+data[[compare2[l]]])+
+                    slg(prior[[compare2[l]]]+data[[compare2[l]]])-slg(prior[[compare2[l]]])
                     )
                    #result=result+lgamma(sum(prior[[compare1[l]]]+prior[[compare2[l]]]))-lgamma(sum(prior[[
                    #compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[compare2[l]]]))+
