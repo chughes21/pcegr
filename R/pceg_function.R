@@ -104,7 +104,7 @@ slg<-function(v){
 #'
 #' @return A numeric value
 lgs<-function(v){
-  return(sum(lgamma(v)))
+  return(lgamma(sum(v)))
 }
 
 #' The PCEG function
