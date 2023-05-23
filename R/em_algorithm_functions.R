@@ -47,6 +47,9 @@ em<-function(p_0,l_0,y,t,max_iter=10000,tol = 1e-10){
   p<-p_0
   lambda<-l_0
 
+  p_chain<-c(p)
+  lambda_chain<-c(lambda)
+
   result<-cdll(c(p,lambda),y,t)
   lik<-result$lik
   omega<-result$weights
@@ -63,6 +66,10 @@ em<-function(p_0,l_0,y,t,max_iter=10000,tol = 1e-10){
     diff=val-lik
     lik<-val
     i<-i+1
+
+    p_chain<-c(p_chain,p)
+    lambda_chain<-c(lambda_chain,lambda)
+
   }
 
   return(list(p=p,lambda=lambda,iter=i))
@@ -100,8 +107,8 @@ em_zip<-function(data,p_0=0.5,l_0=1, variable_time = TRUE, max_iter = 10000,tol=
 
   output_matrix<-cbind(tree_matrix, p_hat=rep(0,p), l_hat=rep(0,p),n_zero = rep(0,p),n_pos=rep(0,p),y_bar=rep(0,p),t_bar = rep(0,p))
 
-  l<-c()
-  propor<-c()
+  l<-list()
+  propor<-list()
 
   if(length(p_0) != length(l_0)){
     warning("Length of vectors of initial values for parameters don't match.")
@@ -138,6 +145,8 @@ em_zip<-function(data,p_0=0.5,l_0=1, variable_time = TRUE, max_iter = 10000,tol=
     result<-em(prob,lambda,y,t,max_iter=max_iter,tol=tol)
     lambda<-result$lambda
     prob<-result$p
+    lambda_chain<-result$lambda_chain
+    p_chain<-result$p_chain
 
     output_matrix$l_hat[i]=lambda
     output_matrix$p_hat[i]=prob
@@ -146,8 +155,8 @@ em_zip<-function(data,p_0=0.5,l_0=1, variable_time = TRUE, max_iter = 10000,tol=
     output_matrix$y_bar[i]=sum(y)
     output_matrix$t_bar[i]=sum(t)
 
-    propor[i]<-prob
-    l[i]<-lambda
+    propor[[i]]<-prob
+    l[[i]]<-lambda
 
   }
 

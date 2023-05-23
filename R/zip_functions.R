@@ -152,8 +152,8 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 
   if(method=="EM"){
     out<-em_zip(data,p_0=p_0,l_0=l_0,variable_time=variable_time,max_iter=iter,tol=tol)
-    pe<-out$prob
-    le<-out$lambda
+    le<-unlist(lapply(out$lambda,mean))
+    pe<-unlist(lapply(out$prob,mean))
   }
 
   if(method %in% c("mle","mm")){
