@@ -155,8 +155,8 @@ em_zip<-function(data,p_0=0.5,l_0=1, variable_time = TRUE, max_iter = 10000,tol=
     output_matrix$y_bar[i]=sum(y)
     output_matrix$t_bar[i]=sum(t)
 
-    propor[[i]]<-prob
-    l[[i]]<-lambda
+    propor[[i]]<-p_chain
+    l[[i]]<-lambda_chain
 
   }
 
