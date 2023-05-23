@@ -72,7 +72,7 @@ em<-function(p_0,l_0,y,t,max_iter=10000,tol = 1e-10){
 
   }
 
-  return(list(p=p,lambda=lambda,iter=i))
+  return(list(p=p,lambda=lambda,p_chain=p_chain,lambda_chain=lambda_chain,iter=i))
 }
 
 
