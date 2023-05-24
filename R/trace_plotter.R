@@ -15,6 +15,7 @@
 #' l<-gibbs_result$lambda
 #' l_est<-gibbs_result$summary$l_hat
 #' trace_plotter(l,l_est)
+#' trace_plotter(l,l_est,ind=c(1,5))
 trace_plotter<-function(y_chain,y_est,ind=c(),max_per_plot = 8){
 
   #some check for y being a list
