@@ -110,7 +110,7 @@ mme_variable_time_zip<-function(data){
 
   data.temp<-cbind(data.temp,z=z)
 
-  return(uniform_time_zip(data.temp,"mm",TRUE))
+  return(uniform_time_zip(data.temp,"mm",FALSE))
 }
 
 #' The Maximum Likelihood Estimator under Variable Time
@@ -141,6 +141,6 @@ mle_variable_time_zip<-function(data){
 
   data.temp<-cbind(data.temp,z=z)
 
-  return(uniform_time_zip(data.temp,"mle",TRUE))
+  return(uniform_time_zip(data.temp,"mle",FALSE))
 }
 
