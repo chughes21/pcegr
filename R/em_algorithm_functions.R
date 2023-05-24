@@ -95,7 +95,7 @@ em<-function(p_0,l_0,y,t,max_iter=10000,tol = 1e-10){
 #'
 #' @examples
 #' em_zip(knee_pain_obs)
-em_zip<-function(data,p_0=0.5,l_0=1, variable_time = TRUE, max_iter = 10000,tol=1e-10){
+em_zip<-function(data,p_0=NULL,l_0=NULL, variable_time = TRUE, max_iter = 10000,tol=1e-10){
 
   #below is also in other zip functions
 
@@ -110,17 +110,25 @@ em_zip<-function(data,p_0=0.5,l_0=1, variable_time = TRUE, max_iter = 10000,tol=
   l<-list()
   propor<-list()
 
+  mme<-mme_variable_time_zip(data.use)
+  l0_vec<-mme$lambda
+  p0_vec<-mme$prob
+
   if(length(p_0) != length(l_0)){
     warning("Length of vectors of initial values for parameters don't match.")
   }
 
-  if(length(p_0)==1){
+  if(length(p_0)==0){
+    p_0<-p0_vec
+  }else if(length(p_0)==1){
     p_0<-rep(p_0,p)
   }else if(length(p_0)!=p){
     stop("Initial value vector for risk probability doesn't match number of leaves.")
   }
 
-  if(length(l_0)==1){
+  if(length(l_0)==0){
+    l_0<-l0_vec
+  }else if(length(l_0)==1){
     l_0<-rep(l_0,p)
   }else if(length(l_0)!=p){
     stop("Initial value vector for rates doesn't match number of leaves.")

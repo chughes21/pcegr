@@ -81,6 +81,10 @@ nlm_zip<-function(data,variable_time = TRUE){
   l<-c()
   propor<-c()
 
+  mme<-mme_variable_time_zip(data.use)
+  l0_vec<-mme$lambda
+  p0_vec<-mme$prob
+
   for(i in 1:p){
     v<-tree_matrix[i,]
     ind<-which(row.match(data.use[,1:n],v)==1 )
@@ -98,8 +102,8 @@ nlm_zip<-function(data,variable_time = TRUE){
       p_0 <- 1
       l_0<-0
     }else{
-      p_0<-glogit(sum(y>0)/m) #could maybe base this on l_0
-      l_0<-log(sum(y)/(sum(t[y>0])))
+      p_0<-p0_vec[i]
+      l_0<-l0_vec[i]
     }
 
     est<-suppressWarnings(nlm(ziplike,c(p_0,l_0),y = y,t = t)$estimate) #leaf = i is just for when it's being printed really
