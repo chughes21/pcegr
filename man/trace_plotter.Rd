@@ -22,6 +22,9 @@ A traceplot for each chain provided, along with the final estimate as a red hori
 Produces a traceplot for chains produced in order to estimate the underlying parameters of the ZIP distribution.
 }
 \examples{
-l<-gibbs_zip(knee_pain_obs)$lambda
-trace_plotter(l)
+gibbs_result<-gibbs_zip(knee_pain_obs)
+l<-gibbs_result$lambda
+l_est<-gibbs_result$summary$l_hat
+trace_plotter(l,l_est)
+trace_plotter(l,l_est,ind=c(1,5))
 }

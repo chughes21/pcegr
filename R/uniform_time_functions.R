@@ -81,3 +81,66 @@ uniform_time_zip<-function(data,method = "mle",time_input = FALSE){
 
   return(list(summary=output_matrix,lambda = l, prob = propor))
 }
+
+#' The Methods of Moments Estimator under Variable Time
+#'
+#' Calculates the method of moments estimator (mme) for a ZIP distribution under variable time, by dividing the counts by observation time.
+#'
+#' @param data A data set, where the observed count vector and time vector (if included) are the last two columns.
+#'
+#' @return A list containing mmes for at-risk rate and risk proportion for each leaf
+#' @export
+#'
+#' @examples
+#' mme_variable_time_zip(knee_pain_obs)
+#'
+mme_variable_time_zip<-function(data){
+
+  n<-dim(data)[2]
+  data.temp<-data[,1:(n-2)]
+
+  y<-data[,n-1]
+  t<-data[,n]
+
+  if(min(t)<=0){
+    stop("Time must be positive")
+  }
+
+  z<-y/t
+
+  data.temp<-cbind(data.temp,z=z)
+
+  return(uniform_time_zip(data.temp,"mm",TRUE))
+}
+
+#' The Maximum Likelihood Estimator under Variable Time
+#'
+#' Calculates the maximum likelihood estimator (mle) for a ZIP distribution under variable time, by dividing the counts by observation time.
+#'
+#' @param data A data set, where the observed count vector and time vector (if included) are the last two columns.
+#'
+#' @return A list containing mles for at-risk rate and risk proportion for each leaf
+#' @export
+#'
+#' @examples
+#' mle_variable_time_zip(knee_pain_obs)
+#'
+mle_variable_time_zip<-function(data){
+
+  n<-dim(data)[2]
+  data.temp<-data[,1:(n-2)]
+
+  y<-data[,n-1]
+  t<-data[,n]
+
+  if(min(t)<=0){
+    stop("Time must be positive")
+  }
+
+  z<-y/t
+
+  data.temp<-cbind(data.temp,z=z)
+
+  return(uniform_time_zip(data.temp,"mle",TRUE))
+}
+
