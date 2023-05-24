@@ -11,8 +11,10 @@
 #' @export
 #'
 #' @examples
-#' l<-gibbs_zip(knee_pain_obs)$lambda
-#' trace_plotter(l)
+#' gibbs_result<-gibbs_zip(knee_pain_obs)
+#' l<-gibbs_result$lambda
+#' l_est<-gibbs_result$summary$l_hat
+#' trace_plotter(l,l_est)
 trace_plotter<-function(y_chain,y_est,ind=c(),max_per_plot = 8){
 
   #some check for y being a list
@@ -57,7 +59,7 @@ trace_plotter<-function(y_chain,y_est,ind=c(),max_per_plot = 8){
     y<-y_chain[[j]]
     data<-data.frame(chain=y,est=y_est[[j]],index=c(1:length(y)))
     leaves[[i]]<-ggplot(data)+geom_line(mapping=aes(x=index,y=est),col="red")+geom_line(mapping=aes(x=index,y=chain))+
-      ggtitle(paste0("Trace Plot - Leaf ",j))+xlab("Iteration")+ylab("Estimate")
+      ggtitle(paste0("Trace Plot - Chain ",j))+xlab("Iteration")+ylab("Estimate")
   }
 
   #then plot g
