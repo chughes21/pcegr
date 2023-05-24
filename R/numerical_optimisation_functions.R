@@ -60,6 +60,8 @@ ziplike<-function(params, y, t){
 #' The Numerical Optimisation Method
 #'
 #' @param data A data set, where the observed count vector and time vector (if variable) are the last two columns.
+#' @param p_0 A numeric vector of initial values for the risk probabilities. If the vector is of length 1, this value will be repeated for each leaf.
+#' @param l_0 A numeric vector of initial values for the rates. If the vector is of length 1, this value will be repeated for each leaf.
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
 #'
 #' @return A list containing a matrix with the desired outputs for each evolution of the process, as well as vectors of the estimates for the rates and risk probabilities.
@@ -67,7 +69,7 @@ ziplike<-function(params, y, t){
 #'
 #' @examples
 #' nlm_zip(knee_pain_obs)
-nlm_zip<-function(data,variable_time = TRUE){
+nlm_zip<-function(data,p_0=NULL,l_0=NULL,variable_time = TRUE){
   #below is also in other zip functions
 
   path_details<-refactored_tree_matrix(data,TRUE,variable_time)
@@ -81,9 +83,31 @@ nlm_zip<-function(data,variable_time = TRUE){
   l<-c()
   propor<-c()
 
+  #same as an in em_algorithm
+
   mme<-mme_variable_time_zip(data.use)
   l0_vec<-mme$lambda
   p0_vec<-mme$prob
+
+  if(length(p_0) != length(l_0)){
+    warning("Length of vectors of initial values for parameters don't match.")
+  }
+
+  if(length(p_0)==0){
+    p_0<-p0_vec
+  }else if(length(p_0)==1){
+    p_0<-rep(p_0,p)
+  }else if(length(p_0)!=p){
+    stop("Initial value vector for risk probability doesn't match number of leaves.")
+  }
+
+  if(length(l_0)==0){
+    l_0<-l0_vec
+  }else if(length(l_0)==1){
+    l_0<-rep(l_0,p)
+  }else if(length(l_0)!=p){
+    stop("Initial value vector for rates doesn't match number of leaves.")
+  }
 
   for(i in 1:p){
     v<-tree_matrix[i,]
@@ -98,15 +122,7 @@ nlm_zip<-function(data,variable_time = TRUE){
       t<-rep(1,m)
     }
 
-    if(sum(y)==0){
-      p_0 <- 1
-      l_0<-0
-    }else{
-      p_0<-p0_vec[i]
-      l_0<-l0_vec[i]
-    }
-
-    est<-suppressWarnings(nlm(ziplike,c(p_0,l_0),y = y,t = t)$estimate) #leaf = i is just for when it's being printed really
+    est<-suppressWarnings(nlm(ziplike,c(p_0[i],l_0[i]),y = y,t = t)$estimate) #leaf = i is just for when it's being printed really
     prob<-glogitinv(est[1])
     lambda<-exp(est[2])
 
