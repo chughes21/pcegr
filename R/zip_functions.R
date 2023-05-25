@@ -120,7 +120,7 @@ state_imputer<-function(data,lambda=1,prob=0.5,variable_time=TRUE,stoch=TRUE,all
 #' summary(mod)
 zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response = TRUE,
                       variable_time = TRUE, remove_risk_free = TRUE, stoch_imputation = TRUE, gamma_alpha =1, gamma_beta = 2, beta_c = 1, beta_d = 1,
-                      p_0 = 0.5, l_0 = 1, tol=1e-10,structural_zero = FALSE, indep = NA, saturated = NA,mean_post_cluster = FALSE, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
+                      p_0 = NULL, l_0 = NULL, tol=1e-10,structural_zero = FALSE, indep = NA, saturated = NA,mean_post_cluster = FALSE, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
 
   if(!(method %in% c("Gibbs","nlm","EM","mle","mm"))){
     stop("Unknown estimation method chosen - Please choose either Gibbs, nlm, EM, mle or mm")
@@ -145,7 +145,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
   }
 
   if(method=="nlm"){
-    out<-nlm_zip(data,variable_time)
+    out<-nlm_zip(data,p_0=p_0,l_0=l_0,variable_time=variable_time)
     pe<-out$prob
     le<-out$lambda
   }
@@ -217,7 +217,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, plot_rates = TRUE,
                            plot_probs = FALSE, hist = FALSE, line = FALSE, scatter = FALSE, equivsize=2,
                            poisson_response = TRUE, variable_time = TRUE,remove_risk_free = TRUE, stoch_imputation=TRUE,
-                           print_output = FALSE, gamma_alpha = 1, gamma_beta = 2, beta_c = 1, beta_d = 1,p_0=NA,l_0=NA,
+                           print_output = FALSE, gamma_alpha = 1, gamma_beta = 2, beta_c = 1, beta_d = 1,p_0=NULL,l_0=NULL,
                            tol=1e-10, structural_zero = FALSE, indep = NA, saturated = NA,mean_post_cluster = FALSE,
                            var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
   if(sum(hist,scatter,line)>1 ){
