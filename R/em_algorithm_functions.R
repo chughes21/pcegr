@@ -133,7 +133,7 @@ em_zip<-function(data,p_0=NULL,l_0=NULL, initial_method = NULL, variable_time = 
   }
 
   if(length(initial_method)>0){
-    if(!(initial %in% c("mean","mme","mle") )){
+    if(!(initial_method %in% c("mean","mme","mle") )){
       stop("Unknown initial condition method chosen - Please select either mean, mme or mle")
     }
     if(initial_method=="mme"){
