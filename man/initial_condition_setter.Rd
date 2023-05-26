@@ -27,13 +27,12 @@ initial_condition_setter(
 \item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).}
 }
 \value{
-A list containing vectors of initial values for the risk probability and rate.
+A list containing vectors of initial values for the risk probability and rat, as well as a logical value for whether mean is being used as the initial condition method (TRUE) or not (FALSE).
 }
 \description{
 Sets the initial conditions for the nlm_zip() and em_zip() functions, based on inputs.
 }
 \examples{
 initial_condition_setter(knee_pain_obs,8)
-initial_condition_setter(knee_pain_obs,8,p_0 = )
 
 }

@@ -87,6 +87,7 @@ nlm_zip<-function(data,p_0=NULL,l_0=NULL,initial_method=NULL,variable_time = TRU
   ic<-initial_condition_setter(data.use,p,p_0,l_0,initial_method,variable_time)
   p_0<-ic$p
   l_0<-ic$l
+  initial_mean<-ic$initial_mean
 
   for(i in 1:p){
     v<-tree_matrix[i,]
