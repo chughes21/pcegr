@@ -4,12 +4,18 @@
 \alias{nlm_zip}
 \title{The Numerical Optimisation Method}
 \usage{
-nlm_zip(data, variable_time = TRUE)
+nlm_zip(data, p_0 = NULL, l_0 = NULL, variable_time = TRUE)
 }
 \arguments{
 \item{data}{A data set, where the observed count vector and time vector (if variable) are the last two columns.}
 
+\item{p_0}{A numeric vector of initial values for the risk probabilities. If the vector is of length 1, this value will be repeated for each leaf. If NULL, then an automatic method (initial_method) will be used.}
+
+\item{l_0}{A numeric vector of initial values for the rates. If the vector is of length 1, this value will be repeated for each leaf. If NULL, then an automatic method (initial_method) will be used.}
+
 \item{variable_time}{A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).}
+
+\item{initial_method}{A character string indicating the method for automatically setting the initial conditions. The character string can be an element of c("mean",mle","mm"), with "mean" being the default when p_0, l_0 are not provided.}
 }
 \value{
 A list containing a matrix with the desired outputs for each evolution of the process, as well as vectors of the estimates for the rates and risk probabilities.

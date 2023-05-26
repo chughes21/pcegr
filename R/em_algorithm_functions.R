@@ -81,11 +81,12 @@ em<-function(p_0,l_0,y,t,max_iter=10000,tol = 1e-10){
 #'
 #' This function carries out the Expectation-Maximisation algorithm across all leaves.
 #'
-#' For each leaf, which represents a unique evolution of the process, the [em()] function is applied.
+#' For each leaf, which represents a unique evolution of the process, the [em()] function is applied. Initial conditions can either be provided through
 #'
 #' @param data A data set, where the observed count vector and time vector (if variable) are the last two columns.
-#' @param p_0 A numeric vector of initial values for the risk probabilities. If the vector is of length 1, this value will be repeated for each leaf.
-#' @param l_0 A numeric vector of initial values for the rates. If the vector is of length 1, this value will be repeated for each leaf
+#' @param p_0 A numeric vector of initial values for the risk probabilities. If the vector is of length 1, this value will be repeated for each leaf. If NULL, then an automatic method (initial_method) will be used.
+#' @param l_0 A numeric vector of initial values for the rates. If the vector is of length 1, this value will be repeated for each leaf. If NULL, then an automatic method (initial_method) will be used.
+#' @param initial_method A character string indicating the method for automatically setting the initial conditions. The character string can be an element of c("mean",mle","mm"), with "mean" being the default when p_0, l_0 are not provided.
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
 #' @param max_iter An integer for the maximum number of iterations for the algorithm.
 #' @param tol A numeric which represents the minimum change in the complete data log likelihood needed to continue the algorithm.
@@ -95,7 +96,7 @@ em<-function(p_0,l_0,y,t,max_iter=10000,tol = 1e-10){
 #'
 #' @examples
 #' em_zip(knee_pain_obs)
-em_zip<-function(data,p_0=NULL,l_0=NULL, variable_time = TRUE, max_iter = 10000,tol=1e-10){
+em_zip<-function(data,p_0=NULL,l_0=NULL, initial_method = NULL, variable_time = TRUE, max_iter = 10000,tol=1e-10){
 
   #below is also in other zip functions
 
@@ -110,12 +111,44 @@ em_zip<-function(data,p_0=NULL,l_0=NULL, variable_time = TRUE, max_iter = 10000,
   l<-list()
   propor<-list()
 
-  mme<-mme_variable_time_zip(data.use)
-  l0_vec<-mme$lambda
-  p0_vec<-mme$prob
+  #all of the below is in nlm_zip also
 
   if(length(p_0) != length(l_0)){
-    warning("Length of vectors of initial values for parameters don't match.")
+    if(min(length(p_0),length(l_0))){
+      stop("if one of p_0, l_0 is provided, the other must too")
+  }else{
+      warning("Length of vectors of initial values for parameters don't match.")
+  }
+  }
+
+  if(max(length(p_0),length(l_0))>0 & length(initial_method)>0 ){
+    stop("Initial condition method can only be provided when neither p_0, l_0 are")
+  }
+
+  if(max(length(p_0),length(l_0),length(initial_method))==0){
+    initial_method<-"mean"
+    initial_mean<-1
+  }else{
+    initial_mean<-0
+  }
+
+  if(length(initial_method)>0){
+    if(!(initial %in% c("mean","mme","mle") )){
+      stop("Unknown initial condition method chosen - Please select either mean, mme or mle")
+    }
+    if(initial_method=="mme"){
+      mme<-mme_variable_time_zip(data.use)
+      l0_vec<-mme$lambda
+      p0_vec<-mme$prob
+    }else if(initial_method=="mle"){
+      mle<-mle_variable_time_zip(data.use)
+      l0_vec<-mle$lambda
+      p0_vec<-mle$prob
+    }else{
+      p0_vec<-c()
+      l0_vec<-c()
+      initial_mean<-1
+    }
   }
 
   if(length(p_0)==0){
@@ -147,8 +180,13 @@ em_zip<-function(data,p_0=NULL,l_0=NULL, variable_time = TRUE, max_iter = 10000,
       t<-rep(1,m)
     }
 
+    if(initial_mean){
+    prob<-glogit(sum(y>0)/m)
+    lambda<-log(sum(y)/(sum(t[y>0])))
+    }else{
     prob<-p_0[i]
     lambda<-l_0[i]
+    }
 
     result<-em(prob,lambda,y,t,max_iter=max_iter,tol=tol)
     lambda<-result$lambda

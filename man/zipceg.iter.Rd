@@ -24,8 +24,9 @@ zipceg.iter(
   gamma_beta = 2,
   beta_c = 1,
   beta_d = 1,
-  p_0 = NA,
-  l_0 = NA,
+  p_0 = NULL,
+  l_0 = NULL,
+  initial_condition = NULL,
   tol = 1e-10,
   structural_zero = FALSE,
   indep = NA,
@@ -77,9 +78,11 @@ zipceg.iter(
 
 \item{beta_d}{A numeric value for the beta hyperparameter of the Beta prior for the risk probability.}
 
-\item{p_0}{A numeric initial value for the risk probability.}
+\item{p_0}{A numeric vector of initial values for the risk probabilities, if em or nlm method is chosen. If the vector is of length 1, this value will be repeated for each leaf. If NULL, then an automatic method (initial_condition) will be used.}
 
-\item{l_0}{A numeric initial value for the rate.}
+\item{l_0}{A numeric vector of initial values for the rates, if em or nlm method is chosen. If the vector is of length 1, this value will be repeated for each leaf. If NULL, then an automatic method (initial_condition) will be used.}
+
+\item{initial_condition}{A character string indicating the method for automatically setting the initial conditions for the em and nlm methods. The character string can be an element of c("mean",mle","mm"), with "mean" being the default when p_0, l_0 are not provided.}
 
 \item{tol}{A numeric which represents the minimum change in the complete data log likelihood needed to continue the Expectation-Maximisation algorithm.}
 

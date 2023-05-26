@@ -98,8 +98,9 @@ state_imputer<-function(data,lambda=1,prob=0.5,variable_time=TRUE,stoch=TRUE,all
 #' @param gamma_beta A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.
 #' @param beta_c A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.
 #' @param beta_d A numeric value for the beta hyperparameter of the Beta prior for the risk probability.
-#' @param p_0 A numeric initial value for the risk probability.
-#' @param l_0 A numeric initial value for the rate.
+#' @param p_0 A numeric vector of initial values for the risk probabilities, if em or nlm method is chosen. If the vector is of length 1, this value will be repeated for each leaf. If NULL, then an automatic method (initial_condition) will be used.
+#' @param l_0 A numeric vector of initial values for the rates, if em or nlm method is chosen. If the vector is of length 1, this value will be repeated for each leaf. If NULL, then an automatic method (initial_condition) will be used.
+#' @param initial_condition A character string indicating the method for automatically setting the initial conditions for the em and nlm methods. The character string can be an element of c("mean",mle","mm"), with "mean" being the default when p_0, l_0 are not provided.
 #' @param tol A numeric which represents the minimum change in the complete data log likelihood needed to continue the Expectation-Maximisation algorithm.
 #' @param structural_zero A logical value indicating whether zero counts in the data set should be considered as structural (TRUE) or sampling (FALSE) for the setting of the prior.
 #' @param indep An integer vector indicating which variables should be assumed to be independent of preceding variables (all situations in same stage).
@@ -120,7 +121,7 @@ state_imputer<-function(data,lambda=1,prob=0.5,variable_time=TRUE,stoch=TRUE,all
 #' summary(mod)
 zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response = TRUE,
                       variable_time = TRUE, remove_risk_free = TRUE, stoch_imputation = TRUE, gamma_alpha =1, gamma_beta = 2, beta_c = 1, beta_d = 1,
-                      p_0 = NULL, l_0 = NULL, tol=1e-10,structural_zero = FALSE, indep = NA, saturated = NA,mean_post_cluster = FALSE, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
+                      p_0 = NULL, l_0 = NULL, initial_condition=NULL, tol=1e-10,structural_zero = FALSE, indep = NA, saturated = NA,mean_post_cluster = FALSE, var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
 
   if(!(method %in% c("Gibbs","nlm","EM","mle","mm"))){
     stop("Unknown estimation method chosen - Please choose either Gibbs, nlm, EM, mle or mm")
@@ -145,13 +146,13 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
   }
 
   if(method=="nlm"){
-    out<-nlm_zip(data,p_0=p_0,l_0=l_0,variable_time=variable_time)
+    out<-nlm_zip(data,p_0=p_0,l_0=l_0,initial_method=initial_condition,variable_time=variable_time)
     pe<-out$prob
     le<-out$lambda
   }
 
   if(method=="EM"){
-    out<-em_zip(data,p_0=p_0,l_0=l_0,variable_time=variable_time,max_iter=iter,tol=tol)
+    out<-em_zip(data,p_0=p_0,l_0=l_0,initial_method = initial_condition,variable_time=variable_time,max_iter=iter,tol=tol)
     le<-unlist(lapply(out$lambda,mean))
     pe<-unlist(lapply(out$prob,mean))
   }
@@ -196,8 +197,9 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 #' @param gamma_beta A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.
 #' @param beta_c A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.
 #' @param beta_d A numeric value for the beta hyperparameter of the Beta prior for the risk probability.
-#' @param p_0 A numeric initial value for the risk probability.
-#' @param l_0 A numeric initial value for the rate.
+#' @param p_0 A numeric vector of initial values for the risk probabilities, if em or nlm method is chosen. If the vector is of length 1, this value will be repeated for each leaf. If NULL, then an automatic method (initial_condition) will be used.
+#' @param l_0 A numeric vector of initial values for the rates, if em or nlm method is chosen. If the vector is of length 1, this value will be repeated for each leaf. If NULL, then an automatic method (initial_condition) will be used.
+#' @param initial_condition A character string indicating the method for automatically setting the initial conditions for the em and nlm methods. The character string can be an element of c("mean",mle","mm"), with "mean" being the default when p_0, l_0 are not provided.
 #' @param tol A numeric which represents the minimum change in the complete data log likelihood needed to continue the Expectation-Maximisation algorithm.
 #' @param structural_zero A logical value indicating whether zero counts in the data set should be considered as structural (TRUE) or sampling (FALSE) for the setting of the prior.
 #' @param indep An integer vector indicating which variables should be assumed to be independent of preceding variables (all situations in same stage).
@@ -217,7 +219,7 @@ zipceg<-function(data,method="Gibbs",iter = 10000, equivsize=2, poisson_response
 zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, plot_rates = TRUE,
                            plot_probs = FALSE, hist = FALSE, line = FALSE, scatter = FALSE, equivsize=2,
                            poisson_response = TRUE, variable_time = TRUE,remove_risk_free = TRUE, stoch_imputation=TRUE,
-                           print_output = FALSE, gamma_alpha = 1, gamma_beta = 2, beta_c = 1, beta_d = 1,p_0=NULL,l_0=NULL,
+                           print_output = FALSE, gamma_alpha = 1, gamma_beta = 2, beta_c = 1, beta_d = 1,p_0=NULL,l_0=NULL,initial_condition = NULL,
                            tol=1e-10, structural_zero = FALSE, indep = NA, saturated = NA,mean_post_cluster = FALSE,
                            var_disc = 0, disc_length = 0, restrict = FALSE, mirror = FALSE, cat_limit = 0){
   if(sum(hist,scatter,line)>1 ){
@@ -247,8 +249,8 @@ zipceg.iter<-function(data, method = "Gibbs", iter_total = 10, iter_f = 10000, p
   for(i in 1:iter_total){
     ceg.temp<-zipceg(data,method=method,iter = iter_f, equivsize=equivsize, poisson_response = poisson_response,
                           variable_time = variable_time , remove_risk_free = remove_risk_free, stoch_imputation = stoch_imputation,
-                          gamma_alpha =gamma_alpha, gamma_beta = gamma_beta, beta_c = beta_c, beta_d = beta_d, p_0 = p_0, l_0 = l_0, tol=tol,
-                          structural_zero = structural_zero, indep = indep, saturated = saturated,mean_post_cluster = mean_post_cluster,
+                          gamma_alpha =gamma_alpha, gamma_beta = gamma_beta, beta_c = beta_c, beta_d = beta_d, p_0 = p_0, l_0 = l_0, initial_condition = initial_condition,
+                          tol=tol,structural_zero = structural_zero, indep = indep, saturated = saturated,mean_post_cluster = mean_post_cluster,
                           var_disc = var_disc, disc_length = disc_length, restrict = restrict, mirror = mirror)
 
     if(plot_rates){
