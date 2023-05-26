@@ -111,61 +111,9 @@ em_zip<-function(data,p_0=NULL,l_0=NULL, initial_method = NULL, variable_time = 
   l<-list()
   propor<-list()
 
-  #all of the below is in nlm_zip also
-
-  if(length(p_0) != length(l_0)){
-    if(min(length(p_0),length(l_0))){
-      stop("if one of p_0, l_0 is provided, the other must too")
-  }else{
-      warning("Length of vectors of initial values for parameters don't match.")
-  }
-  }
-
-  if(max(length(p_0),length(l_0))>0 & length(initial_method)>0 ){
-    stop("Initial condition method can only be provided when neither p_0, l_0 are")
-  }
-
-  if(max(length(p_0),length(l_0),length(initial_method))==0){
-    initial_method<-"mean"
-    initial_mean<-1
-  }else{
-    initial_mean<-0
-  }
-
-  if(length(initial_method)>0){
-    if(!(initial_method %in% c("mean","mme","mle") )){
-      stop("Unknown initial condition method chosen - Please select either mean, mme or mle")
-    }
-    if(initial_method=="mme"){
-      mme<-mme_variable_time_zip(data.use)
-      l0_vec<-mme$lambda
-      p0_vec<-mme$prob
-    }else if(initial_method=="mle"){
-      mle<-mle_variable_time_zip(data.use)
-      l0_vec<-mle$lambda
-      p0_vec<-mle$prob
-    }else{
-      p0_vec<-c()
-      l0_vec<-c()
-      initial_mean<-1
-    }
-  }
-
-  if(length(p_0)==0){
-    p_0<-p0_vec
-  }else if(length(p_0)==1){
-    p_0<-rep(p_0,p)
-  }else if(length(p_0)!=p){
-    stop("Initial value vector for risk probability doesn't match number of leaves.")
-  }
-
-  if(length(l_0)==0){
-    l_0<-l0_vec
-  }else if(length(l_0)==1){
-    l_0<-rep(l_0,p)
-  }else if(length(l_0)!=p){
-    stop("Initial value vector for rates doesn't match number of leaves.")
-  }
+  ic<-initial_condition_setter(data.use,p,p_0,l_0,initial_method,variable_time)
+  p_0<-ic$p
+  l_0<-ic$l
 
   for(i in 1:p){
     v<-tree_matrix[i,]
