@@ -106,8 +106,8 @@ nlm_zip<-function(data,p_0=NULL,l_0=NULL,initial_method=NULL,variable_time = TRU
       prob<-glogit(sum(y>0)/m)
       lambda<-log(sum(y)/(sum(t[y>0])))
     }else{
-      prob<-p_0[i]
-      lambda<-l_0[i]
+      prob<-glogit(p_0[i])
+      lambda<-log(l_0[i])
     }
 
     est<-suppressWarnings(nlm(ziplike,c(prob,lambda),y = y,t = t)$estimate) #leaf = i is just for when it's being printed really

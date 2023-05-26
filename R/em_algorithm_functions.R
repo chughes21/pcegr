@@ -130,8 +130,8 @@ em_zip<-function(data,p_0=NULL,l_0=NULL, initial_method = NULL, variable_time = 
     }
 
     if(initial_mean){
-    prob<-glogit(sum(y>0)/m)
-    lambda<-log(sum(y)/(sum(t[y>0])))
+    prob<-sum(y>0)/m
+    lambda<-sum(y)/(sum(t[y>0]))
     }else{
     prob<-p_0[i]
     lambda<-l_0[i]
