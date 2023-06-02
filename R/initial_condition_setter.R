@@ -80,6 +80,10 @@ initial_condition_setter<-function(data,n_leaves,p_0=NULL,l_0=NULL,initial_metho
     stop("Initial value vector for rates doesn't match number of leaves.")
   }
 
+  if(min(c(l_0,p_0))<0){
+    stop("Negative parameters estimated as initial condition - consider an alternative method.")
+  }
+
   return(list(l=l_0,p=p_0,initial_mean = initial_mean))
 
 }

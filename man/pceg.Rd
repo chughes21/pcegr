@@ -13,6 +13,7 @@ pceg(
   remove_risk_free = FALSE,
   gamma_alpha = 1,
   gamma_beta = 2,
+  prior_input = NULL,
   structural_zero = FALSE,
   indep = NA,
   saturated = NA,
@@ -41,6 +42,8 @@ pceg(
 \item{gamma_alpha}{A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.}
 
 \item{gamma_beta}{A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.}
+
+\item{prior_input}{A list where each element is a matrix corresponding to a Dirichlet prior distribution for each level of the tree.}
 
 \item{structural_zero}{A logical value indicating whether zero counts in the data set should be considered as structural (TRUE) or sampling (FALSE) for the setting of the prior.}
 

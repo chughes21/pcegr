@@ -121,6 +121,7 @@ lgs<-function(v){
 #' @param remove_risk_free A logical value indicating whether the risk free leaves and edges should be removed (TRUE) or not (FALSE).
 #' @param gamma_alpha A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.
 #' @param gamma_beta A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.
+#' @param prior_input A list where each element is a matrix corresponding to a Dirichlet prior distribution for each level of the tree.
 #' @param structural_zero A logical value indicating whether zero counts in the data set should be considered as structural (TRUE) or sampling (FALSE) for the setting of the prior.
 #' @param indep An integer vector indicating which variables should be assumed to be independent of preceding variables (all situations in same stage).
 #' @param saturated An integer vector indicating which variables should be assumed to be saturated (all situations in own stage).
@@ -140,7 +141,7 @@ lgs<-function(v){
 #' plot(mod)
 #' summary(mod)
 pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE, zip=FALSE,remove_risk_free = FALSE,
-                        gamma_alpha =1, gamma_beta = 2,structural_zero = FALSE, indep = NA, saturated = NA,mean_post_cluster = FALSE, var_disc = 0, disc_length = 0,
+                        gamma_alpha =1, gamma_beta = 2,prior_input=NULL,structural_zero = FALSE, indep = NA, saturated = NA,mean_post_cluster = FALSE, var_disc = 0, disc_length = 0,
                         restrict = FALSE, mirror = FALSE, cat_limit=0, collapse = FALSE){
 
   exampledata<-data
@@ -222,6 +223,31 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
    }
   }
 
+  if(length(prior_input)>0){
+    if(length(prior_input)!=numbvariables){
+      stop("Prior input should match the number of variables")
+    }
+
+    for(i in 1:numbvariables){
+      if(i==numbvariables & poisson_response){
+        if(dim(prior_input[[i]])[2]!=2){
+          stop("Prior input for Poisson response should have 2 columns")
+        }else if(dim(prior_input[[i]])[1]!=numb[i]){
+          stop("Prior input for Poisson response should match ")
+        }
+      }else{
+          if(dim(prior_input[[i]])[2]!=numbcat[i]){
+          stop(paste0("Prior input should match number of categories for variable ",i))
+        }else if(dim(prior_input[[i]])[1]!=numb[i]){
+          stop(paste0("Prior input should match number of edges for variable ",i))
+        }
+      }
+    }
+
+    prior<-prior_input
+
+  }else{
+
   prior_output<-prior_set(situation_data,structural_zero,nv,numbcat[1:nv],numb[1:nv],equivsize)
   prior<-prior_output$prior
   no_merge_ind<-prior_output$no_merge
@@ -255,7 +281,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     }
     prior<-c(prior,prior_response)
   }
-
+  }
   #moved labelling up here
 
   labelling <-c()
