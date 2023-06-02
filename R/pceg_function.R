@@ -239,7 +239,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
         if(dim(prior_input[[i]])[2]!=2){
           stop("Prior input for Poisson response should have 2 columns")
         }else if(dim(prior_input[[i]])[1]!=numb[i]){
-          stop("Prior input for Poisson response should match ")
+          stop("Prior input for Poisson response should match number of leaves")
         }
       }else{
           if(dim(prior_input[[i]])[2]!=numbcat[i]){
