@@ -263,7 +263,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
       for(j in 1:numb[i]){
         prior<-c(prior,list(as.matrix(prior_input[[i]][j,])))
         if(i==numbvariables & poisson_response){
-        prior_response<-c(prior_response,list(as.matrix(prior_input[[i]][j,])))
+        prior_response<-c(prior_response,list(rbind(prior_input[[i]][j,])))
         }
       }
 
