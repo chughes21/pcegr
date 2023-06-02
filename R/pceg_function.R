@@ -231,6 +231,9 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     ind_start<-1
     no_merge_ind<-c()
 
+    prior<-list()
+    prior_response<-list()
+
     for(i in 1:numbvariables){
       if(i==numbvariables & poisson_response){
         if(dim(prior_input[[i]])[2]!=2){
@@ -245,20 +248,27 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
           stop(paste0("Prior input should match number of edges for variable ",i))
         }
       }
+
+      if(i>2){
+
+        ind_temp<-which(prior_input[[i]]==0)
+        ind_temp2<-which(ind_temp>numb[i])
+        ind_temp[ind_temp2]<-ind_temp[ind_temp2]-numb[i]
+
+        ind_temp<-unique(ind_temp)+ind_start
+        no_merge_ind<-c(no_merge_ind,ind_temp)
+        ind_start<-ind_start+numb[i]
+      }
+
+      for(j in 1:numb[i]){
+        prior<-c(prior,list(prior_input[[i]][j,]))
+        if(i==numbvariables & poisson_response){
+        prior_response<-c(prior_response,list(prior_input[[i]][j,]))
+        }
+      }
+
     }
 
-    if(i>2){
-
-      ind_temp<-which(prior_input[[i]]==0)
-      ind_temp2<-which(ind_temp>numb[i])
-      ind_temp[ind_temp2]<-ind_temp[ind_temp2]-numb[i]
-
-      ind_temp<-unique(ind_temp)+ind_start
-      no_merge_ind<-c(no_merge_ind,ind_temp)
-      ind_start<-ind_start+numb[i]
-    }
-
-    prior<-prior_input
     if(length(no_merge_ind)==0){
       no_merge_ind<-NA
     }
