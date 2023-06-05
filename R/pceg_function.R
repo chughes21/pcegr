@@ -254,7 +254,6 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
           stop(paste0("Prior input should match number of edges for variable ",i))
         }
         }
-      }
 
       if(i>2){
 
