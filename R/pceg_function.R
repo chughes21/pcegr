@@ -265,6 +265,8 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
         ind_temp<-unique(ind_temp)+ind_start
         no_merge_ind<-c(no_merge_ind,ind_temp)
         ind_start<-ind_start+numb[i]
+      }else{
+        ind_start<-ind_start+numb[i]
       }
 
       for(j in 1:numb[i]){
