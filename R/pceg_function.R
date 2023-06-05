@@ -235,25 +235,24 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     prior_response<-list()
 
     for(i in 1:numbvariables){
+
+      if(is.null(dim(prior_input[[i]]))){
+        prior_input[[i]]<-matrix(prior_input[[i]],nrow=1)
+      }
+
       if(i==numbvariables & poisson_response){
         if(dim(prior_input[[i]])[2]!=2){
           stop("Prior input for Poisson response should have 2 columns")
         }else if(dim(prior_input[[i]])[1]!=numb[i]){
           stop("Prior input for Poisson response should match number of leaves")
         }
-      }else if(i>1){
+      }else{
           if(dim(prior_input[[i]])[2]!=numbcat[i]){
           stop(paste0("Prior input should match number of categories for variable ",i))
         }else if(dim(prior_input[[i]])[1]!=numb[i]){
           stop(paste0("Prior input should match number of edges for variable ",i))
         }
-      }else{
-        if(length(prior_input[[i]])!=numbcat[i]){
-          stop(paste0("Prior input should match number of categories for variable ",i))
-        }else if(length(prior_input[[i]])!=numb[i]){
-          stop(paste0("Prior input should match number of edges for variable ",i))
-        }
-        }
+      }
 
       if(i>2){
 
