@@ -228,7 +228,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
       stop("Prior input should match the number of variables")
     }
 
-    ind_start<-1
+    ind_start<-0
     no_merge_ind<-c()
 
     prior<-list()
@@ -254,7 +254,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
         }
       }
 
-      if(i>2){
+      if(i>1){
 
         ind_temp<-which(prior_input[[i]]==0)
         ind_temp2<-which(ind_temp>numb[i])
