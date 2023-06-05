@@ -10,8 +10,6 @@
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE).
 #'
 #' @return A list containing vectors of initial values for the risk probability and rat, as well as a logical value for whether mean is being used as the initial condition method (TRUE) or not (FALSE).
-#' @examples
-#' initial_condition_setter(knee_pain_obs,8)
 #'
 initial_condition_setter<-function(data,n_leaves,p_0=NULL,l_0=NULL,initial_method=NULL,variable_time=TRUE){
   if(length(p_0) != length(l_0)){

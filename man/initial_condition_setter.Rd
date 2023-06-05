@@ -32,7 +32,3 @@ A list containing vectors of initial values for the risk probability and rat, as
 \description{
 Sets the initial conditions for the nlm_zip() and em_zip() functions, based on inputs.
 }
-\examples{
-initial_condition_setter(knee_pain_obs,8)
-
-}
