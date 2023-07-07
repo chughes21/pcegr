@@ -107,6 +107,54 @@ lgs<-function(v){
   return(lgamma(sum(v)))
 }
 
+#' The AHC Merge Function
+#'
+#' Calculates the change in log marginal likelihood from merging two count vectors given their prior vectors
+#'
+#' @param y1 An integer count vector for the first stage.
+#' @param y2 An integer count vector for the second stage.
+#' @param a1 A numeric prior vector for the first stage
+#' @param a2 A numeric prior vector for the first stage
+#'
+#' @return A numeric value for the change in log marginal likelihood
+#' @export
+#'
+#' @examples
+#' ahc_merge(c(1,1),c(0,2),c(1,1),c(1,1))
+ahc_merge<-function(y1, y2, a1, a2){
+
+  if(length(y1)!=length(a1)){
+    stop("Length of prior should match counts")
+  }
+
+
+  if(length(y2)!=length(a2)){
+    stop("Length of prior should match counts")
+  }
+
+  if(length(y1)!=length(y2)){
+    stop("Length of counts should match")
+  }
+
+  if(length(a1)!=length(a2)){
+    stop("Length of priors should match")
+  }
+
+  a1_star<-a1+y1
+  a2_star<-a2+y2
+
+  a12<-a1+a2
+  y12<-y1+y2
+  a12_star<-a12+y12
+
+  out<-lgs(a1)-lgs(a1_star)+slg(a1_star)-slg(a1)+
+    lgs(a2)-lgs(a2_star)+slg(a2_star)-slg(a2)-(
+      lgs(a12)-lgs(a12_star)+slg(a12_star)-slg(a12)
+    )
+
+  return(-out)
+}
+
 #' The PCEG function
 #'
 #' This function fits a PCEG model to a data set.
@@ -614,19 +662,23 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
             L<-length(compare1)
             for(l in 1:L){
               if(poisson){
-                result = result + bayes_factor(data, prior,compare1[l], compare2[l] ) #note just regular data and prior, due to what the stages are
+                result <- result + bayes_factor(data, prior,compare1[l], compare2[l] ) #note just regular data and prior, due to what the stages are
               }
-              else{ result=result+lgs(prior[[compare1[l]]]+prior[[compare2[l]]])-
-                    lgs(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[compare2[l]]])+
-                    slg(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[compare2[l]]])-
-                    slg(prior[[compare1[l]]]+prior[[compare2[l]]])-
+              else{
+
+                result <- result + ahc_merge(data[[compare1[l]]],data[[compare2[l]]],prior[[compare1[l]]],prior[[compare2[l]]])
+
+                    #result=result+lgs(prior[[compare1[l]]]+prior[[compare2[l]]])-
+                    #lgs(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[compare2[l]]])+
+                    #slg(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[compare2[l]]])-
+                    #slg(prior[[compare1[l]]]+prior[[compare2[l]]])-
                 # and the CEG where the two stages are not merged
-                    (lgs(prior[[compare1[l]]])-lgs(prior[[compare1[l]]]+data[[compare1[l]]])+
-                    slg(prior[[compare1[l]]]+data[[compare1[l]]])-
-                    slg(prior[[compare1[l]]])+lgs(prior[[compare2[l]]])-
-                    lgs(prior[[compare2[l]]]+data[[compare2[l]]])+
-                    slg(prior[[compare2[l]]]+data[[compare2[l]]])-slg(prior[[compare2[l]]])
-                    )
+                    #(lgs(prior[[compare1[l]]])-lgs(prior[[compare1[l]]]+data[[compare1[l]]])+
+                    #slg(prior[[compare1[l]]]+data[[compare1[l]]])-
+                    #slg(prior[[compare1[l]]])+lgs(prior[[compare2[l]]])-
+                    #lgs(prior[[compare2[l]]]+data[[compare2[l]]])+
+                    #slg(prior[[compare2[l]]]+data[[compare2[l]]])-slg(prior[[compare2[l]]])
+                    #)
                    #result=result+lgamma(sum(prior[[compare1[l]]]+prior[[compare2[l]]]))-lgamma(sum(prior[[
                    #compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[compare2[l]]]))+
                    # sum(lgamma(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[
@@ -683,23 +735,26 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
           for(i in 2:n){
             if(!(cluster_index[i] %in% merged1[2,])){
               if(poisson){
-                result2 = bayes_factor(data, prior,cluster_index[1], cluster_index[i] ) #note just regular data and prior, due to what the stages are
+                result2 <- bayes_factor(data, prior,cluster_index[1], cluster_index[i] ) #note just regular data and prior, due to what the stages are
               }
               else{
-                result2<-lgs(prior[[cluster_index[1]]]+prior[[cluster_index[i]]])
-                        -lgs(prior[[cluster_index[1]]]+data[[cluster_index[1]]]+prior[[cluster_index[i]]]+data[[cluster_index[i]]])
-                        +slg(prior[[cluster_index[1]]]+data[[cluster_index[1]]]+prior[[cluster_index[i]]]+data[[cluster_index[i]]])
-                        -slg(prior[[cluster_index[1]]]+prior[[cluster_index[i]]])-
+
+                result2<-ahc_merge(data[[cluster_index[1]]],data[[cluster_index[i]]],prior[[cluster_index[1]]],prior[[cluster_index[i]]])
+
+               # result2<-lgs(prior[[cluster_index[1]]]+prior[[cluster_index[i]]])
+                #        -lgs(prior[[cluster_index[1]]]+data[[cluster_index[1]]]+prior[[cluster_index[i]]]+data[[cluster_index[i]]])
+                #        +slg(prior[[cluster_index[1]]]+data[[cluster_index[1]]]+prior[[cluster_index[i]]]+data[[cluster_index[i]]])
+                #        -slg(prior[[cluster_index[1]]]+prior[[cluster_index[i]]])-
                   # and the CEG where the two stages are not merged
-                        (lgs(prior[[cluster_index[1]]])
-                        -lgs(prior[[cluster_index[1]]]+data[[cluster_index[1]]])
-                        +slg(prior[[cluster_index[1]]]+data[[cluster_index[1]]])
-                        -slg(prior[[cluster_index[1]]])
-                        +lgs(prior[[cluster_index[i]]])
-                        -lgs(prior[[cluster_index[i]]]+data[[cluster_index[i]]])
-                        +slg(prior[[cluster_index[i]]]+data[[cluster_index[i]]])
-                        -slg(prior[[cluster_index[i]]])
-                    )
+                #        (lgs(prior[[cluster_index[1]]])
+                #        -lgs(prior[[cluster_index[1]]]+data[[cluster_index[1]]])
+                #        +slg(prior[[cluster_index[1]]]+data[[cluster_index[1]]])
+                #        -slg(prior[[cluster_index[1]]])
+                #        +lgs(prior[[cluster_index[i]]])
+                #        -lgs(prior[[cluster_index[i]]]+data[[cluster_index[i]]])
+                #        +slg(prior[[cluster_index[i]]]+data[[cluster_index[i]]])
+                #        -slg(prior[[cluster_index[i]]])
+                #    )
               }
               replace_len<-length(prior[[cluster_index [1]]])
               replace_NA<-matrix(rep(NA,replace_len),nrow=1)
