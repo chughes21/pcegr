@@ -49,9 +49,9 @@ zipceg(
 
 \item{stoch_imputation}{A logical value indicating whether stochastic (TRUE) or deterministic (FALSE) imputation should be used.}
 
-\item{gamma_alpha}{A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.}
+\item{gamma_alpha}{A numeric vector for the shape hyperparameters of the Gamma priors for the Poisson rates, if applicable. If a single value, each prior takes the same value.}
 
-\item{gamma_beta}{A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.}
+\item{gamma_beta}{A numeric vector for the rate hyperparameters of the Gamma priors for the Poisson rates, if applicable. If a single value, each prior takes the same value.}
 
 \item{beta_c}{A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.}
 

@@ -39,11 +39,11 @@ pceg(
 
 \item{remove_risk_free}{A logical value indicating whether the risk free leaves and edges should be removed (TRUE) or not (FALSE).}
 
-\item{gamma_alpha}{A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.}
+\item{gamma_alpha}{A numeric vector for the shape hyperparameters of the Gamma priors for the Poisson rates, if applicable. If a single value, each prior takes the same value.}
 
-\item{gamma_beta}{A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.}
+\item{gamma_beta}{A numeric vector for the rate hyperparameters of the Gamma priors for the Poisson rates, if applicable. If a single value, each prior takes the same value.}
 
-\item{prior_input}{A list where each element is a matrix corresponding to a Dirichlet prior distribution for each level of the tree.}
+\item{prior_input}{A list where each element is a matrix corresponding to a Dirichlet prior distribution for each level of the tree. If NULL, the default prior is used.}
 
 \item{structural_zero}{A logical value indicating whether zero counts in the data set should be considered as structural (TRUE) or sampling (FALSE) for the setting of the prior.}
 

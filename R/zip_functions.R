@@ -94,8 +94,8 @@ state_imputer<-function(data,lambda=1,prob=0.5,variable_time=TRUE,stoch=TRUE,all
 #' @param variable_time A logical value indicating whether the observed time is uniform (FALSE) or variable (TRUE), if applicable.
 #' @param remove_risk_free A logical value indicating whether the risk free leaves and edges should be removed (TRUE) or not (FALSE).
 #' @param stoch_imputation A logical value indicating whether stochastic (TRUE) or deterministic (FALSE) imputation should be used.
-#' @param gamma_alpha A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.
-#' @param gamma_beta A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.
+#' @param gamma_alpha A numeric vector for the shape hyperparameters of the Gamma priors for the Poisson rates, if applicable. If a single value, each prior takes the same value.
+#' @param gamma_beta A numeric vector for the rate hyperparameters of the Gamma priors for the Poisson rates, if applicable. If a single value, each prior takes the same value.
 #' @param beta_c A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.
 #' @param beta_d A numeric value for the beta hyperparameter of the Beta prior for the risk probability.
 #' @param p_0 A numeric vector of initial values for the risk probabilities, if em or nlm method is chosen. If the vector is of length 1, this value will be repeated for each leaf. If NULL, then an automatic method (initial_condition) will be used.
