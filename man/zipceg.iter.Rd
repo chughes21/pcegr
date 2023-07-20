@@ -70,11 +70,9 @@ zipceg.iter(
 
 \item{print_output}{A logical value indicating whether the output for each iteration should be printed (TRUE) or not (FALSE).}
 
-\item{gamma_alpha}{A numeric value for the shape hyperparameter of the Gamma prior for the Poisson rate, if applicable.}
+\item{gamma_alpha}{A numeric vector for the shape hyperparameters of the Gamma priors for the Poisson rates, if applicable. If a single value, each prior takes the same value.}
 
-\item{gamma_beta}{A numeric value for the rate hyperparameter of the Gamma prior for the Poisson rate.}
-
-\item{beta_c}{A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.}
+\item{gamma_beta}{A numeric vector for the rate hyperparameters of the Gamma priors for the Poisson rates, if applicable. If a single value, each prior takes the same value.#' @param beta_c A numeric value for the alpha hyperparameter of the Beta prior for the risk probability.}
 
 \item{beta_d}{A numeric value for the beta hyperparameter of the Beta prior for the risk probability.}
 
