@@ -4,12 +4,12 @@
 \alias{vif}
 \title{The variance inflation factor calculation for a level of a staged tree}
 \usage{
-vif(mod, var)
+vif(mod, level)
 }
 \arguments{
 \item{mod}{A StagedTree model fit to the data set, as produced by pceg() or zipceg().}
 
-\item{var}{A positive integer value detailing which level of the tree to calculate the VIF for.}
+\item{level}{A positive integer value detailing which level of the tree to calculate the VIF for.}
 }
 \value{
 A numeric value for the variance inflation factor.
