@@ -357,7 +357,8 @@ model_combiner<-function(data,mod.background,mod.response,prior.input=NULL){
       tree.sat[,1:(cutpoint.variable-1)]<-cat_replacer(tree.sat[,1:(cutpoint.variable-1)],cat_extractor(mod.background))
 
       if(cutpoint.variable>2){
-        tree.resp<-cbind(rep(tree.resp$background,cutpoint.variable-2),tree.resp)
+        #tree.resp<-cbind(rep(tree.resp$background,cutpoint.variable-2),tree.resp) old version
+        tree.resp<-cbind(matrix(rep(tree.resp$background,cutpoint.variable-2),ncol=cutpoint.variable-2,byrow=FALSE),tree.resp)
       }
 
       for(j in 1:situations[i]){
