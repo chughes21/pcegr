@@ -181,7 +181,7 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
 
     data_temp$input<-factor(data_temp$input,levels=labels[[i]])
 
-    max_obs<-max(data_temp$output)
+    max_obs<-max(data_temp$output,na.rm=TRUE)#can be a problem when NaN so added na.rm
     max_lim<-round(max_obs,1)
     if(max_lim<max_obs){
       max_lim<-max_lim+0.1*(max_obs<1)+1*(max_obs>=1)
