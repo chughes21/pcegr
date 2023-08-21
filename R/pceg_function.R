@@ -326,6 +326,9 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
 
     if(length(no_merge_ind)==0){
       no_merge_ind<-NA
+    }else{
+      no_merge_ind<-sort(unique(no_merge_ind))
+      structural_zero<-TRUE
     }
 
   }else{
