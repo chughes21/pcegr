@@ -449,7 +449,10 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
       alpha<-alpha[alpha>0]
       N<-N[N>0]
       if(length(alpha)!=length(N)){
-        stop("Zeroes in prior don't match data")
+        if(length(prior_input>0)){
+          warning("Zeroes in prior don't match data")
+        }else{
+        stop("Zeroes in prior don't match data")}
       }
     }
     if(length(alpha)>0){
