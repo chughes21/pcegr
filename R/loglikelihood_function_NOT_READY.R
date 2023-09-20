@@ -60,8 +60,11 @@ loglik<-function(mod){
        }
       }
     result<-result+temp
-    stages<-stages+1
-
+    if(i==1){
+      stages<-stages+length(post)-1
+    }else{
+    stages<-stages+dim(post)[2]-1
+     }
     }
 
     n<-n+sum(d)
