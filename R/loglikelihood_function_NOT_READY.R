@@ -60,7 +60,7 @@ loglik<-function(mod){
        }
       }
     result<-result+temp
-    if(i==1){
+    if(i==1 || (length(ind)==1)){
       stages<-stages+length(post)-1
     }else{
     stages<-stages+dim(post)[2]-1
