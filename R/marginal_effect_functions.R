@@ -77,6 +77,12 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
 # numb<-c(1,cumprod(numbcat[1:(numbvariables-1)])) #number of nodes at each level
   labels<-lapply(data[,1:cv],levels) #the labels for the covariates, for plotting
 
+  if(!poisson_response){
+    if(nlevels(data[,output_variable])>2){
+      stop("Function only defined for Binary/Poisson output variables - consider reparameterising")
+    }
+  }
+
   #below is copied from expected_counts and into quantile_band - if this changes, so should that
   #make into own function
 
