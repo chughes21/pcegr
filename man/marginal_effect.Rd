@@ -10,7 +10,8 @@ marginal_effect(
   input_variable = c(),
   rel_output = 0,
   max_per_plot = 4,
-  zip = FALSE
+  zip = FALSE,
+  incl_names = TRUE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ marginal_effect(
 \item{max_per_plot}{An integer value specifying the maximum number of leaves that can be shown in a single plot.}
 
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
+
+\item{incl_names}{A logical value indicating whether the names of the covariates should be included (TRUE) or not (FALSE) in the output of each plot, for space reasons.}
 }
 \value{
 A marginal effect plot for each variable.

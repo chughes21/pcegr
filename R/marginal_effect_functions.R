@@ -7,6 +7,7 @@
 #' @param rel_output A non-positive integer value detailing the variable which is being affected by the input variable(s), relative to the response. When 0, this will analyse the response variable, but any variable that appears after the input variables in the tree can be analysed.
 #' @param max_per_plot An integer value specifying the maximum number of leaves that can be shown in a single plot.
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
+#' @param incl_names A logical value indicating whether the names of the covariates should be included (TRUE) or not (FALSE) in the output of each plot, for space reasons.
 #'
 #' @return A marginal effect plot for each variable.
 #' @export
@@ -14,7 +15,7 @@
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' marginal_effect(knee_pain_obs,mod)
-marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plot = 4,zip=FALSE){
+marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plot = 4,zip=FALSE,incl_names=TRUE){
 
   names<-colnames(data)
   n<-dim(data)[2]
@@ -159,10 +160,19 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
 
     labels_ind<-as.matrix(numbcat[non_input]-v)
 
+    if(incl_names){
     string<-paste0(names[non_input[1]],"=",labels[[non_input[1]]][labels_ind[1]])
     if(cv>2){
       for(k in 2:(cv-1)){
         string<-paste0(string,",",names[non_input[k]],"=",labels[[non_input[k]]][labels_ind[k]])
+      }
+    }
+    }else{
+      string<-labels[[non_input[1]]][labels_ind[1]]
+      if(cv>2){
+        for(k in 2:(cv-1)){
+          string<-paste0(string,",",labels[[non_input[k]]][labels_ind[k]])
+        }
       }
     }
 
