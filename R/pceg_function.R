@@ -440,7 +440,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
         prior_response[[i]]<-cbind(0,0)
         prior[[ind_temp[i]]]<-cbind(0,0)
       }
-      no_merge_ind<-c(no_merge_ind,ind_temp[ind_zero])
+      comparisonset[[numbvariables-1]]<-comparisonset[[numbvariables-1]][-ind_zero]
     }
   }
 
