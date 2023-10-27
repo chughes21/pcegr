@@ -441,7 +441,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
         prior[[i]]<-c(0,0)
       }
       ind_zero<-ind_zero+ind_start-1
-      no_merge_ind<-c(no_merge_ind,1)
+      no_merge_ind<-c(no_merge_ind,ind_zero)
     }
   }
 
