@@ -434,13 +434,12 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
 
   if(structural_zero){
     ind_temp<-comparisonset[[numbvariables]]
-    ind_start<-ind_temp[1]
     ind_zero<-which(data_sum$t==0)
     if(length(ind_zero)>0){
+      ind_zero<-ind_temp[ind_zero]
       for(i in ind_zero){
         prior[[i]]<-c(0,0)
       }
-      ind_zero<-ind_zero+ind_start-1
       no_merge_ind<-c(no_merge_ind,ind_zero)
     }
   }
