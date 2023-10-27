@@ -437,8 +437,8 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     ind_zero<-which(data_sum$t==0)
     if(length(ind_zero)>0){
       for(i in ind_zero){
-        prior_response[[i]]<-c(0,0)
-        prior[[ind_temp[i]]]<-c(0,0)
+        prior_response[[i]]<-cbind(0,0)
+        prior[[ind_temp[i]]]<-cbind(0,0)
       }
       no_merge_ind<-c(no_merge_ind,ind_temp[ind_zero])
     }
