@@ -432,7 +432,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     comparisonset <-c(comparisonset ,list(ind_temp))
   }
 
-  if(structural_zero){
+  if(structural_zero & poisson_response){
     ind_temp<-comparisonset[[numbvariables-1]]
     ind_zero<-which(data_sum$t==0)
     if(length(ind_zero)>0){
