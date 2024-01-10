@@ -421,8 +421,8 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     }
   }
 
-  # List of the stages that can be merged in the first step
-  comparisonset<-c()
+  comparisonset<-c() # List of the stages that can be merged in the first step
+  zero_set<-c() #list of stages that are treated as structural zeroes and thus not merged with any others
   for (i in 2:numbvariables){
     ind_temp<-c((sum(numb[1:(i-1)])+1):(sum(numb[1:i])))
     check_temp<-which(ind_temp %in% no_merge_ind)
@@ -430,6 +430,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
       ind_temp<-ind_temp[-check_temp]
     }
     comparisonset <-c(comparisonset ,list(ind_temp))
+    zero_set<-c(zero_set,list(check_temp))
   }
 
   if(structural_zero & poisson_response){
@@ -816,6 +817,10 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
   }
   # Output : stages of the finest partition to be combined to obtain the most probable CEG structure
   stages<-c(1)
+  for(i in 1:numbvariables[-1]){
+    comparisonset[[i]]<-sort(unique(c(comparisonset[[i]],zero_set[[i]])))
+  }
+
   for (i in 2:numbvariables){
     stages<-c(stages ,comparisonset[[i-1]])
   }
