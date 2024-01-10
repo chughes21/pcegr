@@ -426,11 +426,13 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
   for (i in 2:numbvariables){
     ind_temp<-c((sum(numb[1:(i-1)])+1):(sum(numb[1:i])))
     check_temp<-which(ind_temp %in% no_merge_ind)
+    zero_temp<-c()
     if(length(check_temp)>0 & structural_zero){
+      zero_temp<-ind_temp[check_temp]
       ind_temp<-ind_temp[-check_temp]
     }
     comparisonset <-c(comparisonset ,list(ind_temp))
-    zero_set<-c(zero_set,list(check_temp))
+    zero_set<-c(zero_set,list(zero_temp))
   }
 
   if(structural_zero & poisson_response){
