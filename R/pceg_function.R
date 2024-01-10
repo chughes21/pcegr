@@ -817,7 +817,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
   }
   # Output : stages of the finest partition to be combined to obtain the most probable CEG structure
   stages<-c(1)
-  for(i in 1:numbvariables[-1]){
+  for(i in 1:n_iter){
     comparisonset[[i]]<-sort(unique(c(comparisonset[[i]],zero_set[[i]])))
   }
 
