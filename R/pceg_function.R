@@ -583,6 +583,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
         mergedlist[[z_set[1]]]<-cbind(mergedlist[[z_set[1]]],mergedlist[[z_set[i]]])
         mergedlist[[z_set[i]]]<-replace_NA
       }
+      zero_set[[k]]<-z_set[1]
     }
 
     while(diff.end >0){ #We stop when no positive difference is obtained by merging two stages
