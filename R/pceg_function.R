@@ -581,6 +581,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
         data[[z_set[1]]]<-data[[z_set[1]]]+data[[z_set[i]]]
         data[[z_set[i]]]<-replace_NA
         mergedlist[[z_set[1]]]<-cbind(mergedlist[[z_set[1]]],mergedlist[[z_set[i]]])
+        mergedlist[[z_set[i]]]<-replace_NA
       }
     }
 
