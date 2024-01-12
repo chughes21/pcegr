@@ -171,6 +171,7 @@ ahc_merge<-function(y1, y2, a1, a2){
 #' @param gamma_beta A numeric vector for the rate hyperparameters of the Gamma priors for the Poisson rates, if applicable. If a single value, each prior takes the same value.
 #' @param prior_input A list where each element is a matrix corresponding to a Dirichlet prior distribution for each level of the tree. If NULL, the default prior is used.
 #' @param structural_zero A logical value indicating whether zero counts in the data set should be considered as structural (TRUE) or sampling (FALSE) for the setting of the prior.
+#' @param merge_zero A logical value indicating whether structural zeroes in the data set should be combined into one stage at each level (TRUE) or not (FALSE).
 #' @param indep An integer vector indicating which variables should be assumed to be independent of preceding variables (all situations in same stage).
 #' @param saturated An integer vector indicating which variables should be assumed to be saturated (all situations in own stage).
 #' @param mean_post_cluster A logical value indicating whether mean posterior clustering should be used (TRUE) or not (FALSE).
@@ -189,7 +190,7 @@ ahc_merge<-function(y1, y2, a1, a2){
 #' plot(mod)
 #' summary(mod)
 pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE, zip=FALSE,remove_risk_free = FALSE,
-                        gamma_alpha =1, gamma_beta = 2,prior_input=NULL,structural_zero = FALSE, indep = NA, saturated = NA,mean_post_cluster = FALSE, var_disc = 0, disc_length = 0,
+                        gamma_alpha =1, gamma_beta = 2,prior_input=NULL,structural_zero = FALSE, combine_zero=FALSE, indep = NA, saturated = NA,mean_post_cluster = FALSE, var_disc = 0, disc_length = 0,
                         restrict = FALSE, mirror = FALSE, cat_limit=0, collapse = FALSE){
 
   exampledata<-data
@@ -568,6 +569,20 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
       min_category<-rep(cat_limit,numb[[k]])
     }else{min_category<-numeric(numb[[k]])}
 
+
+    if(length(zero_set[[k]]>1)){
+      z_set<-zero_set[[k]]
+      z_len<-length(z_set)
+      replace_len<-length(prior[[z_set[1]]])
+      replace_NA<-matrix(rep(NA,replace_len),nrow=1)
+      for(i in 2:z_len){
+        prior[[z_set[1]]]<-prior[[z_set[1]]]+prior[[z_set[i]]]
+        prior[[z_set[i]]]<-replace_NA
+        data[[z_set[1]]]<-data[[z_set[1]]]+data[[z_set[i]]]
+        data[[z_set[i]]]<-replace_NA
+        mergedlist[[z_set[1]]]<-cbind(mergedlist[[z_set[1]]],mergedlist[[z_set[i]]])
+      }
+    }
 
     while(diff.end >0){ #We stop when no positive difference is obtained by merging two stages
 
