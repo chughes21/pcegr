@@ -570,7 +570,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     }else{min_category<-numeric(numb[[k]])}
 
 
-    if(length(zero_set[[k]]>1)){
+    if(length(zero_set[[k]])*combine_zero>1){
       z_set<-zero_set[[k]]
       z_len<-length(z_set)
       replace_len<-length(prior[[z_set[1]]])
