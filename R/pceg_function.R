@@ -582,6 +582,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
         data[[z_set[i]]]<-replace_NA
         mergedlist[[z_set[1]]]<-cbind(mergedlist[[z_set[1]]],mergedlist[[z_set[i]]])
         mergedlist[[z_set[i]]]<-replace_NA
+        merged_out<-cbind(merged_out,c(z_set[1],z_set[i],k))
       }
       zero_set[[k]]<-z_set[1]
     }
