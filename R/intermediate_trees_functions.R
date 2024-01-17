@@ -283,6 +283,7 @@ stage_updater<-function(mod,level,ref1,ref2){
 #' @param data A data set, where the observed count vector and time vector (if included) are the last two columns.
 #' @param mod.background A StagedTree object modelling the background process.
 #' @param mod.response A StagedTree object modelling the response process.
+#' @param background.order An integer vector detailing how the default backgrounds from the [[background_extractor()]] function have been reordered in the augmented dataset. If integer $m$ is in position $n$ of the vector, than the background $m$ from [[background_extractor()]] is now background $n$ in the augmented data set.
 #' @param prior_input A list where each element is a matrix corresponding to a Dirichlet prior distribution for each level of the tree. If NULL, the default prior is used.
 #'
 #' @return A StagedTree object which is equivalent to combining mod.background and mod.response.
@@ -294,7 +295,7 @@ stage_updater<-function(mod,level,ref1,ref2){
 #' newdata<-background_extractor(knee_pain_obs,mod.back)
 #' mod.resp<-pceg(newdata,2,TRUE,TRUE)
 #' mod2<-model_combiner(knee_pain_obs,mod.back,mod.resp)
-model_combiner<-function(data,mod.background,mod.response,prior.input=NULL){
+model_combiner<-function(data,mod.background,mod.response,background.order=NULL, prior.input=NULL){
 
   resp.variable<-mod.response$event.tree$num.variable
   cutpoint.variable<-mod.background$event.tree$num.variable
@@ -330,6 +331,24 @@ model_combiner<-function(data,mod.background,mod.response,prior.input=NULL){
   resp.end.situations<-cumsum(resp.situations)
 
   data.resp<-background_extractor(data,mod.background)
+
+  if(length(background.order)>0){
+    n_group<-nlevels(data[,1])
+    if(length(unique(background.order))!=n_group){
+      stop("Background order input should have same number of unique elements as background groups")
+    }else if(max(background.order)>n_group){
+      stop("Maximum value in background order vector should be less than or equal to number of groups")
+    }else if(min(background.order)<1){
+      stop("Minimum value in background order vector should be 1")
+    }else{
+     data.temp<-data.resp
+     for(i in 1:n_group){
+       ind.temp<-which(data.resp[,1])==i
+       data.temp[ind.temp,1]<-rep(background.order[i],length(ind.temp))
+     }
+    }
+
+  }
 
   cats.sat<-lapply(data,levels)
   cats.resp<-lapply(data.resp,levels)
