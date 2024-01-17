@@ -68,7 +68,7 @@ path_prob_extractor<-function(mod,precision = 5){
     stop(paste0("Path probabilities don't sum to 1 they sum to ",round(sum(path_prob_mat[,num_var]),precision)))
   }
 
-  if(round(sum(colSums(path_prob_mat)-p/edges),precision)!=0){
+  if(round(sum(colSums(path_prob_mat,na.rm=TRUE)-p/edges),precision)!=0){
     stop("Situation counts don't match")
   }
 
