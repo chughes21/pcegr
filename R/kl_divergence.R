@@ -65,7 +65,7 @@ path_prob_extractor<-function(mod,precision = 5){
   }
 
   if(round(sum(path_prob_mat[,num_var],na.rm=TRUE),precision)!=1){
-    stop(paste0("Path probabilities don't sum to 1 they sum to ",round(sum(path_prob_mat[,num_var]),precision)))
+    stop(paste0("Path probabilities don't sum to 1 they sum to ",round(sum(path_prob_mat[,num_var],na.rm=TRUE),precision)))
   }
 
   if(round(sum(colSums(path_prob_mat,na.rm=TRUE)-p/edges),precision)!=0){
