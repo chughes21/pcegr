@@ -297,9 +297,9 @@ stage_updater<-function(mod,level,ref1,ref2){
 #' mod2<-model_combiner(knee_pain_obs,mod.back,mod.resp)
 model_combiner<-function(data,mod.background,mod.response,background.order=NULL, prior.input=NULL){
 
-  resp.variable<-mod.response$event.tree$num.variable
-  cutpoint.variable<-mod.background$event.tree$num.variable
-  num.variable<-cutpoint.variable+resp.variable-2
+  resp.variable<-mod.response$event.tree$num.variable #how many variables in the response tree
+  cutpoint.variable<-mod.background$event.tree$num.variable #how many variables in background tree
+  num.variable<-cutpoint.variable+resp.variable-2 #total variables in the tree - subtract two because of background variavble and double counting intermediate var
 
   poisson.response<-mod.response$event.tree$poisson.response
   variable.time<-mod.response$event.tree$variable.time
@@ -310,6 +310,8 @@ model_combiner<-function(data,mod.background,mod.response,background.order=NULL,
 
   equivsize<-sum(mod.response$prior.distribution[[1]],na.rm = TRUE)
 
+  #the priors should be taken from the given models-TO DO
+
   if(poisson.response){
     gamma_alpha<-sum(mod.response$prior.distribution[[resp.variable]][,1],na.rm = TRUE)/length(mod.response$prior.distribution[[resp.variable]][,1])
     gamma_beta<-sum(mod.response$prior.distribution[[resp.variable]][,2],na.rm = TRUE)/length(mod.response$prior.distribution[[resp.variable]][,2])
@@ -318,9 +320,10 @@ model_combiner<-function(data,mod.background,mod.response,background.order=NULL,
     gamma_beta<-2
   }
 
+  #compute a saturated model from cutpoint variable on
   mod.sat<-saturated_model_computer(data,cutpoint.variable,equivsize, poisson.response,variable.time,gamma_alpha,gamma_beta,prior_input = prior.input)
 
-  resp.merge<-mod.response$merged
+  resp.merge<-mod.response$merged #the situations merged in the response ceg
 
   situations<-mod.sat$event.tree$num.situation
   start.situations<-c(1,cumsum(situations[1:(num.variable-1)])+1)
@@ -367,12 +370,12 @@ model_combiner<-function(data,mod.background,mod.response,background.order=NULL,
 
     if(i>cutpoint.variable){
 
-      i.resp<-i-cutpoint.variable+2
+      i.resp<-i-cutpoint.variable+1 #changed from +2
       resp.situations.temp<-c(resp.start.situations[i.resp]:resp.end.situations[i.resp])
 
       tree.sat<-rev(expand.grid(rev(cats.sat[-(i:(num.variable+1*variable.time))])))
       tree.resp<-rev(expand.grid(rev(cats.resp[-(i.resp:(resp.variable+1*variable.time))])))
-
+       #below line should be changed to adjust for the background.order input
       tree.sat[,1:(cutpoint.variable-1)]<-cat_replacer(tree.sat[,1:(cutpoint.variable-1)],cat_extractor(mod.background))
 
       if(cutpoint.variable>2){
