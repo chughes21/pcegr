@@ -380,7 +380,7 @@ model_combiner<-function(data,mod.background,mod.response,background.order=NULL,
 
       if(cutpoint.variable>2){
         #tree.resp<-cbind(rep(tree.resp$background,cutpoint.variable-2),tree.resp) old version
-        tree.resp<-cbind(matrix(rep(tree.resp$background,cutpoint.variable-2),ncol=cutpoint.variable-2,byrow=FALSE),tree.resp)
+        tree.resp<-cbind(matrix(rep(tree.resp$background,cutpoint.variable-1),ncol=cutpoint.variable-1,byrow=FALSE),tree.resp)
       }
 
       for(j in 1:situations[i]){
