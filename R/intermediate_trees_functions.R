@@ -283,8 +283,8 @@ stage_updater<-function(mod,level,ref1,ref2){
   ind.sit1<-which(stages.level==true.sit1)
   ind.sit2<-which(stages.level==true.sit2)
 
-  ind.stage1<-stages.pre.level+ind.sit1
-  ind.stage2<-stages.pre.level+ind.sit2
+  ind.stage1<-num.stages.pre.level+ind.sit1
+  ind.stage2<-num.stages.pre.level+ind.sit2
 
   mod$result[[ind.stage1]]<-c(mod$result[[ind.stage1]],mod$result[[ind.stage2]])
   mod$result[[ind.stage2]]<-NA
