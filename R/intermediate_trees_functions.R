@@ -287,7 +287,7 @@ stage_updater<-function(mod,level,ref1,ref2){
   ind.stage2<-num.stages.pre.level+ind.sit2
 
   mod$result[[ind.stage1]]<-cbind(mod$result[[ind.stage1]],mod$result[[ind.stage2]])
-  mod$result[[ind.stage2]]<-NA
+  mod$result[[ind.stage2]]<-NULL
 
   stages<-stages[-which(stages==true.sit2)]
 
