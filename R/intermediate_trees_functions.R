@@ -242,8 +242,8 @@ stage_updater<-function(mod,level,ref1,ref2){
   a1<-mod$prior.distribution[[level]][ref1,]
   a2<-mod$prior.distribution[[level]][ref2,]
 
-  mod$data.summary[[level]][ref1,]<-sum(mod$data.summary[[level]][ref1,],mod$data.summary[[level]][ref2,],na.rm=TRUE)
-  mod$prior.distribution[[level]][ref1,]<-sum(mod$prior.distribution[[level]][ref1,],mod$prior.distribution[[level]][ref2,],na.rm=TRUE)
+  mod$data.summary[[level]][ref1,]<-mod$data.summary[[level]][ref1,]+mod$data.summary[[level]][ref2,]
+  mod$prior.distribution[[level]][ref1,]<-mod$prior.distribution[[level]][ref1,]+mod$prior.distribution[[level]][ref2,]
 
   mod$data.summary[[level]][ref2,]<-NA
   mod$prior.distribution[[level]][ref2,]<-NA
@@ -286,7 +286,7 @@ stage_updater<-function(mod,level,ref1,ref2){
   ind.stage1<-num.stages.pre.level+ind.sit1
   ind.stage2<-num.stages.pre.level+ind.sit2
 
-  mod$result[[ind.stage1]]<-c(mod$result[[ind.stage1]],mod$result[[ind.stage2]])
+  mod$result[[ind.stage1]]<-cbind(mod$result[[ind.stage1]],mod$result[[ind.stage2]])
   mod$result[[ind.stage2]]<-NA
 
   stages<-stages[-which(stages==true.sit2)]
