@@ -242,8 +242,8 @@ stage_updater<-function(mod,level,ref1,ref2){
   a1<-mod$prior.distribution[[level]][ref1,]
   a2<-mod$prior.distribution[[level]][ref2,]
 
-  mod$data.summary[[level]][ref1,]<-mod$data.summary[[level]][ref1,]+mod$data.summary[[level]][ref2,]
-  mod$prior.distribution[[level]][ref1,]<-mod$prior.distribution[[level]][ref1,]+mod$prior.distribution[[level]][ref2,]
+  mod$data.summary[[level]][ref1,]<-sum(mod$data.summary[[level]][ref1,],mod$data.summary[[level]][ref2,],na.rm=TRUE)
+  mod$prior.distribution[[level]][ref1,]<-sum(mod$prior.distribution[[level]][ref1,],mod$prior.distribution[[level]][ref2,],na.rm=TRUE)
 
   mod$data.summary[[level]][ref2,]<-NA
   mod$prior.distribution[[level]][ref2,]<-NA
@@ -269,6 +269,14 @@ stage_updater<-function(mod,level,ref1,ref2){
 
   mod$stage.structure[[level]][[ref1]]<-c(mod$stage.structure[[level]][[ref1]],mod$stage.structure[[level]][[ref2]])
   mod$stage.structure[[level]][[ref2]]<-NA
+
+  #for mergedlist, we need the overall situation number
+
+  true.sit1<-start.situations[level]+ref1-1
+  true.sit2<-start.situations[level]+ref2-1
+
+  mod$mergedlist[[true.sit1]]<-c(mod$mergedlist[[true.sit1]],mod$mergedlist[[true.sit2]])
+  mod$mergedlist[[true.sit2]]<-NA
 
   return(mod)
 }
@@ -320,10 +328,23 @@ model_combiner<-function(data,mod.background,mod.response,background.order=NULL,
     gamma_beta<-2
   }
 
-  #compute a saturated model from cutpoint variable on
-  mod.sat<-saturated_model_computer(data,cutpoint.variable,equivsize, poisson.response,variable.time,gamma_alpha,gamma_beta,prior_input = prior.input)
+  #compute a saturated model without account for cutpoint.variable
+  mod.sat<-saturated_model_computer(data,cutpoint.variable=NULL,equivsize, poisson.response,variable.time,gamma_alpha,gamma_beta,prior_input = prior.input)
 
+  back.merge<-mod.background$merged
   resp.merge<-mod.response$merged #the situations merged in the response ceg
+
+  #create a saturated tree
+  #first need levels
+  cats.sat<-lapply(data,levels)
+  cats.resp<-lapply(data.resp,levels)
+
+  tree.sat<-rev(expand.grid(rev(cats.sat)))
+  tree.resp<-rev(expand.grid(rev(cats.resp)))
+
+  #now create a tree that is the saturated tree except with background imputed
+  tree.background<-tree.sat
+  tree.background<-cat_replacer(tree.sat[,1:(cutpoint.variable-1)],cat_extractor(mod.background))
 
   situations<-mod.sat$event.tree$num.situation
   start.situations<-c(1,cumsum(situations[1:(num.variable-1)])+1)
