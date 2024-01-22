@@ -270,13 +270,26 @@ stage_updater<-function(mod,level,ref1,ref2){
   mod$stage.structure[[level]][[ref1]]<-c(mod$stage.structure[[level]][[ref1]],mod$stage.structure[[level]][[ref2]])
   mod$stage.structure[[level]][[ref2]]<-NA
 
-  #for mergedlist, we need the overall situation number
+  #for result, we need the stage number (ordered)
+
+  stages<-mod$stages
+  stages.level<-stages[which((stages>=start.situations[level])&(stages<=end.situations[level]))]
+  stages.pre.level<-stages[which(stages<start.situations[level])]
+  num.stages.pre.level<-length(stages.pre.level)
 
   true.sit1<-start.situations[level]+ref1-1
   true.sit2<-start.situations[level]+ref2-1
 
-  mod$mergedlist[[true.sit1]]<-c(mod$mergedlist[[true.sit1]],mod$mergedlist[[true.sit2]])
-  mod$mergedlist[[true.sit2]]<-NA
+  ind.sit1<-which(stages.level==true.sit1)
+  ind.sit2<-which(stages.level==true.sit2)
+
+  ind.stage1<-stages.pre.level+ind.sit1
+  ind.stage2<-stages.pre.level+ind.sit2
+
+  mod$result[[ind.stage1]]<-c(mod$result[[ind.stage1]],mod$result[[ind.stage2]])
+  mod$result[[ind.stage2]]<-NA
+
+  stages<-stages[-which(stages==true.sit2)]
 
   return(mod)
 }
