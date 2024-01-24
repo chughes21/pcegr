@@ -273,23 +273,23 @@ stage_updater<-function(mod,level,ref1,ref2){
   #for result, we need the stage number (ordered)
 
   stages<-mod$stages
-  stages.level<-stages[which((stages>=start.situations[level])&(stages<=end.situations[level]))]
-  stages.pre.level<-stages[which(stages<start.situations[level])]
-  num.stages.pre.level<-length(stages.pre.level)
+  #stages.level<-stages[which((stages>=start.situations[level])&(stages<=end.situations[level]))]
+  #stages.pre.level<-stages[which(stages<start.situations[level])]
+ # num.stages.pre.level<-length(stages.pre.level)
 
   true.sit1<-start.situations[level]+ref1-1
   true.sit2<-start.situations[level]+ref2-1
 
-  ind.sit1<-which(stages.level==true.sit1)
-  ind.sit2<-which(stages.level==true.sit2)
+ # ind.sit1<-which(stages.level==true.sit1)
+ # ind.sit2<-which(stages.level==true.sit2)
 
-  ind.stage1<-num.stages.pre.level+ind.sit1
-  ind.stage2<-num.stages.pre.level+ind.sit2
+  ind.stage1<-which(stages==true.sit1)
+  ind.stage2<-which(stages==true.sit2)
 
   mod$result[[ind.stage1]]<-cbind(mod$result[[ind.stage1]],mod$result[[ind.stage2]])
   mod$result[[ind.stage2]]<-NULL
 
-  stages<-stages[-which(stages==true.sit2)]
+  mod$stages<-stages[-ind.stage2]
 
   return(mod)
 }
