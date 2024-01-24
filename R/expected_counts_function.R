@@ -257,7 +257,9 @@ parameter_extractor<-function(stage_struct, posterior, var, poisson_response = T
       j<-2*j
     }
     if(!is.na(j)){
-    output[ind,]<-matrix(rep(post[j,],times=length(ind)),byrow=TRUE,nrow=length(ind))
+    #output[ind,]<-matrix(rep(post[j,],times=length(ind)),byrow=TRUE,nrow=length(ind)) used to do it this way
+    #I'm not sure why I used min - when doing model_combining it breaks it - maybe for rrf?
+    output[ind,]<-matrix(rep(post[i+i*rrf_ind,],times=length(ind)),byrow=TRUE,nrow=length(ind))
     }
   }
 
