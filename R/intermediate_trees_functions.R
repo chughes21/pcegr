@@ -377,7 +377,7 @@ model_combiner<-function(data,mod.background,mod.response,background.order=NULL,
       stop("Prior input doesn't match background model")
     }
   }else{
-    back.prior<-mod.response$prior.distribution
+    back.prior<-mod.background$prior.distribution
     back.prior.check<-FALSE
   }
 
@@ -444,7 +444,7 @@ model_combiner<-function(data,mod.background,mod.response,background.order=NULL,
       corr.sit<-numeric(length(situations)) #a vector showing the corresponding first situation in the big tree for the response tree
       count.sit<-0 #a counter checking the number of situations
 
-      prior.sum<-colSums(resp.prior[[i.resp]]) #the total column sums of the prior to be distributed equally
+      prior.sum<-colSums(resp.prior[[i.resp]],na.rm=TRUE) #the total column sums of the prior to be distributed equally
 
       for(j in situations){
         v<-tree.resp[j,] #the covariates
@@ -512,9 +512,9 @@ model_combiner<-function(data,mod.background,mod.response,background.order=NULL,
       if(back.prior.check){
         mod.sat$prior.distribution[[i]]<-back.prior[[i]]
       }else{
-        prior.sum<-colSums(back.prior[[i]])
+        prior.sum<-colSums(back.prior[[i]],na.rm=TRUE)
         prior.frac<-prior.sum/situations.sat[i]
-        mod.sat$prior.distribution[[i]]<-matrix(rep(prior.frac,situations.sat[i]),ncol=cats.sat[i],nrow=situations.sat[i],byrow=TRUE)
+        mod.sat$prior.distribution[[i]]<-matrix(rep(prior.frac,situations.sat[i]),ncol=lev,nrow=situations.sat[i],byrow=TRUE)
       }
 
       for(j in stage.ref){
