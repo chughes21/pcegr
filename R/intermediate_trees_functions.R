@@ -305,7 +305,8 @@ stage_updater<-function(mod,level,ref1,ref2){
 #' @param mod.background A StagedTree object modelling the background process.
 #' @param mod.response A StagedTree object modelling the response process.
 #' @param background.order An integer vector detailing how the default backgrounds from the [[background_extractor()]] function have been reordered in the augmented dataset. If integer $m$ is in position $n$ of the vector, than the background $m$ from [[background_extractor()]] is now background $n$ in the augmented data set.
-#' @param prior_input A list where each element is a matrix corresponding to a Dirichlet prior distribution for each level of the tree. If NULL, the default prior is used.
+#' @param resp.prior.input A list where each element is a matrix corresponding to a Dirichlet prior distribution for each level of the background tree before model selection. If NULL, the prior is extracted from the background model and assumed equally distributed.
+#' @param resp.prior.input A list where each element is a matrix corresponding to a Dirichlet prior distribution for each level of the response tree before model selection. If NULL, the prior is extracted from the response model and assumed equally distributed.
 #'
 #' @return A StagedTree object which is equivalent to combining mod.background and mod.response.
 #' @export
@@ -316,7 +317,7 @@ stage_updater<-function(mod,level,ref1,ref2){
 #' newdata<-background_extractor(knee_pain_obs,mod.back)
 #' mod.resp<-pceg(newdata,2,TRUE,TRUE)
 #' mod2<-model_combiner(knee_pain_obs,mod.back,mod.resp)
-model_combiner<-function(data,mod.background,mod.response,background.order=NULL, prior.input=NULL){
+model_combiner<-function(data,mod.background,mod.response,background.order=NULL, back.prior.input=NULL,resp.prior.input=NULL){
 
   resp.variable<-mod.response$event.tree$num.variable #how many variables in the response tree
   cutpoint.variable<-mod.background$event.tree$num.variable #how many variables in background tree
@@ -347,30 +348,10 @@ model_combiner<-function(data,mod.background,mod.response,background.order=NULL,
   back.merge<-mod.background$merged
   resp.merge<-mod.response$merged #the situations merged in the response ceg
 
-  #create a saturated tree
-  #first need levels
-  cats.sat<-lapply(data,levels)
-  cats.resp<-lapply(data.resp,levels)
-
-  tree.sat<-rev(expand.grid(rev(cats.sat)))
-  tree.resp<-rev(expand.grid(rev(cats.resp)))
-
-  #now create a tree that is the saturated tree except with background imputed
-  tree.background<-tree.sat
-  tree.background<-cat_replacer(tree.sat[,1:(cutpoint.variable-1)],cat_extractor(mod.background))
-
-  situations<-mod.sat$event.tree$num.situation
-  start.situations<-c(1,cumsum(situations[1:(num.variable-1)])+1)
-  end.situations<-cumsum(situations)
-
-  resp.situations<-mod.response$event.tree$num.situation
-  resp.start.situations<-c(1,cumsum(resp.situations[1:(mod.response$event.tree$num.variable-1)])+1)
-  resp.end.situations<-cumsum(resp.situations)
-
   data.resp<-background_extractor(data,mod.background)
 
   if(length(background.order)>0){
-    n_group<-nlevels(data[,1])
+    n_group<-nlevels(data.resp[,1])
     if(length(unique(background.order))!=n_group){
       stop("Background order input should have same number of unique elements as background groups")
     }else if(max(background.order)>n_group){
@@ -378,102 +359,194 @@ model_combiner<-function(data,mod.background,mod.response,background.order=NULL,
     }else if(min(background.order)<1){
       stop("Minimum value in background order vector should be 1")
     }else{
-     data.temp<-data.resp
-     for(i in 1:n_group){
-       ind.temp<-which(data.resp[,1])==i
-       data.temp[ind.temp,1]<-rep(background.order[i],length(ind.temp))
-     }
+      data.temp<-data.resp
+      for(i in 1:n_group){
+        ind.temp<-which(data.resp[,1]==i)
+        data.temp[ind.temp,1]<-rep(which(background.order==i),length(ind.temp))
+      }
     }
+
+    data.resp<-data.temp
 
   }
 
+  if(length(back.prior.input)>0){
+    back.prior<-back.prior.input
+    back.prior.check<-TRUE
+    if(length(back.prior.input)!=mod.background$prior.distribution){
+      stop("Prior input doesn't match background model")
+    }
+  }else{
+    back.prior<-mod.response$prior.distribution
+    back.prior.check<-FALSE
+  }
+
+
+  if(length(resp.prior.input)>0){
+    resp.prior<-resp.prior.input
+    resp.prior.check<-TRUE
+    if(length(resp.prior.input)!=mod.response$prior.distribution){
+      stop("Prior input doesn't match response model")
+    }
+  }else{
+    resp.prior<-mod.response$prior.distribution
+    resp.prior.check<-FALSE
+    }
+
+
+  #create a saturated tree
+  #first need levels
   cats.sat<-lapply(data,levels)
   cats.resp<-lapply(data.resp,levels)
 
-  #need to fix, doesn't work when more than one covariate in background
+  tree.sat<-rev(expand.grid(rev(cats.sat[-num.variable]))) #don't need the last column as its leaves
+  tree.resp<-rev(expand.grid(rev(cats.resp[-resp.variable])))
 
-  situations.list<-list()
-  for(i in 1:num.variable){
+  #now create a tree that is the saturated tree except with background imputed
+  tree.background<-tree.sat
+  tree.background<-pcegr:::cat_replacer(tree.sat[,1:(cutpoint.variable-1)],pcegr:::cat_extractor(mod.background))
 
-    #resp.situations.temp<-c(resp.start.situations[i]:resp.end.situations[i])
+  tree.ref<-cbind(background=tree.background[,1],tree.sat[-(1:(cutpoint.variable-1))])
 
-    situations.list[[i]]<-cbind(c(start.situations[i]:end.situations[i]),NA)
-    if(i <= cutpoint.variable){
-      situations.list[[i]][,2]<-situations.list[[i]][,1]
+  if(length(background.order)>0){
+    tree.temp<-tree.ref
+    for(i in 1:n_group){
+      ind.temp<-which(tree.ref[,1]==i)
+      tree.temp[ind.temp,1]<-rep(which(background.order==i),length(ind.temp))
     }
+    tree.ref<-tree.temp
+  }
+
+  #don't know if i need the following two lines
+  situations.sat<-mod.sat$event.tree$num.situation
+  start.situations.sat<-c(1,cumsum(situations.sat[1:(num.variable-1)])+1)
+
+  back.stage<-mod.background$stages #the stages in the background
+
+  #now see what levels the stages are at for the response model
+
+  resp.stages<-mod.response$stages
+  situations.resp<-mod.response$event.tree$num.situation
+  start.situations.resp<-c(1,cumsum(situations.resp[1:(resp.variable-1)])+1)
+
+  resp.stages<-rbind(resp.stages,sapply(resp.stages,findInterval,vec=start.situations.resp))
+
+  #index isn't working - should start at num.variable
+
+  for(i in num.variable:2){
+
+    lev<-length(cats.sat[[i]])
 
     if(i>cutpoint.variable){
+      i.resp<-i-cutpoint.variable+2
+      situations<-c(1:length(tree.resp[,i.resp-1]))
 
-      i.resp<-i-cutpoint.variable+1 #changed from +2
-      resp.situations.temp<-c(resp.start.situations[i.resp]:resp.end.situations[i.resp])
+      corr.sit<-numeric(length(situations)) #a vector showing the corresponding first situation in the big tree for the response tree
+      count.sit<-0 #a counter checking the number of situations
 
-      tree.sat<-rev(expand.grid(rev(cats.sat[-(i:(num.variable+1*variable.time))])))
-      tree.resp<-rev(expand.grid(rev(cats.resp[-(i.resp:(resp.variable+1*variable.time))])))
-       #below line should be changed to adjust for the background.order input
-      tree.sat[,1:(cutpoint.variable-1)]<-cat_replacer(tree.sat[,1:(cutpoint.variable-1)],cat_extractor(mod.background))
+      prior.sum<-colSums(resp.prior[[i.resp]]) #the total column sums of the prior to be distributed equally
 
-      if(cutpoint.variable>2){
-        #tree.resp<-cbind(rep(tree.resp$background,cutpoint.variable-2),tree.resp) old version
-        tree.resp<-cbind(matrix(rep(tree.resp$background,cutpoint.variable-1),ncol=cutpoint.variable-1,byrow=FALSE),tree.resp)
-      }
+      for(j in situations){
+        v<-tree.resp[j,] #the covariates
+        ind.sit<-which(prodlim::row.match(tree.ref,v)==1) #which situations match those covariates
+        corr.sit[j]<-ind.sit[1] #keep track of which elements situations correspond to
+        p<-length(ind.sit)
+        count.sit<-count.sit+p #keep track of total number of situations
+        ref1<-ind.sit[1]
 
-      for(j in 1:situations[i]){
-        v<-tree.sat[j,]
-        ind<-which(row.match(tree.resp,v)==1)
-        situations.list[[i]][j,2]<-resp.situations.temp[ind]
-      }
+        if(resp.prior.check){
+          mod.sat$prior.distribution[[i]][ref1,]<-resp.prior[[i.resp]][j,]/p #divide by p to distributed across all paths
+        }else{
+          prior.const<-prior.sum/length(situations)
+          prior.frac<-prior.const/p #divide by the number of paths - assumes each path had the same prior before
+          mod.sat$prior.distribution[[i]][ref1,]<-prior.frac
+        }
 
-      #first merge all equal situations together
-
-      for(j in 1:resp.situations[i.resp]){
-
-        num<-resp.situations.temp[j]
-
-        ind.num<-which(situations.list[[i]][,2]==num)
-        p<-length(ind.num)
-        ref1<-ind.num[1]
         if(p>1){
           for(k in 2:p){
-            ref2<-ind.num[k]
+            ref2<-ind.sit[k]
+            if(resp.prior.check){
+              mod.sat$prior.distribution[[i]][ref2,]<-resp.prior[[i.resp]][j,]/p
+            }else{
+              mod.sat$prior.distribution[[i]][ref2,]<-prior.frac
+            }
+            #Updating the priors here should be enough
 
+            # print(c(j,k))
             mod.sat<-stage_updater(mod.sat,i,ref1,ref2)
-
-            situations.list[[i]][ref2,]<-rep(NA,2)
-
+            #print(paste(j,ref1,ref2,sum(mod.sat$data.summary[[7]],na.rm=TRUE)))
+            # print(mod.sat$model.score)
           }
         }
       }
+
+      if(count.sit!=situations.sat[i]){
+        stop(paste0("Not all situations accounted for at level ",i))
+      }
+
+      stage.ref<-resp.stages[1,which(resp.stages[2,]==i.resp)] #which stages are at this level
+      stage.ref<-stage.ref- start.situations.resp[i.resp]+1 #adjust for indexing
+
+      for(j in stage.ref){
+        ind.stage<-mod.response$stage.structure[[i.resp]][[j]]
+        n.stage<-length(ind.stage)
+        ref1<-corr.sit[ind.stage[1]]
+
+        if(n.stage>1){
+
+          for(k in 2:n.stage){
+            ref2<-corr.sit[ind.stage[k]]
+            #print(paste(j,mod.sat$data.summary[[i]][ref1,],mod.sat$data.summary[[i]][ref2,]))
+            mod.sat<-stage_updater(mod.sat,i,ref1,ref2)
+          }
+        }
+      }
+
+    }else{
+
+      situations<-c(1:situations.sat[i])
+      ind.stage.level<-which(back.stage>=start.situations.sat[i]) #index of which stages are at this level
+      stage.ref<-back.stage[ind.stage.level]
+      stage.ref<-stage.ref-start.situations.sat[i]+1
+
+      if(back.prior.check){
+        mod.sat$prior.distribution[[i]]<-back.prior[[i]]
+      }else{
+        prior.sum<-colSums(back.prior[[i]])
+        prior.frac<-prior.sum/situations.sat[i]
+        mod.sat$prior.distribution[[i]]<-matrix(rep(prior.frac,situations.sat),ncol=cats.sat[i],ncol=situations.sat,byrow=TRUE)
+      }
+
+      for(j in stage.ref){
+        ind.stage<-mod.background$stage.structure[[i]][[j]]
+        n.stage<-length(ind.stage)
+
+        if(n.stage>1){
+          ref1<-ind.stage[1]
+          for(k in 2:n.stage){
+            ref2<-ind.stage[k]
+            mod.sat<-stage_updater(mod.sat,i,ref1,ref2)
+          }
+        }
+      }
+      back.stage<-back.stage[-ind.stage.level]
     }
+
+    cut.ind<-seq(from=1,to=count.sit-1,by=lev) #a sequence to take only one path from every combo
+    cut.ind.resp<-seq(from=1,to=length(situations)-1,by=lev) #a sequence to take only one path from every combo for response tree
+    tree.ref<-tree.ref[cut.ind,]
+    tree.resp<-tree.resp[cut.ind.resp,]
+
+    #   situations.lev<-((start.situations.sat[i]+situations.sat[i]-1):start.situations.sat[i])
+    #    for(k in situations.lev){
+    #    if(is.na(mod.sat$result[[]]))
+    #  }
+
   }
 
-  for(i in 2:(resp.variable-1)){
+  #To do in stage_updater
+  #1. Fix score output - doesn't work in current way
 
-    #now perform the actual merging
-
-    resp.merge.temp<-resp.merge[1:2,which(resp.merge[3,]==i)]
-
-    if(length(resp.merge.temp)>0){
-
-    variable<-cutpoint.variable+i-1
-
-    situations.temp<-situations.list[[variable]]
-
-    for(j in 1:dim(resp.merge.temp)[2]){
-
-      merge.top<-resp.merge.temp[1,j]
-      merge.bottom<-resp.merge.temp[2,j]
-
-      ref1<-which(situations.temp[,2]==merge.top)
-      ref2<-which(situations.temp[,2]==merge.bottom)
-
-      mod.sat<-stage_updater(mod.sat,variable,ref1,ref2)
-
-      situations.list[[variable]][ref2,]<-rep(NA,2)
-
-      #fix result also
-    }
-   }
-  }
 
   return(mod.sat)
 
