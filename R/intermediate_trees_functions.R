@@ -305,7 +305,7 @@ stage_updater<-function(mod,level,ref1,ref2){
 #' @param mod.background A StagedTree object modelling the background process.
 #' @param mod.response A StagedTree object modelling the response process.
 #' @param background.order An integer vector detailing how the default backgrounds from the [[background_extractor()]] function have been reordered in the augmented dataset. If integer $m$ is in position $n$ of the vector, than the background $m$ from [[background_extractor()]] is now background $n$ in the augmented data set.
-#' @param resp.prior.input A list where each element is a matrix corresponding to a Dirichlet prior distribution for each level of the background tree before model selection. If NULL, the prior is extracted from the background model and assumed equally distributed.
+#' @param back.prior.input A list where each element is a matrix corresponding to a Dirichlet prior distribution for each level of the background tree before model selection. If NULL, the prior is extracted from the background model and assumed equally distributed.
 #' @param resp.prior.input A list where each element is a matrix corresponding to a Dirichlet prior distribution for each level of the response tree before model selection. If NULL, the prior is extracted from the response model and assumed equally distributed.
 #'
 #' @return A StagedTree object which is equivalent to combining mod.background and mod.response.
@@ -343,7 +343,7 @@ model_combiner<-function(data,mod.background,mod.response,background.order=NULL,
   }
 
   #compute a saturated model without account for cutpoint.variable
-  mod.sat<-saturated_model_computer(data,cutpoint.variable=NULL,equivsize, poisson.response,variable.time,gamma_alpha,gamma_beta,prior_input = prior.input)
+  mod.sat<-saturated_model_computer(data,cutpoint.variable=NULL,equivsize, poisson.response,variable.time,gamma_alpha,gamma_beta,prior_input = NULL)
 
   back.merge<-mod.background$merged
   resp.merge<-mod.response$merged #the situations merged in the response ceg
