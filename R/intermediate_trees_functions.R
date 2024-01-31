@@ -514,7 +514,7 @@ model_combiner<-function(data,mod.background,mod.response,background.order=NULL,
       }else{
         prior.sum<-colSums(back.prior[[i]])
         prior.frac<-prior.sum/situations.sat[i]
-        mod.sat$prior.distribution[[i]]<-matrix(rep(prior.frac,situations.sat),ncol=cats.sat[i],nrow=situations.sat,byrow=TRUE)
+        mod.sat$prior.distribution[[i]]<-matrix(rep(prior.frac,situations.sat[i]),ncol=cats.sat[i],nrow=situations.sat[i],byrow=TRUE)
       }
 
       for(j in stage.ref){
