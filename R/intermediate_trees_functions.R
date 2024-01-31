@@ -373,8 +373,8 @@ model_combiner<-function(data,mod.background,mod.response,background.order=NULL,
   if(length(back.prior.input)>0){
     back.prior<-back.prior.input
     back.prior.check<-TRUE
-    if(length(back.prior.input)!=mod.background$prior.distribution){
-      stop("Prior input doesn't match background model")
+    if(length(back.prior.input)!=length(mod.background$prior.distribution)){
+      stop("Length of prior input doesn't match background model")
     }
   }else{
     back.prior<-mod.background$prior.distribution
@@ -385,8 +385,8 @@ model_combiner<-function(data,mod.background,mod.response,background.order=NULL,
   if(length(resp.prior.input)>0){
     resp.prior<-resp.prior.input
     resp.prior.check<-TRUE
-    if(length(resp.prior.input)!=mod.response$prior.distribution){
-      stop("Prior input doesn't match response model")
+    if(length(resp.prior.input)!=length(mod.response$prior.distribution)){
+      stop("Length of prior input doesn't match response model")
     }
   }else{
     resp.prior<-mod.response$prior.distribution
