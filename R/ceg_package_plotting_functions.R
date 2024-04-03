@@ -203,6 +203,7 @@ CegGraphSimple1<-function (staged.tree, position, range.color = 1)
   if (range.color == 1) {
     color <- grDevices::palette()
     color[1] <- "white"
+    color<-c(color,"#B06500","#0B6623","#E39ff6")
   }
   else {
     color <- colors(1)
