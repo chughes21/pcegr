@@ -1,7 +1,7 @@
 
 #' The Merge Probability function
 #'
-#' Calculate the probability of two true stages being merged
+#' Calculate the probability of two true stages being merged using the AHC algorithm.
 #'
 #' Given a sample size, at least one stage probability, path probabilities and a prior structure, returns the probability of the two stages being merged. If only one probability is specified, the second probability is assumed to be the same. If alpha is provided, the priors are based on a uniform path prior and the stage probabilities.
 #'

@@ -123,6 +123,7 @@ NodeColor1<-function (num.variable, num.situation, num.category, stage.structure
   if (range.color == 1) {
     color <- palette()
     color[1] <- "white"
+    color<-c(color,"#B06500","#0B6623","#E39ff6")
     start_count<-2
   }
   else {
