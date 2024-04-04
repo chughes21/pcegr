@@ -65,7 +65,9 @@ hdi_beta_extractor<-function(data,mod,ci=0.95,N=10000,level_rel_final=-1,zip=TRU
   }
   n=dim(data)[2]-1*variable_time+level_rel_final+1*zip
   p=nlevels(data[,n])
-
+  if(level_rel_final==-1&zip){
+    p<-2
+  }
   posterior<-mod$prior.distribution[[n]] + mod$data.summary[[n]]
 
   ind<-which(!is.na(posterior[,1]))
