@@ -20,7 +20,7 @@ hdi_gamma_extractor<-function(data,mod,ci=0.95,N=10000,zip=TRUE){
 
   variable_time <- mod$event.tree$variable.time
 
-  n<-dim(data)[2]-1*variable_time
+  n<-dim(data)[2]-1*variable_time+1*zip
 
   posterior<-mod$prior.distribution[[n]] + mod$data.summary[[n]]
   posterior<-posterior[which(!is.na(posterior[,1])),]
@@ -63,7 +63,7 @@ hdi_beta_extractor<-function(data,mod,ci=0.95,N=10000,level_rel_final=-1,zip=TRU
   if(level_rel_final == 0 & poisson_response){
     stop("Beta Distribution not for Poisson Response - Use Gamma")
   }
-  n=dim(data)[2]-1*variable_time+level_rel_final
+  n=dim(data)[2]-1*variable_time+level_rel_final+1*zip
   p=nlevels(data[,n])
 
   posterior<-mod$prior.distribution[[n]] + mod$data.summary[[n]]
