@@ -31,8 +31,8 @@ counter<-function(x,v){
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' quantile_band(knee_pain_obs,mod,limit=10,plot.leaves=TRUE,plot.overall=TRUE,zip=FALSE)
-#' zipmod<-pceg(knee_pain_obs,2,TRUE,TRUE,zip=TRUE)
-#' quantile_band(knee_pain_obs,mod,limit=10,plot.leaves=TRUE,plot.overall=TRUE,zip=TRUE)
+#' zipmod<-zipceg(knee_pain_obs,equivsize=2,poisson_response=TRUE,variable_time=TRUE)
+#' quantile_band(knee_pain_obs,zipmod,limit=10,plot.leaves=TRUE,plot.overall=TRUE,zip=TRUE)
 quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_plot = 8, plot.leaves = TRUE, plot.overall = TRUE, zip=FALSE){
 
   poisson_response<-mod$event.tree$poisson.response
