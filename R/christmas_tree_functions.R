@@ -72,7 +72,7 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_p
 
   if(is.na(limit)){
     max_y<-TRUE
-    limit_overall<-max(data[n+1])
+    limit_overall<-max(data[,n+1])
   }else if(length(limit)==1){
     limit<-rep(limit,p)
     limit_overall<-limit
