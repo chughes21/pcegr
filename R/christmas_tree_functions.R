@@ -74,8 +74,8 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_p
     max_y<-TRUE
     limit_overall<-max(data[,n+1])
   }else if(length(limit)==1){
-    limit<-rep(limit,p)
     limit_overall<-limit
+    limit<-rep(limit,p)
   }else if(length(limit) != p){
     stop("Limit vector of incorrect length")
   }else if(length(limit) == p){
