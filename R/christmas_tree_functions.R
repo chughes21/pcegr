@@ -85,7 +85,6 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_p
   leaves<-list()
 
   count_vec_overall<-rep(0,limit_overall+1)
-  prob_mat_overall<-matrix(NA,nrow=dim(data)[1],ncol=limit_overall+1)
 
   if(p > max_per_plot){
     n_plot<-p%/%max_per_plot
@@ -175,7 +174,11 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_p
     count_vec_overall<-count_vec_overall+count_vec_temp
 
     prob_mat_temp<-cbind(prob_mat,matrix(0,nrow=dim(prob_mat)[1],ncol=lim_diff))
-    prob_mat_overall<-rbind(prob_mat_overall,prob_mat_temp)
+    if(k=1){
+      prob_mat_overall<-prob_mat_temp
+    }else{
+      prob_mat_overall<-rbind(prob_mat_overall,prob_mat_temp)
+    }
   }
   if(plot.leaves){
   for(i in 1:n_plot){
