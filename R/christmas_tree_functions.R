@@ -174,7 +174,7 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_p
     count_vec_overall<-count_vec_overall+count_vec_temp
 
     prob_mat_temp<-cbind(prob_mat,matrix(0,nrow=dim(prob_mat)[1],ncol=lim_diff))
-    if(k=1){
+    if(k==1){
       prob_mat_overall<-prob_mat_temp
     }else{
       prob_mat_overall<-rbind(prob_mat_overall,prob_mat_temp)
