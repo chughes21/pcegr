@@ -30,7 +30,6 @@ counter<-function(x,v){
 #'
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-#' quantile_band(knee_pain_obs,mod,limit=10,plot.leaves=TRUE,plot.overall=TRUE,zip=FALSE)
 quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_plot = 8, plot.leaves = TRUE, plot.overall = TRUE, zip=FALSE){
 
   poisson_response<-mod$event.tree$poisson.response
@@ -174,7 +173,7 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_p
     count_vec_temp<-c(count_vec,rep(0,lim_diff))
     count_vec_overall<-count_vec_overall+count_vec_temp
 
-    prob_mat_temp<-cbind(prob_mat,matrix(0,nrow=dim(prob_mat[1]),ncol=lim_diff))
+    prob_mat_temp<-cbind(prob_mat,matrix(0,nrow=dim(prob_mat)[1],ncol=lim_diff))
     prob_mat_overall<-rbind(prob_mat_overall,prob_mat_temp)
   }
   if(plot.leaves){
