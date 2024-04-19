@@ -200,6 +200,7 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_p
 
     quant_vec_overall<-temp[1:2,]
     median_vec_overall<-temp[3,]
+    x<-c(0:limit_overall)
 
     if(shift){
      # count_vec_overall<-count_vec_overall-median_vec_overall
