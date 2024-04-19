@@ -207,23 +207,22 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_p
     if(shift){
       data.temp<-data.frame(x,count = count_vec_overall,left = quant_vec_overall[1,],right = quant_vec_overall[2,])
     }else{
-      data.temp<-data.frame(x,count = count_vec_overall,left = quant_vec_overall[1,],right = quant_vec_overall[2,],median = median_vec)
+      data.temp<-data.frame(x,count = count_vec_overall,left = quant_vec_overall[1,],right = quant_vec_overall[2,],median = median_vec_overall)
     }
-  }
-
-  if(shift){
-    ggplot(data=data.temp)+
-      geom_path(mapping = aes(x = left, y = x),col="green")+geom_point(mapping = aes(x = left, y = x),col="green")+
-      geom_path(mapping = aes(x = right, y = x),col="green")+geom_point(mapping = aes(x = right, y = x),col="green")+
-      geom_path(mapping = aes(x = count, y = x),col="red")+geom_point(mapping = aes(x = count, y = x),col="red")+
-      xlab("Shifted Observed Counts")+ylab("Event counts")+ggtitle(paste0("Shifted Quantile Band Plot - Overall",k))
-  }else{
-    ggplot(data=data.temp)+
-      geom_path(mapping = aes(x = left, y = x),col="green")+geom_point(mapping = aes(x = left, y = x),col="green")+
-      geom_path(mapping = aes(x = right, y = x),col="green")+geom_point(mapping = aes(x = right, y = x),col="green")+
-      geom_path(mapping = aes(x = count, y = x),col="red")+geom_point(mapping = aes(x = count, y = x),col="red")+
-      geom_path(mapping = aes(x = median, y = x),col="black")+
-      xlab("Raw Observed Counts")+ylab("Event counts")+ggtitle(paste0("Raw Quantile Band Plot - Overall ",k))
+    if(shift){
+      ggplot(data=data.temp)+
+        geom_path(mapping = aes(x = left, y = x),col="green")+geom_point(mapping = aes(x = left, y = x),col="green")+
+        geom_path(mapping = aes(x = right, y = x),col="green")+geom_point(mapping = aes(x = right, y = x),col="green")+
+        geom_path(mapping = aes(x = count, y = x),col="red")+geom_point(mapping = aes(x = count, y = x),col="red")+
+        xlab("Shifted Observed Counts")+ylab("Event counts")+ggtitle("Shifted Quantile Band Plot - Overall")
+    }else{
+      ggplot(data=data.temp)+
+        geom_path(mapping = aes(x = left, y = x),col="green")+geom_point(mapping = aes(x = left, y = x),col="green")+
+        geom_path(mapping = aes(x = right, y = x),col="green")+geom_point(mapping = aes(x = right, y = x),col="green")+
+        geom_path(mapping = aes(x = count, y = x),col="red")+geom_point(mapping = aes(x = count, y = x),col="red")+
+        geom_path(mapping = aes(x = median, y = x),col="black")+
+        xlab("Raw Observed Counts")+ylab("Event counts")+ggtitle("Raw Quantile Band Plot - Overall")
+    }
   }
 
 }
