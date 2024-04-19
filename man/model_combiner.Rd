@@ -4,7 +4,14 @@
 \alias{model_combiner}
 \title{Model Combiner}
 \usage{
-model_combiner(data, mod.background, mod.response, prior.input = NULL)
+model_combiner(
+  data,
+  mod.background,
+  mod.response,
+  background.order = NULL,
+  back.prior.input = NULL,
+  resp.prior.input = NULL
+)
 }
 \arguments{
 \item{data}{A data set, where the observed count vector and time vector (if included) are the last two columns.}
@@ -13,7 +20,11 @@ model_combiner(data, mod.background, mod.response, prior.input = NULL)
 
 \item{mod.response}{A StagedTree object modelling the response process.}
 
-\item{prior_input}{A list where each element is a matrix corresponding to a Dirichlet prior distribution for each level of the tree. If NULL, the default prior is used.}
+\item{background.order}{An integer vector detailing how the default backgrounds from the [\code{\link[=background_extractor]{background_extractor()}}] function have been reordered in the augmented dataset. If integer $m$ is in position $n$ of the vector, than the background $m$ from [\code{\link[=background_extractor]{background_extractor()}}] is now background $n$ in the augmented data set.}
+
+\item{back.prior.input}{A list where each element is a matrix corresponding to a Dirichlet prior distribution for each level of the background tree before model selection. If NULL, the prior is extracted from the background model and assumed equally distributed.}
+
+\item{resp.prior.input}{A list where each element is a matrix corresponding to a Dirichlet prior distribution for each level of the response tree before model selection. If NULL, the prior is extracted from the response model and assumed equally distributed.}
 }
 \value{
 A StagedTree object which is equivalent to combining mod.background and mod.response.

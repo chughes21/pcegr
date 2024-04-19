@@ -11,6 +11,8 @@ quantile_band(
   limit = NA,
   shift = TRUE,
   max_per_plot = 8,
+  plot.leaves = TRUE,
+  plot.overall = TRUE,
   zip = FALSE
 )
 }
@@ -27,6 +29,10 @@ quantile_band(
 
 \item{max_per_plot}{An integer value specifying the maximum number of leaves that can be shown in a single plot.}
 
+\item{plot.leaves}{A logical value indicating whether quantile band plots should be produced for each leaf (TRUE) or not (FALSE).}
+
+\item{plot.overall}{A logical value indicating whether a quantile band plot should be produced for the model as a whole (TRUE) or not (FALSE).}
+
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
 }
 \value{
@@ -37,5 +43,7 @@ This function creates a quantile band plot, a diagnostic plot of the suitability
 }
 \examples{
 mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-quantile_band(knee_pain_obs,mod,limit=10,zip=FALSE)
+quantile_band(knee_pain_obs,mod,limit=10,plot.leaves=TRUE,plot.overall=TRUE,zip=FALSE)
+zipmod<-zipceg(knee_pain_obs,equivsize=2,poisson_response=TRUE,variable_time=TRUE)
+quantile_band(knee_pain_obs,zipmod,limit=10,plot.leaves=TRUE,plot.overall=TRUE,zip=TRUE)
 }

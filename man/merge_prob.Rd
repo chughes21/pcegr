@@ -42,7 +42,7 @@ merge_prob(
 A list containing i) A matrix of the joint probabilities of each possible count combination; ii) A matrix of whether each count combination merges or not; iii) the total probability of merging, the sum of the elementwise product of (i) and (ii).
 }
 \description{
-Calculate the probability of two true stages being merged
+Calculate the probability of two true stages being merged using the AHC algorithm.
 }
 \details{
 Given a sample size, at least one stage probability, path probabilities and a prior structure, returns the probability of the two stages being merged. If only one probability is specified, the second probability is assumed to be the same. If alpha is provided, the priors are based on a uniform path prior and the stage probabilities.

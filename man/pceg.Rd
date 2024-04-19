@@ -15,6 +15,7 @@ pceg(
   gamma_beta = 2,
   prior_input = NULL,
   structural_zero = FALSE,
+  combine_zero = FALSE,
   indep = NA,
   saturated = NA,
   mean_post_cluster = FALSE,
@@ -64,6 +65,8 @@ pceg(
 \item{cat_limit}{An integer value specifying the minimum number of categories to the variable can be discretised to. If 0, there is no minimum number of categories.}
 
 \item{collapse}{A logical value indicating whether, when a restricted discretisation occurs, the final output should be compact (TRUE) or not (FALSE).}
+
+\item{merge_zero}{A logical value indicating whether structural zeroes in the data set should be combined into one stage at each level (TRUE) or not (FALSE).}
 }
 \value{
 An object of the S3 class StagedTree.
