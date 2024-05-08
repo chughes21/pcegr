@@ -9,9 +9,10 @@ marginal_effect(
   mod,
   input_variable = c(),
   rel_output = 0,
+  incl_names = TRUE,
   max_per_plot = 4,
   zip = FALSE,
-  incl_names = TRUE
+  default_cat = TRUE
 )
 }
 \arguments{
@@ -23,11 +24,13 @@ marginal_effect(
 
 \item{rel_output}{A non-positive integer value detailing the variable which is being affected by the input variable(s), relative to the response. When 0, this will analyse the response variable, but any variable that appears after the input variables in the tree can be analysed.}
 
+\item{incl_names}{A logical value indicating whether the names of the covariates should be included (TRUE) or not (FALSE) in the output of each plot, for space reasons.}
+
 \item{max_per_plot}{An integer value specifying the maximum number of leaves that can be shown in a single plot.}
 
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
 
-\item{incl_names}{A logical value indicating whether the names of the covariates should be included (TRUE) or not (FALSE) in the output of each plot, for space reasons.}
+\item{default_cat}{A logical value indicating whether, when a binary variable is being analysed, the category used should be the default (TRUE) or not (FALSE).}
 }
 \value{
 A marginal effect plot for each variable.

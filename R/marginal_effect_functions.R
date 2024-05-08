@@ -5,9 +5,10 @@
 #' @param mod A StagedTree model fit to the data set, as produced by pceg() or zipceg()
 #' @param input_variable An integer vector detailing the covariates whose marginal effect is to be analysed. The default is to analyse all covariates.
 #' @param rel_output A non-positive integer value detailing the variable which is being affected by the input variable(s), relative to the response. When 0, this will analyse the response variable, but any variable that appears after the input variables in the tree can be analysed.
+#' @param incl_names A logical value indicating whether the names of the covariates should be included (TRUE) or not (FALSE) in the output of each plot, for space reasons.
 #' @param max_per_plot An integer value specifying the maximum number of leaves that can be shown in a single plot.
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
-#' @param incl_names A logical value indicating whether the names of the covariates should be included (TRUE) or not (FALSE) in the output of each plot, for space reasons.
+#' @param default_cat A logical value indicating whether, when a binary variable is being analysed, the category used should be the default (TRUE) or not (FALSE).
 #'
 #' @return A marginal effect plot for each variable.
 #' @export
@@ -15,7 +16,7 @@
 #' @examples
 #' mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
 #' marginal_effect(knee_pain_obs,mod)
-marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plot = 4,zip=FALSE,incl_names=TRUE){
+marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,incl_names=TRUE,max_per_plot = 4,zip=FALSE,default_cat=TRUE){
 
   names<-colnames(data)
   n<-dim(data)[2]
@@ -115,6 +116,10 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,max_per_plo
     }
 
   num_levels<-lapply(numbcat,vec_from)
+
+  if(m==2&(default.cat==FALSE)){
+    output<-1-output
+  }
 
   #below copied from Christmas tree plots
 
