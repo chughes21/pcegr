@@ -117,7 +117,7 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,incl_names=
 
   num_levels<-lapply(numbcat,vec_from)
 
-  if(m==2&(default.cat==FALSE)){
+  if(m==2&(default_cat==FALSE)){
     output<-1-output
   }
 
