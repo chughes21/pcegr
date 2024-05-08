@@ -25,8 +25,10 @@ marginal_effect<-function(data,mod,input_variable = c(),rel_output=0,incl_names=
   remove_risk_free<-mod$remove.risk.free.edges
   variable_time<-mod$event.tree$variable.time
 
-  if(zip){
+  if(zip&default_cat){
     names<-c(names[c(1:(n-1-1*variable_time))],"risk free",names[-c(1:(n-1-1*variable_time))])
+  }else if(zip&!default_cat){
+    names<-c(names[c(1:(n-1-1*variable_time))],"at risk",names[-c(1:(n-1-1*variable_time))])
   }
 
   numbvariables<-n + 1*zip-1*variable_time #total number of variables in the dataset including response and possibly ZIP, without time
