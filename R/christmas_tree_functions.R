@@ -85,9 +85,6 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_p
   }
 
   leaves<-list()
-
-  count_vec_overall<-rep(0,limit_overall+1)
-
   if(p > max_per_plot){
     n_plot<-p%/%max_per_plot
     p_plot<-rep(max_per_plot, n_plot)
@@ -172,9 +169,6 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_p
         xlab("Raw Observed Counts")+ylab("Event counts")+ggtitle(paste0("Raw Quantile Band Plot - Leaf ",k))
     }
 
-    count_vec_temp<-c(count_vec,rep(0,lim_diff))
-    count_vec_overall<-count_vec_overall+count_vec_temp
-
     prob_mat_temp<-cbind(prob_mat,matrix(0,nrow=dim(prob_mat)[1],ncol=lim_diff))
     if(k==1){
       prob_mat_overall<-prob_mat_temp
@@ -202,8 +196,11 @@ quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_p
     median_vec_overall<-temp[3,]
     x<-c(0:limit_overall)
 
+    y<-data_use[,n+1]
+    count_vec_overall<-sapply(x,counter,v=y)
+
     if(shift){
-     # count_vec_overall<-count_vec_overall-median_vec_overall
+      count_vec_overall<-count_vec_overall-median_vec_overall
       quant_vec_overall<-quant_vec_overall-matrix(rep(median_vec_overall,2),nrow=2,byrow=TRUE)
     }
 
