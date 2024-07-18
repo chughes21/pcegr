@@ -142,7 +142,7 @@ ahc_merge<-function(y1, y2, a1, a2,structural_zero){
   }
 
   if(structural_zero){
-    if(min(c(a1,a2)==0)){
+    if(min(c(a1,a2))==0){
       ind_zero1<-which(a1==0)
       ind_zero2<-which(a2==0)
       if(!all.equal(ind_zero1,ind_zero2)){
