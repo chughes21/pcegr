@@ -795,7 +795,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
               }
               else{
 
-                result2<-ahc_merge(data[[cluster_index[1]]],data[[cluster_index[i]]],prior[[cluster_index[1]]],prior[[cluster_index[i]]])
+                result2<-ahc_merge(data[[cluster_index[1]]],data[[cluster_index[i]]],prior[[cluster_index[1]]],prior[[cluster_index[i]]],structural_zero)
 
                # result2<-lgs(prior[[cluster_index[1]]]+prior[[cluster_index[i]]])
                 #        -lgs(prior[[cluster_index[1]]]+data[[cluster_index[1]]]+prior[[cluster_index[i]]]+data[[cluster_index[i]]])
