@@ -115,13 +115,14 @@ lgs<-function(v){
 #' @param y2 An integer count vector for the second stage.
 #' @param a1 A numeric prior vector for the first stage
 #' @param a2 A numeric prior vector for the first stage
+#' @structural_zero A logical value indicating whether zero counts should be treated as structural zeroes
 #'
 #' @return A numeric value for the change in log marginal likelihood
 #' @export
 #'
 #' @examples
 #' ahc_merge(c(1,1),c(0,2),c(1,1),c(1,1))
-ahc_merge<-function(y1, y2, a1, a2){
+ahc_merge<-function(y1, y2, a1, a2,structural_zero){
 
   if(length(y1)!=length(a1)){
     stop("Length of prior should match counts")
@@ -138,6 +139,22 @@ ahc_merge<-function(y1, y2, a1, a2){
 
   if(length(a1)!=length(a2)){
     stop("Length of priors should match")
+  }
+
+  if(structural_zero){
+    if(min(c(a1,a2)==0)){
+      ind_zero1<-which(a1==0)
+      ind_zero2<-which(a2==0)
+      if(!all.equal(ind_zero1,ind_zero2)){
+        stop("Trying to merge situations with non-corresponding structural zeroes")
+      }else{
+        ind_zero<-ind_zero1
+        a1<-a1[-ind_zero]
+        a2<-a2[-ind_zero]
+        y1<-y1[-ind_zero]
+        y2<-y2[-ind_zero]
+      }
+    }
   }
 
   a1_star<-a1+y1
@@ -705,7 +722,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
               }
               else{
 
-                result <- result + ahc_merge(data[[compare1[l]]],data[[compare2[l]]],prior[[compare1[l]]],prior[[compare2[l]]])
+                result <- result + ahc_merge(data[[compare1[l]]],data[[compare2[l]]],prior[[compare1[l]]],prior[[compare2[l]]],structural_zero)
 
                     #result=result+lgs(prior[[compare1[l]]]+prior[[compare2[l]]])-
                     #lgs(prior[[compare1[l]]]+data[[compare1[l]]]+prior[[compare2[l]]]+data[[compare2[l]]])+
