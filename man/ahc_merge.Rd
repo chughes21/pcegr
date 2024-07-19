@@ -4,7 +4,7 @@
 \alias{ahc_merge}
 \title{The AHC Merge Function}
 \usage{
-ahc_merge(y1, y2, a1, a2)
+ahc_merge(y1, y2, a1, a2, structural_zero)
 }
 \arguments{
 \item{y1}{An integer count vector for the first stage.}

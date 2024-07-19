@@ -172,6 +172,11 @@ ahc_merge<-function(y1, y2, a1, a2,structural_zero){
   return(-out)
 }
 
+nonzero_vector_checker<-function(v){
+  vec<-which(v!=0)
+  return(length(vec))
+}
+
 #' The PCEG function
 #'
 #' This function fits a PCEG model to a data set.
@@ -322,13 +327,11 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
 
       if(i>1){
 
-        ind_temp<-which(prior_input[[i]]==0)
-        ind_temp2<-which(ind_temp>numb[i])
-        ind_temp[ind_temp2]<-ind_temp[ind_temp2]-numb[i]
-
-        ind_temp<-unique(ind_temp)+ind_start
+        check.temp<-apply(prior_input[[i]],1,nonzero_vector_checker)
+        ind_temp<-which(check.temp<=1)+ind_start
         no_merge_ind<-c(no_merge_ind,ind_temp)
         ind_start<-ind_start+numb[i]
+
       }else{
         ind_start<-ind_start+numb[i]
       }
