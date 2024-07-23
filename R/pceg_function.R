@@ -491,21 +491,19 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
   for( i in 1: sum(numb)){
     alpha<-unlist(prior[i])
     N<-unlist(data[i])
-    if(structural_zero){
-      check.alpha<-alpha>0
-      check.N<-N>0
-      if(!all.equal(check.alpha, check.N)){
+    check.alpha<-alpha>0
+    check.N<-N>0
+    if(!all.equal(check.alpha, check.N)){
         if(length(prior_input)>0){
           warning(paste("Zeroes in prior don't match data - Situation ",i))
         }else{
-        stop(paste("Zeroes in prior don't match data - Situation ",i))}
+          stop(paste("Zeroes in prior don't match data - Situation ",i))}
       }
-    }
     if(sum(check.alpha)>0){
-      alpha<-alpha[check.alpha]
-      N<-N[check.alpha] #use the nonzeroes for alpha rather than N as N can have sampling zeroes
-    lik<-lik+sum(lgamma(alpha+N)-lgamma(alpha))+sum(lgamma(sum(alpha))-lgamma(
-      sum(alpha+N)))
+        alpha<-alpha[check.alpha]
+        N<-N[check.alpha] #use the nonzeroes for alpha rather than N as N can have sampling zeroes
+        lik<-lik+sum(lgamma(alpha+N)-lgamma(alpha))+sum(lgamma(sum(alpha))-lgamma(
+             sum(alpha+N)))
     }
   }
 
