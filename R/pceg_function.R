@@ -493,7 +493,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     N<-unlist(data[i])
     check.alpha<-alpha>0
     check.N<-N>0
-    if(!all.equal(check.alpha, check.N)){
+    if(!all(check.alpha==check.N)){
         if(length(prior_input)>0){
           warning(paste("Zeroes in prior don't match data - Situation ",i))
         }else{
