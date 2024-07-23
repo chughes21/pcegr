@@ -604,18 +604,30 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     if(length(zero_set[[k]])*combine_zero>1){
       z_set<-zero_set[[k]]
       z_len<-length(z_set)
-      replace_len<-length(prior[[z_set[1]]])
-      replace_NA<-matrix(rep(NA,replace_len),nrow=1)
-      for(i in 2:z_len){
-        prior[[z_set[1]]]<-prior[[z_set[1]]]+prior[[z_set[i]]]
-        prior[[z_set[i]]]<-replace_NA
-        data[[z_set[1]]]<-data[[z_set[1]]]+data[[z_set[i]]]
-        data[[z_set[i]]]<-replace_NA
-        mergedlist[[z_set[1]]]<-cbind(mergedlist[[z_set[1]]],mergedlist[[z_set[i]]])
-        mergedlist[[z_set[i]]]<-replace_NA
-        merged_out<-cbind(merged_out,c(z_set[1],z_set[i],k))
+      num_cat<-length(prior[[z_set[1]]])
+      replace_NA<-matrix(rep(NA,num_cat),nrow=1)
+      for(i in 1:num_cat){
+        for(j in z_set[-1]){
+          check.z1<-prior[[z_set[1]]]==0
+          check.z2<-prior[[j]]==0
+          if(all(check.z1==check.z2)){
+            prior[[z_set[1]]]<-prior[[z_set[1]]]+prior[[j]]
+            prior[[j]]<-replace_NA
+            data[[z_set[1]]]<-data[[z_set[1]]]+data[[j]]
+            data[[j]]<-replace_NA
+            mergedlist[[z_set[1]]]<-cbind(mergedlist[[z_set[1]]],mergedlist[[j]])
+            mergedlist[[j]]<-replace_NA
+            merged_out<-cbind(merged_out,c(z_set[1],j,k))
+            z_set<-z_set[-which(z_set==j)]
+          }
+        }
+       if(i==1){
+         zero_set[[k]]<-z_set[1]
+       }else{
+         zero_set[[k]]<-c(zero_set[[k]],z_set[1])
+       }
+         z_set<-z_set[-1]
       }
-      zero_set[[k]]<-z_set[1]
     }
 
     while(diff.end >0){ #We stop when no positive difference is obtained by merging two stages
