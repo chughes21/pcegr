@@ -121,7 +121,7 @@ lgs<-function(v){
 #' @export
 #'
 #' @examples
-#' ahc_merge(c(1,1),c(0,2),c(1,1),c(1,1))
+#' ahc_merge(c(1,1),c(0,2),c(1,1),c(1,1),FALSE)
 ahc_merge<-function(y1, y2, a1, a2,structural_zero){
 
   if(length(y1)!=length(a1)){
@@ -172,6 +172,16 @@ ahc_merge<-function(y1, y2, a1, a2,structural_zero){
   return(-out)
 }
 
+#' Nonzero Vector Checker
+#'
+#' Calculates how many elements in a vector are nonzero
+#'
+#' @param v A numerical vector
+#'
+#' @return An integer detailing how many elements are nonzero
+#'
+#' @examples
+#' nonzero_vector_checker(c(1,0,2))
 nonzero_vector_checker<-function(v){
   vec<-which(v!=0)
   return(length(vec))
@@ -482,16 +492,18 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     alpha<-unlist(prior[i])
     N<-unlist(data[i])
     if(structural_zero){
-      alpha<-alpha[alpha>0]
-      N<-N[N>0]
-      if(length(alpha)!=length(N)){
+      check.alpha<-alpha>0
+      check.N<-N>0
+      if(!all.equal(check.alpha, check.N)){
         if(length(prior_input)>0){
-          warning("Zeroes in prior don't match data")
+          warning(paste("Zeroes in prior don't match data - Situation ",i))
         }else{
-        stop("Zeroes in prior don't match data")}
+        stop(paste("Zeroes in prior don't match data - Situation ",i))}
       }
     }
-    if(length(alpha)>0){
+    if(sum(check.alpha)>0){
+      alpha<-alpha[check.alpha]
+      N<-N[check.alpha] #use the nonzeroes for alpha rather than N as N can have sampling zeroes
     lik<-lik+sum(lgamma(alpha+N)-lgamma(alpha))+sum(lgamma(sum(alpha))-lgamma(
       sum(alpha+N)))
     }
