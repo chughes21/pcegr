@@ -604,9 +604,10 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     if(length(zero_set[[k]])*combine_zero>1){
       z_set<-zero_set[[k]]
       z_len<-length(z_set)
-      num_cat<-length(prior[[z_set[1]]])
+      poss_comb<-length(prior[[z_set[1]]])+1 #add 1 in case all 0
       replace_NA<-matrix(rep(NA,num_cat),nrow=1)
-      for(i in 1:num_cat){
+      for(i in 1:poss_comb){
+        if(length(z_set)>1){
         for(j in z_set[-1]){
           check.z1<-prior[[z_set[1]]]==0
           check.z2<-prior[[j]]==0
@@ -620,6 +621,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
             merged_out<-cbind(merged_out,c(z_set[1],j,k))
             z_set<-z_set[-which(z_set==j)]
           }
+        }
         }
        if(i==1){
          zero_set[[k]]<-z_set[1]
