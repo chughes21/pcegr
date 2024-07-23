@@ -115,7 +115,7 @@ lgs<-function(v){
 #' @param y2 An integer count vector for the second stage.
 #' @param a1 A numeric prior vector for the first stage
 #' @param a2 A numeric prior vector for the first stage
-#' @structural_zero A logical value indicating whether zero counts should be treated as structural zeroes
+#' @structural_zero A logical value indicating whether zero counts should be treated as structural zeroes (TRUE) or not (FALSE).
 #'
 #' @return A numeric value for the change in log marginal likelihood
 #' @export
@@ -145,8 +145,9 @@ ahc_merge<-function(y1, y2, a1, a2,structural_zero){
     if(min(c(a1,a2))==0){
       ind_zero1<-which(a1==0)
       ind_zero2<-which(a2==0)
-      if(!all.equal(ind_zero1,ind_zero2)){
-        stop("Trying to merge situations with non-corresponding structural zeroes")
+      if(!all(ind_zero1==ind_zero2)){
+        warning("Trying to merge situations with non-corresponding structural zeroes - -1 outputted")
+        return(-1) #a negative value so that it is not merged
       }else{
         ind_zero<-ind_zero1
         a1<-a1[-ind_zero]
