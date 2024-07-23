@@ -143,13 +143,13 @@ ahc_merge<-function(y1, y2, a1, a2,structural_zero){
 
   if(structural_zero){
     if(min(c(a1,a2))==0){
-      ind_zero1<-which(a1==0)
-      ind_zero2<-which(a2==0)
+      ind_zero1<-a1==0
+      ind_zero2<-a2==0
       if(!all(ind_zero1==ind_zero2)){
         warning("Trying to merge situations with non-corresponding structural zeroes - -1 outputted")
         return(-1) #a negative value so that it is not merged
       }else{
-        ind_zero<-ind_zero1
+        ind_zero<-which(ind_zero1)
         a1<-a1[-ind_zero]
         a2<-a2[-ind_zero]
         y1<-y1[-ind_zero]
