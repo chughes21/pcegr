@@ -605,7 +605,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
       z_set<-zero_set[[k]]
       z_len<-length(z_set)
       poss_comb<-length(prior[[z_set[1]]])+1 #add 1 in case all 0
-      replace_NA<-matrix(rep(NA,num_cat),nrow=1)
+      replace_NA<-matrix(rep(NA,poss_comb-1),nrow=1)
       for(i in 1:poss_comb){
         if(length(z_set)>1){
         for(j in z_set[-1]){
