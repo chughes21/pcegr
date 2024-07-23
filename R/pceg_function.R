@@ -496,7 +496,7 @@ pceg<-function(data ,equivsize=2,  poisson_response = TRUE, variable_time = TRUE
     if(!all(check.alpha==check.N)){
         if(length(prior_input)>0){
           warning(paste("Zeroes in prior don't match data - Situation ",i))
-        }else{
+        }else if(structural_zero){
           stop(paste("Zeroes in prior don't match data - Situation ",i))}
       }
     if(sum(check.alpha)>0){
