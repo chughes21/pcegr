@@ -385,6 +385,7 @@ chi_sq_calculator<-function(data,mod,stages = TRUE, limit=4,min_exp=5,zip=FALSE,
     if(zip){
       if(ind.stages[1]==1){
         ind.stages<-ind.stages[-1]
+        n.stages<-n.stages-1
       }
 
       ind.stages<-ind.stages/2
