@@ -421,7 +421,11 @@ chi_sq_calculator<-function(data,mod,stages = TRUE, limit=4,min_exp=5,zip=FALSE,
   colnames(exp.mat)<-v
   colnames(chi.mat)<-v
 
-  u<-paste0("Leaf",1:p)
+  if(stages){
+    u<-paste0("Stage",1:n.stages)
+  }else{
+    u<-paste0("Leaf",1:p)
+  }
 
   rownames(obs.mat)<-u
   rownames(exp.mat)<-u
