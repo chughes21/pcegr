@@ -382,14 +382,27 @@ chi_sq_calculator<-function(data,mod,stages = TRUE, limit=4,min_exp=5,zip=FALSE,
     n.stages<-length(ind.stages)
     ss<-stage.struct[[num_var]]
 
+    if(zip){
+      if(ind.stages[1]==1){
+        ind.stages<-ind.stages[-1]
+      }
+
+      ind.stages<-ind.stages/2
+    }
+
     exp.mat.new<-matrix(data=NA,nrow=n.stages,ncol=limit+1)
     obs.mat.new<-matrix(data=NA,nrow=n.stages,ncol=limit+1)
 
     count<-0
     for(i in 1:n.stages){
       ind.temp<-ss[[ind.stages[i]]]
-      exp.mat.new[i,]<-colSums(exp.mat[ind.temp,])
-      obs.mat.new[i,]<-colSums(obs.mat[ind.temp,])
+      if(length(ind.temp>1)){
+        exp.mat.new[i,]<-colSums(exp.mat[ind.temp,])
+        obs.mat.new[i,]<-colSums(obs.mat[ind.temp,])
+      }else{
+        exp.mat.new[i,]<-exp.mat[ind.temp,]
+        obs.mat.new[i,]<-obs.mat[ind.temp,]
+      }
       count<-count+length(ind.temp)
     }
     if(count!=num.sit[num_var]){
