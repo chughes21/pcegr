@@ -22,5 +22,5 @@ A numeric value for the change in log marginal likelihood
 Calculates the change in log marginal likelihood from merging two count vectors given their prior vectors
 }
 \examples{
-ahc_merge(c(1,1),c(0,2),c(1,1),c(1,1))
+ahc_merge(c(1,1),c(0,2),c(1,1),c(1,1),FALSE)
 }

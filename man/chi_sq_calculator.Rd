@@ -7,6 +7,7 @@
 chi_sq_calculator(
   data,
   mod,
+  stages = TRUE,
   limit = 4,
   min_exp = 5,
   zip = FALSE,
