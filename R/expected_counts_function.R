@@ -298,7 +298,7 @@ parameter_extractor<-function(stage_struct, posterior, var, poisson_response = T
 #'
 #' mod2<-zipceg(knee_pain_obs,"nlm",variable_time=TRUE)
 #' chi_sq_calculator(knee_pain_obs,mod2)
-chi_sq_calculator<-function(data,mod,limit=4,min_exp=5,zip=FALSE, dec_place = NA){
+chi_sq_calculator<-function(data,mod,stages = TRUE, limit=4,min_exp=5,zip=FALSE, dec_place = NA){
 
   poisson_response<-mod$event.tree$poisson.response
   remove_risk_free<-mod$remove.risk.free.edges
@@ -325,6 +325,9 @@ chi_sq_calculator<-function(data,mod,limit=4,min_exp=5,zip=FALSE, dec_place = NA
 
   posterior<-mod$posterior.expectation
   stage.struct<-mod$stage.structure
+  num.sit<-mod$event.tree$num.situation
+  numb<-cumsum(num.sit)
+  num_var<-mod$event.tree$num.variable #could be different to n and n1 - only cares about the event tree given so factors in zip
 
   n1<-n+1*poisson_response +1*zip
 
@@ -371,6 +374,29 @@ chi_sq_calculator<-function(data,mod,limit=4,min_exp=5,zip=FALSE, dec_place = NA
     obs.mat[k,limit+1]<-length(which(y >= limit))
     exp.mat[k,limit+1]<-length(ind)-sum(exp.mat[k,1:limit])
 
+  }
+
+  if(stages){
+    starting.sit<-numb[num_var-1]
+    ind.stages<-mod$stages[mod$stages>starting.sit]-starting.sit
+    n.stages<-length(ind.stages)
+    ss<-stage.struct[[num_var]]
+
+    exp.mat.new<-matrix(data=NA,nrow=n.stages,ncol=limit+1)
+    obs.mat.new<-matrix(data=NA,nrow=n.stages,ncol=limit+1)
+
+    count<-0
+    for(i in 1:n.stages){
+      ind.temp<-ss[[ind.stages[i]]]
+      exp.mat.new[i,]<-colSums(exp.mat[ind.temp,])
+      obs.mat.new[i,]<-colSums(obs.mat[ind.temp,])
+      count<-count+length(ind.temp)
+    }
+    if(count!=num.sit[num_var]){
+      stop(paste0("Number of situations not accounted for in stage - ", length(ind.temp)-count))
+    }
+    exp.mat<-exp.mat.new
+    obs.mat<-obs.mat.new
   }
 
   min.exp.mat<-exp.mat<min_exp
