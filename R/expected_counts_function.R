@@ -396,7 +396,7 @@ chi_sq_calculator<-function(data,mod,stages = TRUE, limit=4,min_exp=5,zip=FALSE,
     count<-0
     for(i in 1:n.stages){
       ind.temp<-ss[[ind.stages[i]]]
-      if(length(ind.temp>1)){
+      if(length(ind.temp)>1){
         exp.mat.new[i,]<-colSums(exp.mat[ind.temp,])
         obs.mat.new[i,]<-colSums(obs.mat[ind.temp,])
       }else{
