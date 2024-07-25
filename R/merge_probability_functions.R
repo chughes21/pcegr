@@ -73,7 +73,7 @@ merge_prob<-function(n, p1,p2=NULL, l1, l2, alpha=NULL, a11 = NULL, a12 = NULL, 
       y1<-c(i,n1-i)
       y2<-c(j,n2-j)
 
-      M_ahc[i+1,j+1]<-ahc_merge(y1,y2,a1,a2)
+      M_ahc[i+1,j+1]<-ahc_merge(y1,y2,a1,a2,FALSE)
 
     }
   }

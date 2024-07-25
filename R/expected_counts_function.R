@@ -324,15 +324,15 @@ chi_sq_calculator<-function(data,mod,stages = TRUE, limit=4,min_exp=5,zip=FALSE,
   #a lot of the below is copied into quantile_band - if this changes, so should that
 
   posterior<-mod$posterior.expectation
-  stage.struct<-mod$stage.structure
-  num.sit<-mod$event.tree$num.situation
-  numb<-cumsum(num.sit)
+  stage_struct<-mod$stage.structure
+  num_sit<-mod$event.tree$num_situation
+  numb<-cumsum(num_sit)
   num_var<-mod$event.tree$num.variable #could be different to n and n1 - only cares about the event tree given so factors in zip
 
   n1<-n+1*poisson_response +1*zip
 
-  rates<-parameter_extractor(stage.struct,posterior,n1,poisson_response,remove_risk_free)
-  probs<-parameter_extractor(stage.struct,posterior,n1-1,poisson_response,remove_risk_free)
+  rates<-parameter_extractor(stage_struct,posterior,n1,poisson_response,remove_risk_free)
+  probs<-parameter_extractor(stage_struct,posterior,n1-1,poisson_response,remove_risk_free)
 
   if(zip & !(remove_risk_free)){
     len<-seq(2,2*p,by=2)
@@ -377,37 +377,37 @@ chi_sq_calculator<-function(data,mod,stages = TRUE, limit=4,min_exp=5,zip=FALSE,
   }
 
   if(stages){
-    starting.sit<-numb[num_var-1]
-    ind.stages<-mod$stages[mod$stages>starting.sit]-starting.sit
-    n.stages<-length(ind.stages)
-    ss<-stage.struct[[num_var]]
+    starting_sit<-numb[num_var-1]
+    ind_stages<-mod$stages[mod$stages>starting_sit]-starting_sit
+    n_stages<-length(ind_stages)
+    ss<-stage_struct[[num_var]]
 
     if(zip){
-      if(ind.stages[1]==1){
-        ind.stages<-ind.stages[-1]
-        n.stages<-n.stages-1
+      if(ind_stages[1]==1){
+        ind_stages<-ind_stages[-1]
+        n_stages<-n_stages-1
       }
 
-      ind.stages<-ind.stages/2
+      ind_stages<-ind_stages/2
     }
 
-    exp.mat.new<-matrix(data=NA,nrow=n.stages,ncol=limit+1)
-    obs.mat.new<-matrix(data=NA,nrow=n.stages,ncol=limit+1)
+    exp.mat.new<-matrix(data=NA,nrow=n_stages,ncol=limit+1)
+    obs.mat.new<-matrix(data=NA,nrow=n_stages,ncol=limit+1)
 
     count<-0
-    for(i in 1:n.stages){
-      ind.temp<-ss[[ind.stages[i]]]
-      if(length(ind.temp)>1){
-        exp.mat.new[i,]<-colSums(exp.mat[ind.temp,])
-        obs.mat.new[i,]<-colSums(obs.mat[ind.temp,])
+    for(i in 1:n_stages){
+      ind_temp<-ss[[ind_stages[i]]]
+      if(length(ind_temp)>1){
+        exp.mat.new[i,]<-colSums(exp.mat[ind_temp,])
+        obs.mat.new[i,]<-colSums(obs.mat[ind_temp,])
       }else{
-        exp.mat.new[i,]<-exp.mat[ind.temp,]
-        obs.mat.new[i,]<-obs.mat[ind.temp,]
+        exp.mat.new[i,]<-exp.mat[ind_temp,]
+        obs.mat.new[i,]<-obs.mat[ind_temp,]
       }
-      count<-count+length(ind.temp)
+      count<-count+length(ind_temp)
     }
-    if(count!=num.sit[num_var]){
-      stop(paste0("Number of situations not accounted for in stage - ", length(ind.temp)-count))
+    if(count!=num_sit[num_var]){
+      stop(paste0("Number of situations not accounted for in stage - ", length(ind_temp)-count))
     }
     exp.mat<-exp.mat.new
     obs.mat<-obs.mat.new
@@ -436,7 +436,7 @@ chi_sq_calculator<-function(data,mod,stages = TRUE, limit=4,min_exp=5,zip=FALSE,
   colnames(chi.mat)<-v
 
   if(stages){
-    u<-paste0("Stage",1:n.stages)
+    u<-paste0("Stage",1:n_stages)
   }else{
     u<-paste0("Leaf",1:p)
   }
