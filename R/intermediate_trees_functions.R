@@ -258,7 +258,7 @@ stage_updater<-function(mod,level,ref1,ref2){
   mod$posterior.expectation[[level]][ref2]<-NA
 
   }else{
-  mod$model.score<-mod$model.score+ahc_merge(d1,d2,a1,a2)
+  mod$model.score<-mod$model.score+ahc_merge(d1,d2,a1,a2,FALSE)
 
   mod$posterior.expectation[[level]][ref1,]<-(mod$prior.distribution[[level]][ref1,]+mod$data.summary[[level]][ref1,])/sum(mod$prior.distribution[[level]][ref1,]+mod$data.summary[[level]][ref1,])
   mod$posterior.expectation[[level]][ref2,]<-NA
