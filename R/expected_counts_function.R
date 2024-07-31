@@ -325,7 +325,7 @@ chi_sq_calculator<-function(data,mod,stages = TRUE, limit=4,min_exp=5,zip=FALSE,
 
   posterior<-mod$posterior.expectation
   stage_struct<-mod$stage.structure
-  num_sit<-mod$event.tree$num_situation
+  num_sit<-mod$event.tree$num.situation
   numb<-cumsum(num_sit)
   num_var<-mod$event.tree$num.variable #could be different to n and n1 - only cares about the event tree given so factors in zip
 
