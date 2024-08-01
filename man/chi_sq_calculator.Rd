@@ -28,7 +28,7 @@ chi_sq_calculator(
 \item{dec_place}{An integer value detailing how many decimal places the outputs should be rounded to. If NA, no rounding will occur.}
 }
 \value{
-A list of three matrices and a numeric value. The first matrix is the observed count matrix, the second is the expected count matrix, and the third is the chi-squared contribution matrix.The numeric value is the sum of the chi square contributions.
+A list of three matrices and three numeric values. The first matrix is the observed count matrix, the second is the expected count matrix, and the third is the chi-squared contribution matrix. All three matrices are in ascending order of rate and risk probability. The first numeric value is the sum of the chi square contributions. The second numeric value is the degrees of freedom, the product of the amount of stages for risk probabilities and rates and the upper limit on counts. The third numeric value is the p-value for a Chi-squared distribution with the observed Chi-squared statistics at the calculated degrees of freedom.
 }
 \description{
 This function tests the goodness of fit of a pceg model to a data set using a Chi squared calculation.

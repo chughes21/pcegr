@@ -289,7 +289,7 @@ parameter_extractor<-function(stage_struct, posterior, var, poisson_response = T
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
 #' @param dec_place An integer value detailing how many decimal places the outputs should be rounded to. If NA, no rounding will occur.
 #'
-#' @return A list of three matrices and a numeric value. The first matrix is the observed count matrix, the second is the expected count matrix, and the third is the chi-squared contribution matrix.The numeric value is the sum of the chi square contributions.
+#' @return A list of three matrices and three numeric values. The first matrix is the observed count matrix, the second is the expected count matrix, and the third is the chi-squared contribution matrix. All three matrices are in ascending order of rate and risk probability. The first numeric value is the sum of the chi square contributions. The second numeric value is the degrees of freedom, the product of the amount of stages for risk probabilities and rates and the upper limit on counts. The third numeric value is the p-value for a Chi-squared distribution with the observed Chi-squared statistics at the calculated degrees of freedom.
 #' @export
 #'
 #' @examples
@@ -303,6 +303,14 @@ chi_sq_calculator<-function(data,mod,stages = TRUE, limit=4,min_exp=5,zip=FALSE,
   poisson_response<-mod$event.tree$poisson.response
   remove_risk_free<-mod$remove.risk.free.edges
   variable_time<-mod$event.tree$variable.time
+
+  if(limit<=0){
+    stop("Please input a valid count limit greater than 0")
+  }
+
+  if(min_exp<0){
+    stop("Please input a non-negative minimum expectation")
+  }
 
   if(!poisson_response & variable_time){
     stop("Variable Time Requires Poisson Response")
@@ -348,15 +356,32 @@ chi_sq_calculator<-function(data,mod,stages = TRUE, limit=4,min_exp=5,zip=FALSE,
 
   x<-c(0:(limit-1))
 
+  unique_rates<-sort(unique(rates),decreasing = FALSE)
+  if(zip){
+    unique_probs<-sort(unique(probs),decreasing = FALSE)
+  }else{
+    unique_probs<-1
+  }
+
+  n_stages_rates<-length(unique_rates)
+  n_stages_probs<-length(unique_probs)
+
+  n_stages_combo<-n_stages_rates*n_stages_probs
+
+  stage_combo_index<-matrix(data=NA,nrow=p,ncol=2)
+
   for(k in 1:p){
     v<-tree[k,c(1:n)]
     ind<-which(row.match(data_use[,1:n],v)==1 )
     lambda<-rates[k]
+    stage_combo_index[k,2]<-which(unique_rates==lambda)
 
     if(zip){
       prop<-probs[k]
+      stage_combo_index[k,1]<-which(unique_probs==prop)
     }else{
       prop<-1
+      stage_combo_index[k,1]<-1
     }
 
     y<-data_use[ind,n+1]
@@ -367,7 +392,6 @@ chi_sq_calculator<-function(data,mod,stages = TRUE, limit=4,min_exp=5,zip=FALSE,
       t<-rep(1,length(ind))
     }
 
-
     obs.mat[k,1:limit]<-sapply(x,counter,v=y)
     exp.mat[k,1:limit]<-colSums(sapply(x,f,p=prop,lambda=lambda,t=t))
 
@@ -377,40 +401,38 @@ chi_sq_calculator<-function(data,mod,stages = TRUE, limit=4,min_exp=5,zip=FALSE,
   }
 
   if(stages){
-    starting_sit<-numb[num_var-1]
-    ind_stages<-mod$stages[mod$stages>starting_sit]-starting_sit
-    n_stages<-length(ind_stages)
-    ss<-stage_struct[[num_var]]
 
-    if(zip){
-      if(ind_stages[1]==1){
-        ind_stages<-ind_stages[-1]
-        n_stages<-n_stages-1
+    exp.mat.new<-matrix(data=NA,nrow=n_stages_combo,ncol=limit+1)
+    obs.mat.new<-matrix(data=NA,nrow=n_stages_combo,ncol=limit+1)
+
+    count<-1
+    for(i in 1:n_stages_probs){
+      for(j in 1:n_stages_rates){
+        combo<-c(i,j)
+        ind_temp<-which((!colSums(t(stage_combo_index)!=combo))==TRUE)
+
+        if(length(ind_temp)>1){
+          exp.mat.new[count,]<-colSums(exp.mat[ind_temp,])
+          obs.mat.new[count,]<-colSums(obs.mat[ind_temp,])
+          count<-count+1
+        }else if(length(ind_temp)==1){
+          exp.mat.new[count,]<-exp.mat[ind_temp,]
+          obs.mat.new[count,]<-obs.mat[ind_temp,]
+          count<-count+1
+        }
       }
-
-      ind_stages<-ind_stages/2
-    }
-
-    exp.mat.new<-matrix(data=NA,nrow=n_stages,ncol=limit+1)
-    obs.mat.new<-matrix(data=NA,nrow=n_stages,ncol=limit+1)
-
-    count<-0
-    for(i in 1:n_stages){
-      ind_temp<-ss[[ind_stages[i]]]
-      if(length(ind_temp)>1){
-        exp.mat.new[i,]<-colSums(exp.mat[ind_temp,])
-        obs.mat.new[i,]<-colSums(obs.mat[ind_temp,])
-      }else{
-        exp.mat.new[i,]<-exp.mat[ind_temp,]
-        obs.mat.new[i,]<-obs.mat[ind_temp,]
-      }
-      count<-count+length(ind_temp)
-    }
-    if(count!=num_sit[num_var]){
-      stop(paste0("Number of situations not accounted for in stage - ", length(ind_temp)-count))
     }
     exp.mat<-exp.mat.new
     obs.mat<-obs.mat.new
+  }
+
+  df<-n_stages_combo*limit
+
+  ind.na<-which(is.na(obs.mat[,1]))
+  if(length(ind.na)>0){
+  obs.mat<-obs.mat[-ind.na,]
+  exp.mat<-exp.mat[-ind.na,]
+  n_stages_combo<-n_stages_combo-length(ind.na)
   }
 
   min.exp.mat<-exp.mat<min_exp
@@ -436,7 +458,7 @@ chi_sq_calculator<-function(data,mod,stages = TRUE, limit=4,min_exp=5,zip=FALSE,
   colnames(chi.mat)<-v
 
   if(stages){
-    u<-paste0("Stage",1:n_stages)
+    u<-paste0("Stage",1:n_stages_combo)
   }else{
     u<-paste0("Leaf",1:p)
   }
@@ -445,6 +467,10 @@ chi_sq_calculator<-function(data,mod,stages = TRUE, limit=4,min_exp=5,zip=FALSE,
   rownames(exp.mat)<-u
   rownames(chi.mat)<-u
 
-  return(list(obs=obs.mat,exp=exp.mat,chi.mat=chi.mat,chi_sq = sum(chi.mat)))
+  chi_sq<-sum(chi.mat)
+  p_value<-pchisq(chi_sq,df)
+
+  return(list(obs=obs.mat,exp=exp.mat,chi.mat=chi.mat,chi_sq = chi_sq,df=df,p_value=p_value))
 
 }
+
