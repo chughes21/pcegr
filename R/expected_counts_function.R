@@ -284,6 +284,7 @@ parameter_extractor<-function(stage_struct, posterior, var, poisson_response = T
 #'
 #' @param data A data set, where the observed count vector and time vector (if variable) are the last two columns
 #' @param mod A StagedTree model fit to the data set, as produced by pceg() or zipceg().
+#' @param stages A logical value indicating whether the calculations should be based on stages (TRUE) or leaves (FALSE).
 #' @param limit An integer where the number of event counts greater than or equal to this integer are grouped together.
 #' @param min_exp An integer specifying the minimum expected count necessary for its chi square contribution to be considered.
 #' @param zip A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).
@@ -333,9 +334,6 @@ chi_sq_calculator<-function(data,mod,stages = TRUE, limit=4,min_exp=5,zip=FALSE,
 
   posterior<-mod$posterior.expectation
   stage_struct<-mod$stage.structure
-  num_sit<-mod$event.tree$num.situation
-  numb<-cumsum(num_sit)
-  num_var<-mod$event.tree$num.variable #could be different to n and n1 - only cares about the event tree given so factors in zip
 
   n1<-n+1*poisson_response +1*zip
 

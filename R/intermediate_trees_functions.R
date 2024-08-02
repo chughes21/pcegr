@@ -399,8 +399,16 @@ model_combiner<-function(data,mod.background,mod.response,background.order=NULL,
   cats.sat<-lapply(data,levels)
   cats.resp<-lapply(data.resp,levels)
 
-  tree.sat<-rev(expand.grid(rev(cats.sat[-num.variable]))) #don't need the last column as its leaves
-  tree.resp<-rev(expand.grid(rev(cats.resp[-resp.variable])))
+  if(variable.time){
+    ind.excl.sat<-c(num.variable:(num.variable+1))
+    ind.excl.resp<-c(resp.variable:(resp.variable+1))
+  }else{
+    ind.excl.sat<-num.variable
+    ind.excl.resp<-resp.variable
+  }
+
+  tree.sat<-rev(expand.grid(rev(cats.sat[-ind.excl.sat]))) #don't need the last column as its leaves and also wanna exclude variable time
+  tree.resp<-rev(expand.grid(rev(cats.resp[-ind.excl.resp])))
 
   #now create a tree that is the saturated tree except with background imputed
   tree.background<-tree.sat
