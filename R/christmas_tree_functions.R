@@ -34,7 +34,7 @@ counter<-function(x,v){
 #' quantile_band(knee_pain_obs,mod,limit=10,plot.indiv=TRUE,plot.overall=TRUE,zip=FALSE)
 #' zipmod<-zipceg(knee_pain_obs,equivsize=2,poisson_response=TRUE,variable_time=TRUE)
 #' quantile_band(knee_pain_obs,zipmod,limit=10,plot.indiv=TRUE,plot.overall=TRUE,zip=TRUE)
-quantile_band<-function(data,mod,signif = 0.05, limit=NA,shift = TRUE, max_per_plot = 8, plot.indiv = TRUE, plot.overall = TRUE, zip=FALSE){
+quantile_band<-function(data,mod,signif = 0.05,stages=TRUE, limit=NA,shift = TRUE, max_per_plot = 8, plot.indiv = TRUE, plot.overall = TRUE, zip=FALSE){
 
   poisson_response<-mod$event.tree$poisson.response
   remove_risk_free<-mod$remove.risk.free.edges
