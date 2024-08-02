@@ -209,9 +209,9 @@ quantile_band<-function(data,mod,signif = 0.05,stages=TRUE, limit=NA,shift = TRU
 
   #  prob_mat_temp<-cbind(prob_mat,matrix(0,nrow=dim(prob_mat)[1],ncol=lim_diff)) don't need anymore if each given same limit
     if(k==1){
-      prob_mat_overall<-prob_mat_temp
+      prob_mat_overall<-prob_mat
     }else{
-      prob_mat_overall<-rbind(prob_mat_overall,prob_mat_temp)
+      prob_mat_overall<-rbind(prob_mat_overall,prob_mat)
     }
   }
 
@@ -259,14 +259,14 @@ quantile_band<-function(data,mod,signif = 0.05,stages=TRUE, limit=NA,shift = TRU
               geom_path(mapping = aes(x = left, y = x),col="green")+geom_point(mapping = aes(x = left, y = x),col="green")+
               geom_path(mapping = aes(x = right, y = x),col="green")+geom_point(mapping = aes(x = right, y = x),col="green")+
               geom_path(mapping = aes(x = count, y = x),col="red")+geom_point(mapping = aes(x = count, y = x),col="red")+
-              xlab("Shifted Observed Counts")+ylab("Event counts")+ggtitle(paste0("Shifted Quantile Band Plot - Stage ",k))
+              xlab("Shifted Observed Counts")+ylab("Event counts")+ggtitle(paste0("Shifted Quantile Band Plot - Stage ",count))
           }else{
             indiv[[count]]<-ggplot(data=data.temp)+
               geom_path(mapping = aes(x = left, y = x),col="green")+geom_point(mapping = aes(x = left, y = x),col="green")+
               geom_path(mapping = aes(x = right, y = x),col="green")+geom_point(mapping = aes(x = right, y = x),col="green")+
               geom_path(mapping = aes(x = count, y = x),col="red")+geom_point(mapping = aes(x = count, y = x),col="red")+
               geom_path(mapping = aes(x = median, y = x),col="black")+
-              xlab("Raw Observed Counts")+ylab("Event counts")+ggtitle(paste0("Raw Quantile Band Plot - Stage ",k))
+              xlab("Raw Observed Counts")+ylab("Event counts")+ggtitle(paste0("Raw Quantile Band Plot - Stage ",count))
           }
 
           count<-count+1
