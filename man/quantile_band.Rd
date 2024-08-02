@@ -8,10 +8,11 @@ quantile_band(
   data,
   mod,
   signif = 0.05,
+  stages = TRUE,
   limit = NA,
   shift = TRUE,
   max_per_plot = 8,
-  plot.leaves = TRUE,
+  plot.indiv = TRUE,
   plot.overall = TRUE,
   zip = FALSE
 )
@@ -23,27 +24,29 @@ quantile_band(
 
 \item{signif}{A numeric value specifying the significance level for the quantiles.}
 
-\item{limit}{An integer vector specifying the maximium number of possible counts to analyse. If it is a vector of length one, this value will be used for all leaves. If NA, this will be the maximum count recorded per leaf.}
+\item{stages}{A logical value indicating whether the individual plots should be based on stages (TRUE) or leaves (FALSE).}
+
+\item{limit}{An integer vector specifying the maximium number of possible counts to analyse. If it is a vector of length one, this value will be used for all stages/leaves. If NA, this will be the maximum count recorded per leaf.}
 
 \item{shift}{A logical value indicating whether the raw observed counts and quantiles should be used (FALSE), or whether they should be shifted by the median (TRUE).}
 
-\item{max_per_plot}{An integer value specifying the maximum number of leaves that can be shown in a single plot.}
+\item{max_per_plot}{An integer value specifying the maximum number of stages/leaves that can be shown in a single plot.}
 
-\item{plot.leaves}{A logical value indicating whether quantile band plots should be produced for each leaf (TRUE) or not (FALSE).}
+\item{plot.indiv}{A logical value indicating whether quantile band plots should be produced for each leaf (TRUE) or not (FALSE).}
 
 \item{plot.overall}{A logical value indicating whether a quantile band plot should be produced for the model as a whole (TRUE) or not (FALSE).}
 
 \item{zip}{A logical value indicating whether the model specified is zero-inflated (TRUE) or not (FALSE).}
 }
 \value{
-A quantile-band plot for each leaf.
+A quantile-band plot for the model, whether each stage/leaf or overall.
 }
 \description{
 This function creates a quantile band plot, a diagnostic plot of the suitability of a model to count data.
 }
 \examples{
 mod<-pceg(knee_pain_obs,2,TRUE,TRUE)
-quantile_band(knee_pain_obs,mod,limit=10,plot.leaves=TRUE,plot.overall=TRUE,zip=FALSE)
+quantile_band(knee_pain_obs,mod,limit=10,plot.indiv=TRUE,plot.overall=TRUE,zip=FALSE)
 zipmod<-zipceg(knee_pain_obs,equivsize=2,poisson_response=TRUE,variable_time=TRUE)
-quantile_band(knee_pain_obs,zipmod,limit=10,plot.leaves=TRUE,plot.overall=TRUE,zip=TRUE)
+quantile_band(knee_pain_obs,zipmod,limit=10,plot.indiv=TRUE,plot.overall=TRUE,zip=TRUE)
 }
