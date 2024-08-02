@@ -208,11 +208,12 @@ quantile_band<-function(data,mod,signif = 0.05,stages=TRUE, limit=NA,shift = TRU
     }
 
   #  prob_mat_temp<-cbind(prob_mat,matrix(0,nrow=dim(prob_mat)[1],ncol=lim_diff)) don't need anymore if each given same limit
+    if(plot.overall){
     if(k==1){
       prob_mat_overall<-prob_mat
     }else{
       prob_mat_overall<-rbind(prob_mat_overall,prob_mat)
-    }
+    }}
   }
 
   if(stages){
